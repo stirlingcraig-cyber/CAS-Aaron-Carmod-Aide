@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Hot hatch and sports car tuning guide for Glasgow and Scotland: model-year specs, remap stages, rated mods including styling, build planner, screened garages and UK legal checks.">
+<meta name="description" content="Hot hatch and sports car tuning guide for Glasgow and Scotland: model-year specs, remap stages, rated mods, DRL and headlight lab, insurance estimator, screened garages and UK legal checks.">
 <meta name="theme-color" content="#0e1116">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <title>Clydeside Redline</title>
@@ -312,6 +312,21 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 .shop input{accent-color:var(--sodium);margin-top:3px}
 .shop input:checked + span{color:var(--muted);text-decoration:line-through}
 .shop small{font:400 .72rem/1.3 var(--mono);color:var(--muted);text-align:right}
+
+.drlstage{border:1px solid var(--line);border-radius:12px;background:radial-gradient(ellipse at 50% 100%,#78bdff14,transparent 60%),var(--asphalt);padding:8px}
+.drlstage svg{display:block;width:100%;height:auto}
+.swatches{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.sw{all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;padding:7px 10px 7px 7px;border:1px solid var(--line);border-radius:99px;font:600 .76rem/1 var(--body);color:var(--muted)}
+.sw i{width:18px;height:18px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
+.sw[aria-checked="true"]{color:var(--fg);border-color:var(--sodium)}
+.sw:focus-visible{outline:2px solid var(--sodium)}
+.lezout.track{background:var(--track-dim)} .lezout.track b{color:var(--track)}
+.insref{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.insref div{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);font-size:.88rem}
+.insref b{font:500 .85rem var(--mono);color:var(--sodium);white-space:nowrap}
+.insrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.insrow small{grid-column:1/-1;color:var(--muted);font-size:.78rem}
+.insrow b{font-family:var(--mono);font-weight:500;color:var(--sodium);white-space:nowrap}
 .toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(140%);background:var(--sodium);color:var(--asphalt);font:700 .85rem/1 var(--body);padding:12px 16px;border-radius:99px;transition:transform .25s;z-index:30;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 </style>
@@ -324,7 +339,9 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
     <a class="tab" href="#garage">Garage</a>
     <a class="tab" href="#mods">Mod list</a>
     <a class="tab" href="#remaps">Remaps</a>
+    <a class="tab" href="#lighting">Lighting</a>
     <a class="tab" href="#build">Build planner</a>
+    <a class="tab" href="#insurance">Insurance</a>
     <a class="tab" href="#guide">How to choose</a>
     <a class="tab" href="#scotland">Scotland &amp; the law</a>
     <a class="tab" href="#garages">Garages</a>
@@ -342,7 +359,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
       <p class="lede">Pick your car, see what it makes stock and what owners and tuners typically get from it, then plan a build that stays road legal, insurable and MOT-proof on Scottish roads. Every modification is rated for difficulty, cost and legality.</p>
       <div class="hero-meta">
         <span class="pill">15 cars · 30 model-year variants</span>
-        <span class="pill" id="modcountpill">66 modifications</span>
+        <span class="pill" id="modcountpill">78 modifications</span>
         <span class="pill">UK law · checked Sept 2026</span>
         <span class="pill">Glasgow LEZ aware</span>
       </div>
@@ -489,11 +506,106 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
   </div>
 </section>
 
+
+<!-- LIGHTING -->
+<section id="lighting">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">04 · Lighting lab</p>
+      <h2>DRLs &amp; headlights</h2>
+      <p class="lede">Preview a DRL colour on your car, see whether it's road legal, then compare headlight upgrades by cost, legality and insurance impact.</p>
+    </div>
+    <div class="two">
+      <div class="panel">
+        <p class="eyebrow">DRL colour change</p>
+        <h3 style="margin-top:6px">Try a colour</h3>
+        <div class="drlstage" style="margin-top:12px">
+          <svg viewBox="0 0 400 200" id="drlsvg" role="img" aria-label="Front view of a car with the selected DRL colour">
+            <defs>
+              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <linearGradient id="rgbg" x1="0" x2="1"><stop offset="0" stop-color="#ff3b3b"/><stop offset=".33" stop-color="#39e07a"/><stop offset=".66" stop-color="#3d7bff"/><stop offset="1" stop-color="#c05cff"/></linearGradient>
+            </defs>
+            <ellipse cx="200" cy="186" rx="170" ry="10" fill="var(--led)" opacity=".12"/>
+            <path d="M40 150 L52 92 Q60 70 90 64 L130 40 Q140 34 156 34 L244 34 Q260 34 270 40 L310 64 Q340 70 348 92 L360 150 Q360 168 344 170 L56 170 Q40 168 40 150 Z" fill="var(--panel-2)" stroke="var(--line)" stroke-width="2"/>
+            <path d="M136 46 L264 46 L292 66 L108 66 Z" fill="var(--led)" opacity=".16"/>
+            <path d="M62 96 Q70 84 96 82 L148 84 L140 108 L70 112 Z" fill="var(--asphalt)" stroke="var(--muted)" stroke-width="1.5"/>
+            <path d="M338 96 Q330 84 304 82 L252 84 L260 108 L330 112 Z" fill="var(--asphalt)" stroke="var(--muted)" stroke-width="1.5"/>
+            <path d="M160 118 L240 118 L250 146 L150 146 Z" fill="var(--asphalt)" stroke="var(--line)" stroke-width="1.5"/>
+            <rect x="166" y="150" width="68" height="14" rx="2" fill="var(--fg)" opacity=".85"/>
+            <g id="drlstrips" filter="url(#glow)" stroke-linecap="round" fill="none" stroke-width="5">
+              <path d="M74 106 Q96 102 136 102"/>
+              <path d="M326 106 Q304 102 264 102"/>
+            </g>
+          </svg>
+        </div>
+        <div class="swatches" role="radiogroup" aria-label="DRL colour" id="drlswatches"></div>
+        <div class="seg" role="group" aria-label="Where the car is used" style="margin-top:14px" id="drlmode">
+          <button type="button" data-m="road" aria-pressed="true">On the road</button>
+          <button type="button" data-m="show" aria-pressed="false">Show / private land</button>
+        </div>
+        <div class="lezout" id="drlverdict" style="margin-top:12px"></div>
+      </div>
+      <div class="panel">
+        <p class="eyebrow">DRL options &amp; costs</p>
+        <h3 style="margin-top:6px">Ways to change the look legally</h3>
+        <div style="overflow-x:auto"><table class="ltable"><tbody>
+          <tr><td><b>Coding the factory DRLs</b><br><span class="note">Brightness, switchback behaviour, DRL with sidelights. DIY with an app or tool for your make.</span></td><td>£0–£150</td></tr>
+          <tr><td><b>Approved switchback LED units</b><br><span class="note">White DRL that turns amber while indicating; E-marked units only.</span></td><td>£60–£250</td></tr>
+          <tr><td><b>Factory LED headlamps with DRL signature</b><br><span class="note">Facelift or higher-trim units plus coding.</span></td><td>£800–£3,000</td></tr>
+          <tr><td><b>Approved add-on DRL pair (RL-marked)</b><br><span class="note">For cars without DRLs; wired to dim with headlamps.</span></td><td>£40–£150</td></tr>
+          <tr><td><b>RGB / coloured kit, show use only</b><br><span class="note">Must be off and ideally disconnected on public roads.</span></td><td>£30–£150</td></tr>
+        </tbody></table></div>
+        <p class="eyebrow" style="margin-top:18px">DRL rules in brief</p>
+        <ul class="watch">
+          <li>White light only, in a matched pair, with RL type-approval marking</li>
+          <li>On automatically with the engine; off or dimmed when headlamps are on</li>
+          <li>Factory DRLs must work: a failed DRL is an MOT fail</li>
+          <li>Colours that suggest emergency or medical vehicles are prohibited</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin:36px 0 12px">Why LED bulbs in halogen lamps fail</h3>
+    <div class="panel">
+      <div class="chartbox"><svg viewBox="0 0 760 220" role="img" aria-label="Beam pattern comparison: halogen bulb gives a sharp cut-off; LED bulb in a halogen reflector scatters light above the cut-off into oncoming drivers' eyes">
+        <g transform="translate(20 20)">
+          <text x="0" y="0" fill="var(--fg)" style="font:700 14px var(--body);text-transform:uppercase;letter-spacing:.06em">Halogen bulb · designed pattern</text>
+          <rect x="0" y="14" width="340" height="170" rx="10" fill="var(--asphalt)" stroke="var(--line)"/>
+          <line x1="0" y1="96" x2="340" y2="96" stroke="var(--muted)" stroke-dasharray="4 6"/>
+          <text x="6" y="90" fill="var(--muted)" style="font:400 10px var(--mono)">cut-off line</text>
+          <path d="M20 180 Q170 96 170 96 L200 96 L230 78 L330 78 L330 180 Z" fill="var(--sodium)" opacity=".35"/>
+          <path d="M60 180 Q170 110 190 110 L300 104 L320 180 Z" fill="var(--sodium)" opacity=".45"/>
+          <text x="210" y="70" fill="var(--ok)" style="font:500 11px var(--mono)">kerb-side step-up</text>
+        </g>
+        <g transform="translate(400 20)">
+          <text x="0" y="0" fill="var(--fg)" style="font:700 14px var(--body);text-transform:uppercase;letter-spacing:.06em">LED bulb in halogen lamp</text>
+          <rect x="0" y="14" width="340" height="170" rx="10" fill="var(--asphalt)" stroke="var(--line)"/>
+          <line x1="0" y1="96" x2="340" y2="96" stroke="var(--muted)" stroke-dasharray="4 6"/>
+          <path d="M20 180 Q120 60 170 40 Q240 30 330 60 L330 180 Z" fill="var(--led)" opacity=".22"/>
+          <path d="M40 180 Q150 110 200 120 L310 130 L320 180 Z" fill="var(--led)" opacity=".4"/>
+          <circle cx="120" cy="66" r="18" fill="var(--bad)" opacity=".35"/><circle cx="250" cy="52" r="22" fill="var(--bad)" opacity=".3"/>
+          <text x="150" y="30" fill="var(--bad)" style="font:500 11px var(--mono)">glare above the cut-off</text>
+          <text x="180" y="170" fill="var(--muted)" style="font:500 11px var(--mono)">dimmer where you need it</text>
+        </g>
+      </svg></div>
+      <p class="note" style="margin-top:8px">A halogen reflector is shaped around a filament at one exact point. An LED chip sits elsewhere and emits differently, so light spills above the cut-off and dazzles oncoming drivers while the road ahead gets less. Illustrative, not measured.</p>
+    </div>
+
+    <h3 style="margin:36px 0 12px">Headlight &amp; lighting options</h3>
+    <div class="rtable">
+      <table>
+        <thead><tr><th>Option</th><th>Cost</th><th>Legal status</th><th>Insurance</th><th>MOT &amp; law</th><th></th></tr></thead>
+        <tbody id="lighttable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
 <!-- BUILD -->
 <section id="build">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">04 · Build planner</p>
+      <p class="eyebrow">05 · Build planner</p>
       <h2>Plan the build</h2>
       <p class="lede">Your build is checked as you go: cost, estimated power for the selected car, the hardest job on the list, what to tell your insurer, and anything that will fail an MOT or break the law. It's saved in this browser.</p>
     </div>
@@ -530,11 +642,45 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
   </div>
 </section>
 
+
+<!-- INSURANCE -->
+<section id="insurance">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">06 · Insurance cost</p>
+      <h2>What your build adds to the premium</h2>
+      <p class="lede">An estimate built from a 2025 study that compared UK quotes with one modification changed at a time. Insurers load by type of mod, so three suspension parts count once. Real quotes vary widely with age, postcode, claims history and the insurer. Stacking several loadings can overstate the total: modified-car specialists often quote a whole build for less than the sum of its parts.</p>
+    </div>
+    <div class="buildgrid">
+      <div class="panel">
+        <label class="f" for="basePrem">Your current annual premium (£)<input type="number" id="basePrem" min="100" max="20000" step="10" value="900" inputmode="numeric" style="width:100%;font:500 1.1rem var(--mono);color:var(--fg);background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:11px 12px"></label>
+        <p class="note" style="margin-top:6px">£900 is an example figure. Enter your own renewal price for a personal estimate.</p>
+        <div class="tiles" style="margin-top:14px">
+          <div class="tile"><span>Estimated premium</span><b id="ins-total" class="num">—</b><small id="ins-pct">no change</small></div>
+          <div class="tile"><span>Extra per year</span><b id="ins-extra" class="num">£0</b><small id="ins-month">£0 a month</small></div>
+        </div>
+        <div class="flags" id="ins-flags" style="margin-top:14px"></div>
+      </div>
+      <div class="panel">
+        <p class="eyebrow">Increase by mod type</p>
+        <div class="chartbox" style="margin-top:10px"><svg id="insChart" viewBox="0 0 640 120" role="img" aria-label="Premium increase by modification type"></svg></div>
+        <div id="ins-rows" style="margin-top:10px"></div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:20px">
+      <p class="eyebrow">Loading by modification type</p>
+      <h3 style="margin-top:6px">Typical increase for one mod on its own</h3>
+      <div class="insref" id="insref" style="margin-top:12px"></div>
+      <p class="note" style="margin-top:10px">Source: cinch, July 2025, quotes in 10 UK cities with identical driver and car details except one modification. Types marked "est" had no direct figure and use the nearest category. Declaring mods honestly costs far less than a voided claim.</p>
+    </div>
+  </div>
+</section>
+
 <!-- GUIDE -->
 <section id="guide">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">05 · How to choose</p>
+      <p class="eyebrow">07 · How to choose</p>
       <h2>Choosing mods in the right order</h2>
       <p class="lede">The most common regret on owners' forums is buying power first. This is the order experienced owners and UK tuners recommend.</p>
     </div>
@@ -601,7 +747,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="scotland">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">06 · Scotland &amp; the law</p>
+      <p class="eyebrow">08 · Scotland &amp; the law</p>
       <h2>Glasgow rules of the road</h2>
       <p class="lede">What actually gets modified cars stopped, failed or uninsured in Scotland, plus where to measure and use the power legally.</p>
     </div>
@@ -651,7 +797,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="garages">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">07 · Garages near Glasgow</p>
+      <p class="eyebrow">09 · Garages near Glasgow</p>
       <h2>Garages, screened</h2>
       <p class="lede">Trustpilot scores checked on 30 September 2026, plus our own screen: any business that advertises emissions deletes (DPF, GPF, EGR, AdBlue or catalyst removal) is flagged, because that work is illegal on the road and a sign of how the business operates.</p>
     </div>
@@ -699,7 +845,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="sources" class="sources">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">08 · Sources</p>
+      <p class="eyebrow">10 · Sources</p>
       <h2>Where this comes from</h2>
       <p class="lede">Legal points are from government, regulator and circuit sources, checked on 30 September 2026. Power figures are manufacturer data plus owner and tuner consensus; treat them as a guide.</p>
     </div>
@@ -718,6 +864,8 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
       <li><a href="https://dynatune.co.uk/aboutus/" target="_blank" rel="noopener">Dyna Tune, East Kilbride</a> · <a href="https://autotecscotland.co.uk/services/performance-tuning/" target="_blank" rel="noopener">Autotec Scotland</a></li>
       <li><a href="https://www.pistonheads.com/gassing/topic.asp?h=0&amp;f=118&amp;t=1635495" target="_blank" rel="noopener">PistonHeads Scotland forum: Glasgow-area rolling roads</a></li>
       <li>Trustpilot profiles checked 30 Sept 2026: <a href="https://www.trustpilot.com/review/www.atseuromaster.co.uk" target="_blank" rel="noopener">ATS Euromaster</a>, <a href="https://www.trustpilot.com/review/www.kwik-fit.com" target="_blank" rel="noopener">Kwik Fit</a>, <a href="https://www.trustpilot.com/review/www.national.co.uk" target="_blank" rel="noopener">National Tyres</a>, <a href="https://www.trustpilot.com/review/www.halfords.com" target="_blank" rel="noopener">Halfords</a>, <a href="https://www.trustpilot.com/review/quantumtuning.co.uk" target="_blank" rel="noopener">Quantum Tuning</a>, <a href="https://www.trustpilot.com/review/tuneitscotland.co.uk" target="_blank" rel="noopener">Tune-it Scotland</a>, <a href="https://www.trustpilot.com/review/caraholicsremap.co.uk" target="_blank" rel="noopener">Car'aholics Remapping</a>, <a href="https://www.trustpilot.com/review/awesomegti.com" target="_blank" rel="noopener">Awesome GTI</a>, <a href="https://www.trustpilot.com/review/www.merlinmotorsport.co.uk" target="_blank" rel="noopener">Merlin Motorsport</a></li>
+      <li><a href="https://www.cinch.co.uk/news/most-expensive-car-mods-to-insure" target="_blank" rel="noopener">cinch: most expensive car modifications to insure (July 2025)</a> · <a href="https://insurance-edge.net/2025/07/28/which-car-mods-bump-up-your-insurance-costs/" target="_blank" rel="noopener">Insurance Edge summary</a></li>
+      <li><a href="https://www.gov.uk/government/publications/aftermarket-hid-headlamps/aftermarket-hid-headlamps" target="_blank" rel="noopener">GOV.UK: Aftermarket HID headlamps</a> · <a href="https://help.halfords.com/wss/motoring-products/bulbs-blades-batteries/car-bulbs-law" target="_blank" rel="noopener">Halfords: car bulbs and the law</a> · <a href="https://agri-lighting.co.uk/vehicle-lighting/daytime-running-lights-uk-law/" target="_blank" rel="noopener">DRL rules for UK vehicles</a> · <a href="https://carbonwurks.com/are-yellow-drls-legal-in-the-uk/" target="_blank" rel="noopener">Carbonwurks: DRL colours</a></li>
       <li>Laird Performance: <a href="https://www.laird-performance.co.uk/about-us-1-w.asp" target="_blank" rel="noopener">about</a>, <a href="https://laird-performance.co.uk/fiesta-st-mk8-tuning-91-c.asp" target="_blank" rel="noopener">Fiesta ST Mk8 tuning</a>, <a href="https://www.laird-performance.co.uk/visuals--splitters-139-c.asp" target="_blank" rel="noopener">Fiesta visuals &amp; splitters</a>, <a href="https://www.laird-performance.co.uk/visuals-167-c.asp" target="_blank" rel="noopener">Focus ST Mk4 visuals</a>, <a href="https://www.laird-performance.co.uk/laird-performance-stage-1-up-to-355bhp---549nm-workshop-upload-11088-p.asp" target="_blank" rel="noopener">Focus ST stage 1</a>, <a href="https://www.theimi.org.uk/member-register/business/129066" target="_blank" rel="noopener">IMI register</a></li>
       <li>Business websites for services offered: <a href="https://www.psiperformance.co.uk/" target="_blank" rel="noopener">PSI Performance</a>, <a href="https://glasgow.quantumtuning.co.uk/" target="_blank" rel="noopener">Quantum Glasgow</a>, <a href="https://tuneitscotland.co.uk/" target="_blank" rel="noopener">Tune-it Scotland</a></li>
       <li>Manufacturer UK press and brochure data for each model; owners' manuals for fuel grade, oil specification and track-use warranty wording.</li>
@@ -804,6 +952,19 @@ const MODS = [
  {id:"fronttint",cat:"Lighting & glass",part:null,name:"Dark front side tint",what:"Tint on the front side windows below 70% combined light transmission.",why:"Listed so you can recognise it: police can issue a prohibition notice.",diff:3,who:"Pro",cost:[100,250],gain:"None",legal:"illegal",declare:true,mot:"Illegal below 70% (front sides) or 75% (windscreen).",order:4,goals:[]},
  {id:"ledbulbs",cat:"Lighting & glass",part:null,name:"LED bulbs in halogen lamps",what:"Retrofit LED bulbs in headlamps designed for halogen.",why:"Listed so you can recognise it. For LED light, fit complete approved LED headlamp units.",diff:1,who:"DIY",cost:[30,120],gain:"None legal",legal:"illegal",declare:true,mot:"MOT fail: 'light source and lamp not compatible'.",order:4,goals:[]},
 
+
+ {id:"halogenup",cat:"Lighting & glass",part:null,name:"Upgraded halogen bulbs",what:"E-marked high-output halogen bulbs, e.g. Philips RacingVision GT200 or Osram Night Breaker, in the factory halogen headlamps.",why:"The legal way to get more light from halogen headlamps.",diff:1,who:"DIY",cost:[25,60],gain:"Up to +150–200% claimed light",legal:"ok",declare:false,mot:"Legal when E-marked for road use. Shorter bulb life; replace in pairs.",order:1,goals:["road"]},
+ {id:"restore",cat:"Lighting & glass",part:null,name:"Headlamp lens restoration",what:"Sanding and polishing yellowed lenses, then sealing with a UV-resistant clear coat.",why:"Cloudy lenses cut light output and scatter the beam.",diff:2,who:"DIY+",cost:[40,120],gain:"Restores output",legal:"ok",declare:false,mot:"Badly degraded lenses can fail; restoration helps pass.",order:1,goals:["road","show"]},
+ {id:"oemled",cat:"Lighting & glass",part:null,name:"Factory LED / matrix headlamp upgrade",what:"Complete LED or matrix units from a higher trim or facelift model of your car, plus wiring and coding.",why:"Modern light output and looks, fully legal when done properly.",diff:4,who:"Pro",cost:[800,3000],gain:"Big visibility gain",legal:"check",declare:true,mot:"Units must be approved for LED. Light sources over 2,000 lumens need self-levelling and headlamp cleaning. Beam aim checked.",order:4,goals:["road","show"]},
+ {id:"aftled",cat:"Lighting & glass",part:null,name:"Approved aftermarket LED headlamp units",what:"Complete E-marked LED headlamp units for your model (common for older and classic cars).",why:"Legal LED light where no factory upgrade exists.",diff:3,who:"DIY+",cost:[150,700],gain:"Better visibility",legal:"check",declare:true,mot:"Must be E-marked as a complete unit for the correct traffic side, with levelling where required.",order:4,goals:["road","show"]},
+ {id:"projector",cat:"Lighting & glass",part:null,name:"Projector retrofit into halogen housings",what:"Bi-xenon or bi-LED projectors built into the original halogen headlamp shells.",why:"Listed so you can recognise it: the finished lamp isn't type-approved.",diff:5,who:"Pro",cost:[300,900],gain:"None legal",legal:"illegal",declare:true,mot:"Not type-approved for road use; likely MOT fail for light source and lamp not compatible.",order:4,goals:[]},
+ {id:"hidkit",cat:"Lighting & glass",part:null,name:"HID conversion kit",what:"Xenon bulbs and ballasts fitted to halogen headlamps.",why:"Listed so you can recognise it: GOV.UK says these kits are not legal to sell or use.",diff:2,who:"DIY",cost:[40,150],gain:"None legal",legal:"illegal",declare:true,mot:"MOT fail and illegal. Buy complete HID units approved to ECE R98 instead.",order:4,goals:[]},
+ {id:"headtint",cat:"Lighting & glass",part:null,name:"Headlamp tint film / smoked lenses",what:"Smoked or coloured film or paint over headlamps and lights.",why:"Styling only; cuts light output.",diff:2,who:"DIY",cost:[30,200],gain:"None",legal:"check",declare:true,mot:"Headlamps must emit white or yellow light; any other colour is a major fail. Dark smoke that reduces output or hides the lamp is also likely to fail.",order:4,goals:["show"]},
+ {id:"seqind",cat:"Lighting & glass",part:null,name:"Sequential (dynamic) indicators",what:"Approved lamp units or factory-style mirror indicators with a sweeping amber pattern.",why:"Modern look, often from a facelift model.",diff:3,who:"DIY+",cost:[150,600],gain:"Looks",legal:"check",declare:true,mot:"Legal only as complete E-marked units that flash amber at the correct rate. Stick-on LED strips aren't approved.",order:4,goals:["show"]},
+ {id:"drlcode",cat:"Lighting & glass",part:null,name:"DRL and lighting coding",what:"Changing DRL brightness, switchback indicator behaviour, coming-home lights or cornering lights with a diagnostic tool.",why:"Personalise factory lights without new hardware.",diff:2,who:"DIY+",cost:[0,150],gain:"Personalisation",legal:"check",declare:true,mot:"DRLs must stay white, stay working, and dim or switch off with the headlamps.",order:4,goals:["show","road"]},
+ {id:"drlcolour",cat:"Lighting & glass",part:null,name:"Coloured or RGB DRL kit",what:"Colour-changing or coloured LED strips used as daytime running lights.",why:"Listed so you can recognise it: DRLs must be white on the road.",diff:2,who:"DIY",cost:[30,150],gain:"Show only",legal:"illegal",declare:true,mot:"Red, blue and green at the front are reserved or prohibited; approved DRLs are white and marked RL.",order:4,goals:[]},
+ {id:"auxlamps",cat:"Lighting & glass",part:null,name:"Auxiliary driving lamps / light bar",what:"Extra main-beam driving lamps or an LED light bar.",why:"More reach on unlit Highland roads.",diff:3,who:"DIY+",cost:[100,600],gain:"Main-beam reach",legal:"check",declare:true,mot:"Must be E-marked, in a matched pair, and only work with main beam. Many light bars aren't road-approved.",scot:"Useful on the A9, A82 and NC500 at night, used only where main beam is allowed.",order:4,goals:["road"]},
+ {id:"halo",cat:"Lighting & glass",part:null,name:"Halo / angel-eye rings",what:"Ring-style position lamps inside or around the headlamps.",why:"Signature look.",diff:3,who:"DIY+",cost:[60,300],gain:"Looks",legal:"check",declare:true,mot:"Only white approved position lamps are legal at the front; coloured rings aren't.",order:4,goals:["show"]},
  {id:"seats",cat:"Interior & safety",part:null,name:"Bucket seats",what:"Fixed-back or reclining buckets from Recaro, Corbeau (UK), Cobra (UK) or Sparco on proper subframes.",why:"Holds you in place so you can feel the car.",diff:3,who:"DIY+",cost:[600,3000],gain:"Driver support",legal:"check",declare:true,mot:"Seat must be securely mounted; airbag warning light is a fail.",scot:"Side-airbag seats need a resistor or coding done properly.",order:4,goals:["track"]},
  {id:"harness",cat:"Interior & safety",part:null,name:"Harness + harness bar",what:"Four- or six-point harness mounted to a harness bar or cage.",why:"Motorsport restraint. Not a road-safety upgrade.",diff:4,who:"Pro",cost:[300,900],gain:"Track restraint",legal:"track",declare:true,mot:"Standard seatbelts must stay fitted and working for road use.",order:5,req:["seats"],goals:["track"]},
  {id:"cage",cat:"Interior & safety",part:null,name:"Half or full roll cage",what:"Bolt-in or welded cage built to Motorsport UK specs.",why:"Required for many race series.",diff:5,who:"Pro",cost:[700,4000],gain:"Motorsport safety",legal:"track",declare:true,mot:"Road use without helmets is dangerous; padding required.",order:5,goals:["track"]},
@@ -885,6 +1046,19 @@ const KIT = {
  dashcam:["Front and rear camera","Hard-wire kit with low-voltage cut-off","High-endurance microSD card"],
  laptimer:["GPS lap timer","OBD dongle for data","Mount"],
  tuition:["Booked coaching session","Driving licence and helmet (track days)"],
+
+ halogenup:["E-marked road-legal bulbs in the correct type (H7, H4…)","Nitrile gloves (don't touch the glass)","Beam check after fitting"],
+ restore:["Restoration kit: wet-and-dry papers, polish","UV-resistant clear coat","Masking tape"],
+ oemled:["Complete LED/matrix units for your exact model","Wiring adaptor loom","Levelling sensor and washers if required","Coding session","Beam alignment"],
+ aftled:["E-marked LED headlamp units for right-hand-drive","Wiring adaptors","Beam alignment"],
+ projector:["Don't: buy complete approved units instead"],
+ hidkit:["Don't: buy complete ECE R98 HID units instead"],
+ headtint:["Only very light film, if any","Check colour stays white"],
+ seqind:["E-marked sequential indicator units","Load resistors or coding if needed"],
+ drlcode:["Diagnostic tool or app for your make","Stable battery supply while coding","Backup of original coding"],
+ drlcolour:["Don't use on the road; white RL-marked DRLs only"],
+ auxlamps:["E-marked driving lamp pair","Relay and fused wiring switched with main beam","Mounting brackets"],
+ halo:["E-marked white position lamp rings or approved units","Wiring and coding"],
  canards:["Canard set","3M double-sided tape and/or screws","Adhesion promoter and surface cleaner"],
  sideskirt:["Side skirt set","Screws, rivnuts or 3M tape","Adhesion promoter"],
  rearsplit:["Rear side splitter pair","Screws and 3M tape","Surface cleaner"],
@@ -915,6 +1089,87 @@ const LAIRD = {
  focusst:{tune:["Stage 1: up to 355bhp and 549Nm · workshop upload £399.99 (rolling road optional)","Switchable power: normal mode about 20% down, full power in Sport","Recommended with an SD Performance or Airtec intake"],
   style:[["Maxton Focus Mk4 ST/ST-Line front splitter","£149"],["Airtec aluminium under tray","£479.50"],["SD wheel spacers","from £76.95"],["Carbon fibre weighted gear knob","£50"],["Sun strip / body vinyls","from £15"]]}
 };
+
+
+/* ---------- DATA: insurance loadings ----------
+   Main figures: cinch study (July 2025) comparing quotes in 10 UK cities with one modification changed.
+   "est" = no direct figure in that study; mapped to the closest category. */
+const INS_CATS = {
+ remap:{n:"Engine remap / software",p:15.93,src:"cinch"},
+ exhaust:{n:"Exhaust changes",p:15.93,src:"cinch"},
+ suspension:{n:"Suspension changes",p:15.93,src:"cinch"},
+ bodykit:{n:"Body kit (3+ styling parts)",p:15.93,src:"cinch"},
+ bodypart:{n:"Individual styling parts",p:4.52,src:"cinch (side skirts)"},
+ spoiler:{n:"Rear spoiler / aerofoil",p:12.10,src:"cinch"},
+ tint:{n:"Tinted windows",p:12.10,src:"cinch"},
+ brakes:{n:"Uprated brakes",p:4.52,src:"cinch"},
+ intake:{n:"Intake / air filter",p:4.52,src:"cinch (air filter)"},
+ paint:{n:"Non-standard paint / wrap",p:4.52,src:"cinch"},
+ drivetrain:{n:"Drivetrain parts",p:4.52,src:"est"},
+ interior:{n:"Seats and interior",p:4.52,src:"est"},
+ wheels:{n:"Alloy wheels / spacers",p:0.79,src:"cinch"},
+ lights:{n:"Lights",p:0.79,src:"cinch (driving lights)"},
+ minor:{n:"Minor trim",p:0.79,src:"est"},
+ security:{n:"Security (possible discount)",p:0,src:"insurer-dependent"},
+ none:{n:"Not usually a modification",p:0,src:"—"},
+ specialist:{n:"Motorsport equipment",p:null,src:"specialist cover"},
+ illegal:{n:"Illegal on the road",p:null,src:"likely to void cover"}
+};
+const INS_MAP = {
+ remap:["stage1","stage2","tcu","box","crackle","e85","fuel","hybrid"],
+ exhaust:["catback","valved","gpfback","downpipe"],
+ suspension:["springs","coilovers","arb","bushes","strutbar"],
+ styling:["splitter","canards","sideskirt","rearsplit","diffuser","bonnetext","grille","rearwin","eyebrows"],
+ spoiler:["spoilercap","wingraise"],
+ tint:["reartint"],
+ brakes:["pads","lines","bbk","discs"],
+ intake:["intake","turboinlet","ic","chargepipes"],
+ paint:["wrap","sunstrip"],
+ drivetrain:["lsd","clutch","mounts","oilcool"],
+ interior:["seats"],
+ wheels:["forged","winter","spacers"],
+ lights:["oemled","aftled","seqind","auxlamps","halo","drlcode","headtint"],
+ minor:["undertray","gearknob"],
+ security:["tracker","immob"],
+ none:["health","tyres","align","fluid","obdlock","dashcam","laptimer","tuition","bonnetstruts","halogenup","restore"],
+ specialist:["harness","cage"],
+ illegal:["decat","gpfdel","fronttint","ledbulbs","projector","hidkit","drlcolour"]
+};
+const INS_OF = {}; Object.entries(INS_MAP).forEach(([k,ids]) => ids.forEach(id => INS_OF[id] = k));
+const SPECIALIST_HINT = ["stage2","hybrid","e85","fuel","downpipe"];
+function insuranceEstimate(ids, base){
+  const styling = ids.filter(id => INS_OF[id] === "styling");
+  const groups = {};
+  ids.forEach(id => {
+    let k = INS_OF[id]; if(!k) return;
+    if(k === "styling") k = styling.length >= 3 ? "bodykit" : "bodypart";
+    (groups[k] = groups[k] || []).push(id);
+  });
+  const rows = Object.entries(groups).map(([k,m]) => ({k, cat:INS_CATS[k], mods:m}))
+    .sort((a,b) => (b.cat.p ?? -1) - (a.cat.p ?? -1));
+  let running = base; const steps = [];
+  rows.forEach(r => { if(typeof r.cat.p === "number" && r.cat.p > 0){ const add = running * r.cat.p/100; steps.push({k:r.k, from:running, add}); running += add; } });
+  const warnings = [];
+  if(groups.illegal) warnings.push({k:"bad", t:"Illegal mods on the list: an insurer can refuse cover or void the policy, and you'd be treated as uninsured."});
+  if(groups.specialist) warnings.push({k:"track", t:"Harnesses and cages usually need a specialist or track-day policy; many road insurers won't quote."});
+  if(ids.some(id => SPECIALIST_HINT.includes(id))) warnings.push({k:"warn", t:"Stage 2 and bigger builds are often declined by mainstream insurers; expect to use a modified-car specialist."});
+  if(groups.security) warnings.push({k:"good", t:"Thatcham trackers and approved immobilisers can reduce premiums or be required for cover on high-theft models."});
+  return {rows, steps, total:running, pct: base ? (running/base - 1)*100 : 0, warnings};
+}
+
+/* ---------- DATA: DRL colours ---------- */
+const DRL_COLOURS = [
+ {id:"white",n:"Pure white",hex:"#f4f6ff",k:"ok",t:"Legal. DRLs must emit white light, be marked RL, work as a matched pair and dim or switch off with the headlamps."},
+ {id:"warm",n:"Warm white",hex:"#ffe7b8",k:"ok",t:"Legal as long as it still reads as white and the lamp is RL-approved."},
+ {id:"cool",n:"Ice white (blue tinge)",hex:"#cfe3ff",k:"check",t:"Predominantly white light with a slight blue tinge is accepted; anything that looks blue is not."},
+ {id:"amber",n:"Amber",hex:"#ffab1f",k:"check",t:"Not a DRL colour. Amber is legal at the front only as an indicator, including factory 'switchback' units that turn amber while indicating."},
+ {id:"yellow",n:"Yellow",hex:"#ffe14a",k:"bad",t:"Not approved for aftermarket DRLs. Headlamps may be white or yellow, but DRLs are white."},
+ {id:"red",n:"Red",hex:"#ff3b3b",k:"bad",t:"Illegal at the front of a car. Red is for the rear."},
+ {id:"blue",n:"Blue",hex:"#3d7bff",k:"bad",t:"Illegal. Blue lights are reserved for emergency vehicles."},
+ {id:"green",n:"Green",hex:"#39e07a",k:"bad",t:"Illegal. Green beacons are reserved for doctors on call."},
+ {id:"purple",n:"Purple / pink",hex:"#c05cff",k:"bad",t:"Illegal. Not a permitted front-lamp colour."},
+ {id:"rgb",n:"RGB colour-changing",hex:"rgb",k:"bad",t:"Illegal on the road. Colour-changing and chasing effects aren't approved."}
+];
 
 /* ---------- DATA: model-year variants (UK spec) and body style ---------- */
 const BODY = {golfgti:"hatch",golfr:"hatch",civicr:"hatch",gryaris:"hatch3",i30n:"hatch",focusst:"hatch",fiestast:"hatch3",rs3:"hatch",a45s:"hatch",m2:"coupe",supra:"coupe",cayman:"mid",a110:"mid",mx5:"roadster",gr86:"coupe"};
@@ -1198,7 +1453,7 @@ function renderMods(){
         <div><dt>Why</dt><dd>${esc(m.why)}</dd></div>
         <div><dt>Who fits it</dt><dd>${m.who==="DIY"?"DIY friendly":m.who==="DIY+"?"Confident DIY or garage":"Specialist or tuner"} · ${DIFF[m.diff-1].n}</dd></div>
         <div><dt>MOT &amp; law</dt><dd>${esc(m.mot)}</dd></div>
-        <div><dt>Insurance</dt><dd>${m.declare?"Declare to your insurer before driving.":"Not normally a modification, but tell your insurer if unsure."}</dd></div>
+        <div><dt>Insurance</dt><dd>${m.declare?"Declare to your insurer before driving.":"Not normally a modification, but tell your insurer if unsure."} ${insLine(m.id)}</dd></div>
         ${m.req?`<div><dt>Needs first</dt><dd>${m.req.map(r=>esc(byId[r].name)).join(", ")}</dd></div>`:""}
         ${m.scot?`<div><dt>Glasgow &amp; Scotland</dt><dd>${esc(m.scot)}</dd></div>`:""}
         ${KIT[m.id]?`<div><dt>What you'll need</dt><dd><ul class="kitlist">${KIT[m.id].map(k=>`<li>${esc(k)}</li>`).join("")}</ul></dd></div>`:""}
@@ -1230,7 +1485,7 @@ function renderBuild(){
   const groups = {};
   a.mods.slice().sort((x,y) => x.order-y.order || x.diff-y.diff).forEach(m => (groups[m.order] = groups[m.order] || []).push(m));
   const keys = Object.keys(groups);
-  renderShop();
+  renderShop(); renderLightTable(); renderInsurance();
   $("#buildlist").innerHTML = keys.length ? keys.map(k => `<div class="stage"><h5>${ORDER_LABEL[k]}</h5>${groups[k].map(m => `
     <div class="brow"><div><b>${esc(m.name)}</b> <span class="legal ${m.legal}" style="margin-left:6px">${LEGAL_LABEL[m.legal]}</span></div><span class="c">${gbp(m.cost[0])}–${gbp(m.cost[1])}</span><button type="button" class="xbtn" data-remove="${m.id}" aria-label="Remove ${esc(m.name)}">✕</button></div>`).join("")}</div>`).join("")
     : `<div class="empty">Your build is empty. Add mods from the list above, or start from a preset.</div>`;
@@ -1450,6 +1705,67 @@ function renderShop(){
   el.innerHTML = `<div class="shop">${[...items].map(([k,from]) => { const id = "shop"+(i++); return `<label for="${id}"><input type="checkbox" id="${id}" data-item="${esc(k)}"${done.has(k)?" checked":""}><span>${esc(k)}</span><small>${esc(from.length>1?from.length+" mods":from[0])}</small></label>`; }).join("")}</div>`;
 }
 
+
+function insLine(id){
+  const k = INS_OF[id]; if(!k) return "";
+  if(k === "styling") return "Typical loading +4.5% on its own, about +15.9% once it's part of a 3+ piece body kit (cinch 2025).";
+  const c = INS_CATS[k];
+  if(c.p === null) return k === "illegal" ? "Likely to void cover." : "Usually needs specialist or track-day cover.";
+  if(c.p === 0) return k === "security" ? "May reduce your premium or be required by the insurer." : "";
+  return `Typical loading about +${c.p.toFixed(1)}% (${c.n.toLowerCase()}, ${c.src==="est"?"estimated":"cinch 2025"}).`;
+}
+let drl = {c:"white", m:"road"};
+function renderDrl(){
+  $("#drlswatches").innerHTML = DRL_COLOURS.map(c => `<button type="button" class="sw" role="radio" data-c="${c.id}" aria-checked="${c.id===drl.c}" style="--c:${c.hex==="rgb"?"conic-gradient(#ff3b3b,#39e07a,#3d7bff,#c05cff,#ff3b3b)":c.hex}"><i${c.hex==="rgb"?' style="background:conic-gradient(#ff3b3b,#39e07a,#3d7bff,#c05cff,#ff3b3b)"':""}></i>${esc(c.n)}</button>`).join("");
+  const c = DRL_COLOURS.find(x => x.id === drl.c);
+  $("#drlstrips").setAttribute("stroke", c.hex === "rgb" ? "url(#rgbg)" : c.hex);
+  const o = $("#drlverdict");
+  if(drl.m === "show"){
+    o.className = "lezout " + (c.k === "ok" ? "ok" : "track");
+    o.innerHTML = `<b>${c.k==="ok" ? "Fine anywhere" : "Show use only"}</b>${c.k==="ok" ? esc(c.t) : "Off public roads, on private land or at a show you can run any colour. On the road it must be switched off and ideally disconnected; police can still act if it's usable while driving."}`;
+  } else {
+    const map = {ok:["ok","Road legal"],check:["warn","Check before fitting"],bad:["bad","Not road legal"]};
+    o.className = "lezout " + map[c.k][0];
+    o.innerHTML = `<b>${map[c.k][1]}</b>${esc(c.t)}`;
+  }
+}
+function renderLightTable(){
+  const ids = ["halogenup","restore","drlcode","oemled","aftled","seqind","halo","auxlamps","headtint","ledbulbs","hidkit","projector","drlcolour"];
+  $("#lighttable").innerHTML = ids.map(id => { const m = byId[id], inb = state.build.includes(id);
+    return `<tr><td><b>${esc(m.name)}</b>${esc(m.what)}</td><td class="num" style="white-space:nowrap">${gbp(m.cost[0])}–${gbp(m.cost[1])}</td><td><span class="legal ${m.legal}">${LEGAL_LABEL[m.legal]}</span></td><td>${esc(insLine(id) || "Not usually a modification.")}</td><td>${esc(m.mot)}</td><td><button type="button" class="addbtn" data-add="${id}" aria-pressed="${inb}" style="padding:8px 10px;font-size:.7rem">${inb?"In build ✓":"Add"}</button></td></tr>`; }).join("");
+}
+function renderInsurance(){
+  let base = +$("#basePrem").value;
+  if(!isFinite(base) || base < 0) base = 0;
+  const e = insuranceEstimate(state.build, base);
+  $("#ins-total").textContent = gbp(e.total);
+  $("#ins-pct").textContent = e.pct > 0.05 ? `+${e.pct.toFixed(1)}% on ${gbp(base)}` : "no change";
+  $("#ins-extra").textContent = gbp(e.total - base);
+  $("#ins-month").textContent = `${gbp((e.total-base)/12)} a month`;
+  $("#ins-flags").innerHTML = e.warnings.map(f => `<div class="flag ${f.k}"><span>${esc(f.t)}</span></div>`).join("") || `<p class="note">Add mods to the build to see the estimate.</p>`;
+  $("#ins-rows").innerHTML = e.rows.length ? e.rows.map(r => {
+    const st = e.steps.find(x => x.k === r.k);
+    const val = r.cat.p === null ? (r.k==="illegal"?"void risk":"specialist") : r.cat.p === 0 ? (r.k==="security"?"may reduce":"£0") : `+${r.cat.p.toFixed(1)}% · ${gbp(st.add)}`;
+    return `<div class="insrow"><span>${esc(r.cat.n)}</span><b>${val}</b><small>${r.mods.map(id => esc(byId[id].name)).join(", ")}${r.cat.src==="est"?" · estimated":""}</small></div>`;
+  }).join("") : `<div class="empty">Your build is empty. Add mods or load a preset in the build planner.</div>`;
+  // stacked bar
+  const W = 640, L = 0, H = 120, total = Math.max(e.total, 1);
+  const x = v => L + (v/total)*(W-L);
+  let svg = `<rect x="0" y="24" width="${x(base)}" height="36" fill="var(--muted)" opacity=".35"/><text x="6" y="47" fill="var(--fg)" style="font:600 12px var(--body)">Current ${gbp(base)}</text>`;
+  const cols = ["var(--sodium)","var(--bad)","var(--led)","var(--track)","var(--ok)","var(--warn)"];
+  e.steps.forEach((st,i) => {
+    const x0 = x(st.from), w = x(st.from+st.add) - x0;
+    svg += `<rect x="${x0}" y="24" width="${Math.max(w,1)}" height="36" fill="${cols[i%cols.length]}" opacity=".85"><title>${esc(INS_CATS[st.k].n)}: ${gbp(st.add)}</title></rect>`;
+  });
+  svg += `<text x="${W}" y="16" text-anchor="end" fill="var(--sodium)" style="font:500 12px var(--mono)">${gbp(e.total)} estimated</text>`;
+  svg += `<text x="0" y="84" fill="var(--muted)" style="font:400 11px var(--mono)">Coloured segments = added cost per mod type, largest first</text>`;
+  $("#insChart").innerHTML = svg;
+}
+function renderInsRef(){
+  const keys = ["remap","exhaust","suspension","bodykit","spoiler","tint","brakes","intake","paint","bodypart","drivetrain","interior","wheels","lights","minor"];
+  $("#insref").innerHTML = keys.map(k => `<div><span>${esc(INS_CATS[k].n)}${INS_CATS[k].src==="est"?" <span class=\"note\">est</span>":""}</span><b>+${INS_CATS[k].p.toFixed(1)}%</b></div>`).join("");
+}
+
 /* ---------- init & events ---------- */
 function init(){
   $("#modcountpill").textContent = `${MODS.length} modifications`;
@@ -1458,7 +1774,7 @@ function init(){
   const ys = []; for(let y=2026; y>=1980; y--) ys.push(`<option value="${y}"${y===2012?" selected":""}>${y}</option>`);
   $("#lezyear").innerHTML = ys.join("");
   $("#lezmonth").innerHTML = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].map((m,i) => `<option value="${i+1}">${m}</option>`).join("");
-  renderRemaps(); renderGarages(); drawGaugeTicks(); renderCarList(); renderCar(); updateGauge(); renderMods(); renderBuild(); renderDiffScale(); updateTint(); updateLez();
+  renderRemaps(); renderGarages(); renderDrl(); renderInsRef(); drawGaugeTicks(); renderCarList(); renderCar(); updateGauge(); renderMods(); renderBuild(); renderDiffScale(); updateTint(); updateLez();
   try{ trails(); }catch(e){}
 
   $$(".seg button").forEach(b => b.addEventListener("click", () => {
@@ -1522,6 +1838,17 @@ function init(){
     const k = e.target.dataset && e.target.dataset.item; if(k == null) return;
     const done = new Set(store.get("cr_shop", [])); e.target.checked ? done.add(k) : done.delete(k); store.set("cr_shop", [...done]);
   });
+  $("#lighttable").addEventListener("click", e => { const b = e.target.closest("[data-add]"); if(b) toggleBuild(b.dataset.add); });
+  $("#drlswatches").addEventListener("click", e => { const b = e.target.closest("[data-c]"); if(!b) return; drl.c = b.dataset.c; renderDrl(); });
+  $("#drlswatches").addEventListener("keydown", e => {
+    if(!["ArrowRight","ArrowLeft"].includes(e.key)) return; e.preventDefault();
+    const i = DRL_COLOURS.findIndex(c => c.id === drl.c), n = DRL_COLOURS.length;
+    drl.c = DRL_COLOURS[(i + (e.key==="ArrowRight"?1:-1) + n) % n].id; renderDrl(); $(`#drlswatches [data-c="${drl.c}"]`).focus();
+  });
+  $$("#drlmode button").forEach(b => b.addEventListener("click", () => { drl.m = b.dataset.m; $$("#drlmode button").forEach(x => x.setAttribute("aria-pressed", x===b)); renderDrl(); }));
+  $("#basePrem").value = store.get("cr_prem", 900);
+  $("#basePrem").addEventListener("input", () => { store.set("cr_prem", +$("#basePrem").value || 0); renderInsurance(); });
+  renderInsurance();
   $("#clearbuild").addEventListener("click", () => { state.build = []; renderMods(); renderBuild(); toast("Build cleared"); });
   ["glass","film","pane"].forEach(id => $("#"+id).addEventListener("input", updateTint));
   ["lezfuel","lezyear","lezmonth"].forEach(id => $("#"+id).addEventListener("change", updateLez));
