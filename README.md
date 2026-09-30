@@ -3,9 +3,10 @@
 Hot hatch and sports car tuning guide for Glasgow and the west of Scotland.
 
 - 15 cars with 30 UK model-year variants (specs, stage 1/2 estimates, watch items)
-- Remap options and per-car tuning platforms
-- 52 modifications rated for difficulty, cost, gain, MOT and legal status
-- Build planner with cost, power, insurance and legality checks (saved in the browser)
+- Remap options, per-car tuning platforms and stage 1/2/3 requirements
+- Laird Performance (Cambuslang) tuning packages and Maxton/Airtec styling prices for Fiesta ST and Focus ST
+- 66 modifications (performance and styling) rated for difficulty, cost, gain, MOT and legal status, each with a "what you'll need" list
+- Build planner with cost, power, insurance and legality checks and a merged parts checklist (saved in the browser)
 - Glasgow LEZ checker, window-tint checker, Scottish law notes
 - Trustpilot-screened garage list (checked 30 September 2026)
 
@@ -38,7 +39,7 @@ python3 -m http.server 8000
 
 ## Updating data
 
-Car specs, model-year variants, mods, remap platforms and garages are plain JavaScript arrays near the top of the `<script>` block in `index.html` (`CARS`, `VARIANTS`, `MODS`, `PLATFORM`, `GARAGES`).
+Car specs, model-year variants, mods, remap platforms and garages are plain JavaScript arrays near the top of the `<script>` block in `index.html` (`CARS`, `VARIANTS`, `MODS`, `KIT`, `STAGE_REQS`, `LAIRD`, `PLATFORM`, `GARAGES`).
 
 ## Disclaimer
 

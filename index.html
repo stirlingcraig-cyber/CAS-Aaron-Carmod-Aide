@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Hot hatch and sports car tuning guide for Glasgow and Scotland: model-year specs, remap options, rated mods, build planner, screened garages and UK legal checks.">
+<meta name="description" content="Hot hatch and sports car tuning guide for Glasgow and Scotland: model-year specs, remap stages, rated mods including styling, build planner, screened garages and UK legal checks.">
 <meta name="theme-color" content="#0e1116">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <title>Clydeside Redline</title>
@@ -295,6 +295,23 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 .screen{font:600 .68rem/1 var(--body);letter-spacing:.08em;text-transform:uppercase;padding:6px 8px;border-radius:6px;white-space:nowrap}
 .screen.pass{color:var(--ok);background:var(--ok-dim)} .screen.caution{color:var(--warn);background:var(--warn-dim)}
 .screen.fail{color:var(--bad);background:var(--bad-dim)} .screen.thin{color:var(--muted);background:var(--panel-2)}
+
+.kitlist{margin:4px 0 0;padding-left:1.1em;display:grid;gap:3px}
+.stagereqs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.stagereqs{grid-template-columns:1fr}}
+.sreq{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:10px;align-content:start}
+.sreq h4{margin:0;font:900 1.6rem/1 var(--display);text-transform:uppercase;color:var(--sodium)}
+.sreq h5{margin:0;font:500 .66rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sreq ul{margin:4px 0 0;padding-left:1.1em;font-size:.9rem;color:#d3d1c9;display:grid;gap:3px}
+.sreq .carnote{font-size:.85rem;color:var(--led)}
+.ltable{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:8px}
+.ltable td{padding:8px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.ltable td:last-child{text-align:right;white-space:nowrap;font-family:var(--mono);color:var(--sodium);padding-left:12px}
+.shop{display:grid;gap:4px}
+.shop label{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;padding:7px 0;border-bottom:1px solid var(--line);font-size:.9rem;cursor:pointer}
+.shop input{accent-color:var(--sodium);margin-top:3px}
+.shop input:checked + span{color:var(--muted);text-decoration:line-through}
+.shop small{font:400 .72rem/1.3 var(--mono);color:var(--muted);text-align:right}
 .toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(140%);background:var(--sodium);color:var(--asphalt);font:700 .85rem/1 var(--body);padding:12px 16px;border-radius:99px;transition:transform .25s;z-index:30;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 </style>
@@ -325,7 +342,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
       <p class="lede">Pick your car, see what it makes stock and what owners and tuners typically get from it, then plan a build that stays road legal, insurable and MOT-proof on Scottish roads. Every modification is rated for difficulty, cost and legality.</p>
       <div class="hero-meta">
         <span class="pill">15 cars · 30 model-year variants</span>
-        <span class="pill" id="modcountpill">52 modifications</span>
+        <span class="pill" id="modcountpill">66 modifications</span>
         <span class="pill">UK law · checked Sept 2026</span>
         <span class="pill">Glasgow LEZ aware</span>
       </div>
@@ -454,6 +471,12 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
       <p class="note" style="margin-top:12px">Tool support changes with ECU software versions. Confirm your exact car and ECU version with the tuner before paying.</p>
     </div>
 
+    <h3 style="margin:36px 0 6px">What each stage needs</h3>
+    <p class="note" id="stageNote" style="margin-bottom:12px"></p>
+    <div class="stagereqs" id="stagereqs"></div>
+
+    <div class="panel" id="lairdPanel" style="margin-top:20px"></div>
+
     <h3 style="margin:36px 0 12px">How the file gets on the car</h3>
     <div class="flash">
       <div class="law"><h4>OBD flash</h4><p>Written through the diagnostic port in 10–30 minutes. Quick and reversible if the tuner saves your original file.</p></div>
@@ -492,9 +515,16 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
         <p class="eyebrow" style="margin-top:20px">Build checks</p>
         <div class="flags" id="flags"></div>
       </div>
-      <div class="panel">
-        <p class="eyebrow">Recommended fitting order</p>
-        <div class="stagecol" id="buildlist" style="margin-top:12px"></div>
+      <div class="stagecol">
+        <div class="panel">
+          <p class="eyebrow">Recommended fitting order</p>
+          <div class="stagecol" id="buildlist" style="margin-top:12px"></div>
+        </div>
+        <div class="panel">
+          <p class="eyebrow">Parts &amp; items checklist</p>
+          <p class="note" style="margin-top:6px">Everything the build needs, merged across mods. Tick items off as you buy or book them.</p>
+          <div id="shoplist" style="margin-top:10px"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -594,6 +624,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
         <h3 style="margin-top:6px">Dynos &amp; track</h3>
         <div class="venues">
           <div class="venue"><b>Knockhill Racing Circuit</b><span>Fife · ~1 hr from Glasgow</span><p>Scotland's national circuit. Open-pitlane car track days and newcomer track nights. Strict 105dB static noise limit, so check a loud exhaust before you book.</p></div>
+          <div class="venue"><b>Laird Performance</b><span>Cambuslang</span><p>Ford EcoBoost tuning specialists with an in-house rolling road; also sell Maxton and Airtec styling parts.</p></div>
           <div class="venue"><b>Dyna Tune</b><span>East Kilbride</span><p>Dynapack hub dyno, remapping and diagnostics, around 30 minutes from the city centre.</p></div>
           <div class="venue"><b>Autotec Scotland</b><span>Inverclyde</span><p>4WD Dyno Developments rolling road and laser alignment ramps; recommended for Greenock and Port Glasgow owners on local forums.</p></div>
           <div class="venue"><b>Star Performance</b><span>Glenrothes, Fife</span><p>Long-standing Scottish rolling road often recommended on marque forums for consistent power runs.</p></div>
@@ -687,6 +718,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
       <li><a href="https://dynatune.co.uk/aboutus/" target="_blank" rel="noopener">Dyna Tune, East Kilbride</a> · <a href="https://autotecscotland.co.uk/services/performance-tuning/" target="_blank" rel="noopener">Autotec Scotland</a></li>
       <li><a href="https://www.pistonheads.com/gassing/topic.asp?h=0&amp;f=118&amp;t=1635495" target="_blank" rel="noopener">PistonHeads Scotland forum: Glasgow-area rolling roads</a></li>
       <li>Trustpilot profiles checked 30 Sept 2026: <a href="https://www.trustpilot.com/review/www.atseuromaster.co.uk" target="_blank" rel="noopener">ATS Euromaster</a>, <a href="https://www.trustpilot.com/review/www.kwik-fit.com" target="_blank" rel="noopener">Kwik Fit</a>, <a href="https://www.trustpilot.com/review/www.national.co.uk" target="_blank" rel="noopener">National Tyres</a>, <a href="https://www.trustpilot.com/review/www.halfords.com" target="_blank" rel="noopener">Halfords</a>, <a href="https://www.trustpilot.com/review/quantumtuning.co.uk" target="_blank" rel="noopener">Quantum Tuning</a>, <a href="https://www.trustpilot.com/review/tuneitscotland.co.uk" target="_blank" rel="noopener">Tune-it Scotland</a>, <a href="https://www.trustpilot.com/review/caraholicsremap.co.uk" target="_blank" rel="noopener">Car'aholics Remapping</a>, <a href="https://www.trustpilot.com/review/awesomegti.com" target="_blank" rel="noopener">Awesome GTI</a>, <a href="https://www.trustpilot.com/review/www.merlinmotorsport.co.uk" target="_blank" rel="noopener">Merlin Motorsport</a></li>
+      <li>Laird Performance: <a href="https://www.laird-performance.co.uk/about-us-1-w.asp" target="_blank" rel="noopener">about</a>, <a href="https://laird-performance.co.uk/fiesta-st-mk8-tuning-91-c.asp" target="_blank" rel="noopener">Fiesta ST Mk8 tuning</a>, <a href="https://www.laird-performance.co.uk/visuals--splitters-139-c.asp" target="_blank" rel="noopener">Fiesta visuals &amp; splitters</a>, <a href="https://www.laird-performance.co.uk/visuals-167-c.asp" target="_blank" rel="noopener">Focus ST Mk4 visuals</a>, <a href="https://www.laird-performance.co.uk/laird-performance-stage-1-up-to-355bhp---549nm-workshop-upload-11088-p.asp" target="_blank" rel="noopener">Focus ST stage 1</a>, <a href="https://www.theimi.org.uk/member-register/business/129066" target="_blank" rel="noopener">IMI register</a></li>
       <li>Business websites for services offered: <a href="https://www.psiperformance.co.uk/" target="_blank" rel="noopener">PSI Performance</a>, <a href="https://glasgow.quantumtuning.co.uk/" target="_blank" rel="noopener">Quantum Glasgow</a>, <a href="https://tuneitscotland.co.uk/" target="_blank" rel="noopener">Tune-it Scotland</a></li>
       <li>Manufacturer UK press and brochure data for each model; owners' manuals for fuel grade, oil specification and track-use warranty wording.</li>
     </ol>
@@ -710,8 +742,8 @@ const CARS = [
  {id:"civicr",name:"Honda Civic Type R",gen:"FL5",cls:"hatch",years:"2022–",engine:"2.0 VTEC Turbo four-cylinder (K20C1)",layout:"FWD, helical LSD",box:"6-speed manual",ps:329,psNote:"UK spec",nm:420,z62:5.4,kg:1430,s1:[345,365],s2:[365,390],ceiling:"Big gains need turbo work; most owners stop at intake, intercooler and a flash tune.",watch:["Clutch and flywheel are the first weak link with more torque","Intake heat soak on track and in traffic","Front tyres wear fast on track days","Check new-car availability: many UK buyers are on the used market"],status:"New and used"},
  {id:"gryaris",name:"Toyota GR Yaris",gen:"GXPA16",cls:"hatch",years:"2020–",engine:"1.6 turbo three-cylinder (G16E-GTS)",layout:"AWD (GR-Four), optional Torsen diffs",box:"6MT; 8-speed auto from 2024",ps:280,psNote:"2020–23 cars 261PS / 360Nm",nm:390,z62:5.5,kg:1280,s1:[300,320],s2:[320,350],ceiling:"High-output builds exist but engine strength on hard-tuned cars is widely debated on owners' forums.",watch:["Owners' forums discuss engine failures on some hard-tuned, heavily tracked cars: tune conservatively and log","Clutch heat in repeated launches","Rear diff and gearbox oil temperatures on track","Early cars had a recall list: check it's all done"],status:"On sale"},
  {id:"i30n",name:"Hyundai i30 N",gen:"PDe",cls:"hatch",years:"2017–2024",engine:"2.0 T-GDi four-cylinder (Theta II)",layout:"FWD, electronic LSD",box:"6MT or 8-speed wet DCT",ps:280,psNote:"Performance model; early base cars 250PS",nm:392,z62:5.9,kg:1480,s1:[300,320],s2:[320,345],ceiling:"Stage 2 plus a hybrid turbo is where most UK builds end.",watch:["No longer sold new in the UK: buy on history","DCT needs gearbox software for bigger torque","Clutch on manuals above stage 2","Rev-matching and N modes reset after battery disconnection on some cars"],status:"Used market"},
- {id:"focusst",name:"Ford Focus ST",gen:"Mk4",cls:"hatch",years:"2019–2025",engine:"2.3 EcoBoost four-cylinder",layout:"FWD, electronic LSD",box:"6MT or 7-speed auto",ps:280,psNote:"Diesel ST 190PS not covered",nm:420,z62:5.7,kg:1510,s1:[320,335],s2:[335,360],ceiling:"Strong torque already; clutch and front tyres limit what's usable.",watch:["Clutch slip on manuals is common above stage 1","Front tyres and torque steer in the wet","Heat soak in stop-start city traffic","Production ended in 2025: buy on service history"],status:"Used market"},
- {id:"fiestast",name:"Ford Fiesta ST",gen:"Mk8",cls:"hatch",years:"2018–2023",engine:"1.5 EcoBoost three-cylinder",layout:"FWD, Quaife LSD on Performance Pack",box:"6-speed manual",ps:200,psNote:"Torque 290Nm on pre-2020 cars",nm:320,z62:6.5,kg:1262,s1:[220,235],s2:[235,255],ceiling:"Turbo size limits stage 2; bigger numbers need a hybrid turbo.",watch:["Clutch is the usual stage 2 limit","Performance Pack (LSD) cars are the ones to buy","Rear beam: adjustable settings are limited, so dampers matter","Out of production: parts support is still very good"],status:"Used market"},
+ {id:"focusst",name:"Ford Focus ST",gen:"Mk4",cls:"hatch",years:"2019–2025",engine:"2.3 EcoBoost four-cylinder",layout:"FWD, electronic LSD",box:"6MT or 7-speed auto",ps:280,psNote:"Diesel ST 190PS not covered",nm:420,z62:5.7,kg:1510,s1:[330,360],s2:[350,380],ceiling:"Laird Performance quotes up to 355bhp and 549Nm at stage 1; clutch and front tyres limit what's usable.",watch:["Clutch slip on manuals is common above stage 1","Front tyres and torque steer in the wet","Heat soak in stop-start city traffic","Production ended in 2025: buy on service history"],status:"Used market"},
+ {id:"fiestast",name:"Ford Fiesta ST",gen:"Mk8",cls:"hatch",years:"2018–2023",engine:"1.5 EcoBoost three-cylinder",layout:"FWD, Quaife LSD on Performance Pack",box:"6-speed manual",ps:200,psNote:"Torque 290Nm on pre-2020 cars",nm:320,z62:6.5,kg:1262,s1:[240,259],s2:[262,274],ceiling:"Glasgow tuner Laird Performance quotes up to 255bhp at stage 1, 270bhp at stage 2 and 315bhp at stage 3 with hardware.",watch:["Clutch is the usual stage 2 limit","Performance Pack (LSD) cars are the ones to buy","Rear beam: adjustable settings are limited, so dampers matter","Out of production: parts support is still very good"],status:"Used market"},
  {id:"rs3",name:"Audi RS 3",gen:"8Y",cls:"hatch",years:"2021–",engine:"2.5 TFSI five-cylinder",layout:"AWD with RS Torque Splitter",box:"7-speed S tronic",ps:400,psNote:"Sportback and saloon",nm:500,z62:3.8,kg:1575,s1:[460,490],s2:[490,530],ceiling:"Big-turbo builds go much further, but need gearbox and fuel upgrades.",watch:["S tronic needs a TCU map for extra torque","Petrol particulate filter (OPF) fitted: keep it","Brakes and cooling on track","Warranty: engine software changes can affect claims"],status:"On sale"},
  {id:"a45s",name:"Mercedes-AMG A 45 S",gen:"W177",cls:"hatch",years:"2019–2025",engine:"2.0 turbo four-cylinder (M139)",layout:"AWD (4MATIC+) with Drift Mode",box:"8-speed dual-clutch",ps:421,psNote:"Most powerful production four-cylinder of its time",nm:500,z62:3.9,kg:1635,s1:[470,495],s2:[495,530],ceiling:"Already very highly stressed from the factory; margins are smaller than on other cars here.",watch:["Highly stressed stock engine: choose a conservative map","DCT software for torque","Cooling and oil temperature on track","Insurance for tuned AMGs is limited to specialist insurers"],status:"Used market"},
  {id:"m2",name:"BMW M2",gen:"G87",cls:"sports",years:"2023–",engine:"3.0 twin-turbo straight-six (S58)",layout:"RWD, Active M Differential",box:"8-speed auto or 6MT",ps:480,psNote:"2025 update 480PS; earlier cars 460PS",nm:600,z62:4.0,kg:1725,s1:[540,570],s2:[570,620],ceiling:"The S58 takes a lot of power; traction is the practical limit on a wet Scottish road.",watch:["Traction, not power, is the limit: tyres and diff first","Manual cars have lower torque (550Nm)","GPF fitted from the factory","Weight: brakes and tyres work hard on track"],status:"On sale"},
@@ -780,8 +812,109 @@ const MODS = [
  {id:"obdlock",cat:"Security",part:"ecu",name:"OBD port lock",what:"Physical lock or relocated OBD port.",why:"Slows thieves who programme new keys through the port.",diff:1,who:"DIY",cost:[50,150],gain:"Theft deterrent",legal:"ok",declare:false,mot:"Tester needs access to the port: bring the key.",order:1,goals:["road","show"]},
  {id:"dashcam",cat:"Security",part:null,name:"Front and rear dash cam",what:"Hard-wired front and rear camera with parking mode.",why:"Evidence for insurance claims and hit-and-runs.",diff:2,who:"DIY+",cost:[150,400],gain:"Evidence",legal:"ok",declare:false,mot:"Must not block more than a small area of the windscreen.",order:1,goals:["road","show"]},
  {id:"laptimer",cat:"Interior & safety",part:"ecu",name:"Lap timer / data logger",what:"GPS lap timer with OBD logging such as an AIM Solo or RaceBox.",why:"Shows real improvement from driving and mods.",diff:1,who:"DIY",cost:[150,700],gain:"Data",legal:"ok",declare:false,mot:"No effect.",order:2,goals:["track"]},
+
+ {id:"canards",cat:"Styling",part:null,name:"Front bumper canards",what:"Small winglets on the front bumper corners.",why:"Aggressive look; tiny aero effect at road speed.",diff:2,who:"DIY",cost:[44,120],gain:"Looks",legal:"check",declare:true,mot:"Edges must not be sharp or project dangerously; must not cover lights or the number plate.",src:"Laird Performance: Maxton V1–V3 for Fiesta ST Mk8, £44–£89",order:4,goals:["show"]},
+ {id:"sideskirt",cat:"Styling",part:null,name:"Side skirt diffusers",what:"Extensions under the sills, often with small vertical flaps.",why:"Visually lowers the car and links the front and rear aero.",diff:2,who:"DIY+",cost:[174,300],gain:"Looks",legal:"ok",declare:true,mot:"Must be secure with no sharp edges.",scot:"Check clearance over Glasgow speed humps and kerbs.",src:"Laird Performance: Maxton V1–V4 for Fiesta ST Mk8, £174–£219",order:4,goals:["show"]},
+ {id:"rearsplit",cat:"Styling",part:null,name:"Rear side splitters",what:"Lower corner extensions on the rear bumper.",why:"Frames the rear and pairs with a diffuser.",diff:2,who:"DIY",cost:[79,120],gain:"Looks",legal:"ok",declare:true,mot:"Must be secure with no sharp edges.",src:"Laird Performance: Maxton for Fiesta ST Mk8 and Focus ST Mk3, £79–£109",order:4,goals:["show"]},
+ {id:"diffuser",cat:"Styling",part:"catback",name:"Rear valance / diffuser",what:"Replacement lower rear panel, sometimes sold with a matching exhaust.",why:"The biggest visual change at the rear.",diff:3,who:"DIY+",cost:[149,1600],gain:"Looks",legal:"ok",declare:true,mot:"Rear fog and reflectors must stay fitted and visible; exhaust must keep the GPF.",src:"Laird Performance: Maxton valances £149–£174; diffuser + Milltek GPF-back kit for Fiesta ST Mk8 from £1,559",order:4,goals:["show"]},
+ {id:"spoilercap",cat:"Styling",part:null,name:"Spoiler cap / extension",what:"Add-on lip that extends the factory roof spoiler.",why:"Longer, more aggressive roofline.",diff:1,who:"DIY",cost:[129,180],gain:"Looks",legal:"check",declare:true,mot:"The high-level brake light must stay fully visible.",src:"Laird Performance: Maxton caps for Fiesta ST Mk8 and Focus ST Mk3, £129",order:4,goals:["show"]},
+ {id:"wingraise",cat:"Styling",part:null,name:"Spoiler lift blocks / wing raisers",what:"Machined spacers that lift the factory roof spoiler.",why:"More aggressive stance; can help keep the rear window cleaner.",diff:2,who:"DIY",cost:[65,110],gain:"Looks",legal:"check",declare:true,mot:"Re-seal fixings so water can't get in; the high-level brake light must stay visible.",src:"Laird Performance: spoiler lift kit for Fiesta Mk7 ST £64.95; LP wing raisers for Focus ST250 £99.95",order:4,goals:["show"]},
+ {id:"bonnetext",cat:"Styling",part:null,name:"Bonnet extension",what:"Trim piece extending the bonnet's leading edge.",why:"Sharper front-end look.",diff:2,who:"DIY",cost:[159,200],gain:"Looks",legal:"check",declare:true,mot:"Must not have sharp edges or obscure lights.",src:"Laird Performance: Maxton for Fiesta Mk8 2017-, from £159",order:4,goals:["show"]},
+ {id:"eyebrows",cat:"Styling",part:null,name:"Headlight eyebrows",what:"Trim strips along the top edge of the headlamps.",why:"Meaner front-end look.",diff:1,who:"DIY",cost:[49,60],gain:"Looks",legal:"check",declare:true,mot:"Must not cover any part of the headlamp lens or change the beam.",src:"Laird Performance: Maxton and Style 1 for Fiesta Mk8, £49–£49.95",order:4,goals:["show"]},
+ {id:"grille",cat:"Styling",part:null,name:"Replacement front grille",what:"Aftermarket upper grille panel.",why:"Styling, sometimes more open for airflow.",diff:2,who:"DIY+",cost:[130,250],gain:"Looks",legal:"check",declare:true,mot:"Keep radar and camera sensors clear, or driver-assist warning lights may appear.",src:"Laird Performance: Maxton grille for Fiesta ST Mk8 2018-, £132",order:4,goals:["show"]},
+ {id:"rearwin",cat:"Styling",part:null,name:"Rear window extension",what:"Trim that extends the rear screen surround or spoiler sides.",why:"Completes a styling kit.",diff:1,who:"DIY",cost:[150,200],gain:"Looks",legal:"ok",declare:true,mot:"No effect if secure.",src:"Laird Performance: Maxton for Fiesta Mk8 2017-, £154",order:4,goals:["show"]},
+ {id:"undertray",cat:"Styling",part:null,name:"Aluminium under tray",what:"Motorsport-style aluminium sump and underbody guard.",why:"Protects the engine and gearbox from stones, ramps and potholes.",diff:3,who:"DIY+",cost:[396,480],gain:"Protection",legal:"ok",declare:true,mot:"Tester may need it removed to inspect some items.",scot:"Useful on Highland roads and gravel car parks.",src:"Laird Performance: Airtec trays for Fiesta Mk8 £396 and Focus ST Mk4 £479.50",order:2,goals:["track","road"]},
+ {id:"sunstrip",cat:"Styling",part:null,name:"Sun strip / body vinyls",what:"Windscreen top strip and decals.",why:"Cheap personalisation.",diff:1,who:"DIY",cost:[15,60],gain:"Looks",legal:"check",declare:true,mot:"Keep the strip at the very top of the screen and out of the driver's view; strips that drop into the wiper-swept area can fail.",src:"Laird Performance: sun strips and body vinyls from £15",order:4,goals:["show"]},
+ {id:"gearknob",cat:"Styling",part:null,name:"Weighted gear knob",what:"Heavier or carbon-fibre gear knob.",why:"Smoother, more positive shifts on manual cars.",diff:1,who:"DIY",cost:[50,65],gain:"Shift feel",legal:"ok",declare:true,mot:"Gear position markings help but aren't an MOT item.",src:"Laird Performance: Airtec £63.75, carbon fibre £50",order:4,goals:["show","road"]},
+ {id:"bonnetstruts",cat:"Styling",part:null,name:"Hydraulic bonnet struts",what:"Gas struts replacing the bonnet prop rod.",why:"Neater engine bay; easier access at shows.",diff:1,who:"DIY",cost:[60,90],gain:"Convenience",legal:"ok",declare:false,mot:"Bonnet catch must still work correctly.",src:"Laird Performance: for Focus Mk3, £69.95",order:4,goals:["show"]},
  {id:"tuition",cat:"Foundations",part:null,name:"Driver tuition",what:"Circuit coaching or a Knockhill driver development session.",why:"The best lap-time gain per pound on any car.",diff:1,who:"Pro",cost:[150,500],gain:"Seconds per lap",legal:"ok",declare:false,mot:"No effect.",scot:"Knockhill runs newcomer track nights with extra support.",order:1,goals:["track"]}
 ];
+
+
+/* ---------- DATA: items needed per mod ---------- */
+const KIT = {
+ health:["Booked dyno power run","Data log (boost, timing, knock, fuel trims)","Smoke / boost-leak test","Compression or leak-down test","Full service history"],
+ tyres:["4 tyres in the factory size with correct load and speed ratings","Fitting and balancing","Tyre pressure sensor (TPMS) reset"],
+ winter:["Second set of wheels in a size approved for your car","Winter or all-season tyres","TPMS sensors or a warning-light plan","Locking wheel nuts"],
+ align:["Four-wheel laser alignment booking","Target camber/toe spec from your tuner or damper maker","Tyres at correct pressure first"],
+ fluid:["1 litre DOT 4 racing or DOT 5.1 fluid (check your manual)","Bleed kit or pressure bleeder","Clear tube and catch bottle"],
+ pads:["R90-approved pads for your calipers","Brake cleaner and copper-free grease","Pad wear sensors if fitted","Bedding-in procedure from the pad maker"],
+ lines:["Type-approved braided hose set","Fresh brake fluid","Copper sealing washers","Line spanners"],
+ springs:["Lowering spring set for your exact model","Spring compressors","Top-mount bearings (replace while apart)","Headlamp aim reset","Alignment afterwards"],
+ coilovers:["Coilover kit for your exact model and axle type","New top mounts and bump stops if not supplied","Spring compressors / lift access","Alignment and corner weighting","Headlamp aim reset"],
+ arb:["Anti-roll bar(s) for your model","New drop links and bar bushes","Torque wrench and settings"],
+ bushes:["Polyurethane bush kit","Press or bush tool","Bush grease (supplied)","Alignment afterwards"],
+ mounts:["Uprated engine, gearbox or dogbone mount","Engine support or jack","New bolts where specified (often stretch bolts)"],
+ strutbar:["Strut brace for your model","Torque wrench"],
+ lsd:["Mechanical LSD (e.g. Quaife ATB)","Gearbox removal and rebuild labour","New bearings and seals","Correct gearbox oil","Clutch (sensible to replace while the box is out)"],
+ bbk:["Caliper, disc and bracket kit","Wheels that clear the calipers (check fitment template)","Braided lines","Fresh high-temp fluid","Pads matched to use"],
+ discs:["Two-piece disc pair","Matching pads","Fixing bolts to correct torque","Bedding-in procedure"],
+ stage1:["Healthy baseline (see health check)","99 RON super unleaded","Fresh oil and filter","New spark plugs at the gap the map specifies","Stage 1 software (OBD or bench flash)","Battery charger on during the flash","Gearbox software on DSG/DCT/auto cars","Insurer told before driving"],
+ tcu:["Gearbox (TCU) software matched to your engine map","Fresh gearbox oil on high-mileage DSG/DCT boxes"],
+ intake:["Enclosed induction kit or high-flow filter","Heat shield if open-cone","Mass-air-flow sensor cleaner","Map that supports the intake (some change airflow readings)"],
+ turboinlet:["Turbo inlet pipe","New seals or O-rings","Hose clamps"],
+ ic:["Front-mount intercooler kit","Bumper removal clips","Boost-leak test afterwards"],
+ chargepipes:["Alloy or silicone boost pipes","T-bolt clamps","Boost-leak test afterwards"],
+ catback:["Cat-back system for your model","New exhaust gaskets and clamps","Exhaust paste","Stainless hangers or rubbers","Decibel check if going on track"],
+ valved:["Valved system","Valve controller or wiring loom","Coding if it links to drive modes"],
+ downpipe:["Downpipe with high-flow (usually 200-cell) sports catalyst","New turbo-to-downpipe gasket and studs","O2 sensor extension or spacer if needed","Stage 2 map","Emissions check on a gas analyser"],
+ stage2:["All stage 1 items","Uprated intercooler","Downpipe with high-flow cat","Induction kit or turbo inlet","Colder spark plugs gapped per tuner","Stage 2 or custom dyno map","Gearbox software (auto) or uprated clutch (manual)","Uprated brake pads"],
+ clutch:["Uprated clutch kit rated above your torque","Single- or dual-mass flywheel as specified","Release bearing and slave cylinder","Gearbox oil","Fresh clutch fluid"],
+ oilcool:["Thermostatic oil cooler kit","Sandwich plate","Braided oil lines","Correct oil top-up"],
+ hybrid:["Hybrid or big turbo","Oil and water feed lines","Gaskets and new studs","Fuel system upgrade","Uprated clutch or gearbox software","Custom dyno map with wideband logging","Oil cooler"],
+ fuel:["Uprated high-pressure pump","Injectors if required","Low-pressure pump if flow runs short","Custom map"],
+ e85:["Ethanol content sensor","Fuel lines rated for ethanol","Flex-fuel map","A reliable E85 supply (not sold at UK forecourts)"],
+ box:["Tuning box for your engine","Wiring loom","Notification to insurer"],
+ crackle:["Overrun map","Healthy catalyst and GPF"],
+ decat:["Don't: illegal on the road"],
+ gpfdel:["Don't: illegal on the road"],
+ gpfback:["GPF-back system for your model","New gaskets and clamps"],
+ forged:["Wheels with correct PCD, centre bore, offset and load rating","Hub-centric rings if needed","Correct bolts (seat type)","TPMS sensors","Tyres"],
+ spacers:["Hub-centric spacers","Longer wheel bolts with full thread engagement","Torque wrench","Re-torque after 50 miles"],
+ splitter:["Splitter or wing for your model","Fixings and rivnuts","Edge trim for any sharp edges"],
+ wrap:["Professional wrap or PPF installer","Paint correction beforehand","V5C update for a colour change"],
+ reartint:["Rear window film","Professional installer"],
+ fronttint:["Don't: front side windows must stay at 70%+"],
+ ledbulbs:["Don't: fit complete approved LED headlamp units instead"],
+ seats:["Bucket seats","Seat-specific subframes","Airbag resistor or coding if side airbags are removed","Seatbelt buckle stalks that fit"],
+ harness:["FIA-approved harness","Harness bar or cage","Compatible bucket seat","Keep standard belts for road use"],
+ cage:["Motorsport UK-compliant cage","Cage padding","Professional fitting"],
+ tracker:["Thatcham S5 or S7 tracker","Subscription","Installation certificate for insurer"],
+ immob:["CAN-bus immobiliser (e.g. Ghost-type)","Approved installer","Installation certificate"],
+ obdlock:["OBD lock or relocation kit"],
+ dashcam:["Front and rear camera","Hard-wire kit with low-voltage cut-off","High-endurance microSD card"],
+ laptimer:["GPS lap timer","OBD dongle for data","Mount"],
+ tuition:["Booked coaching session","Driving licence and helmet (track days)"],
+ canards:["Canard set","3M double-sided tape and/or screws","Adhesion promoter and surface cleaner"],
+ sideskirt:["Side skirt set","Screws, rivnuts or 3M tape","Adhesion promoter"],
+ rearsplit:["Rear side splitter pair","Screws and 3M tape","Surface cleaner"],
+ diffuser:["Valance or diffuser for your model","Matching exhaust tips or system if required","Fixings","GPF-back exhaust if the kit includes one"],
+ spoilercap:["Spoiler cap","3M tape","Adhesion promoter"],
+ wingraise:["Spoiler lift blocks","Longer bolts (if not supplied)","Silicone sealant to keep water out"],
+ bonnetext:["Bonnet extension","3M tape","Adhesion promoter"],
+ eyebrows:["Eyebrow trims","3M tape","Surface cleaner"],
+ grille:["Grille for your model","Clips","Sensor brackets transferred from the old grille"],
+ rearwin:["Rear window extension","3M tape","Adhesion promoter"],
+ undertray:["Under tray kit","Mounting brackets and bolts","Axle stands or lift"],
+ sunstrip:["Sun strip vinyl","Squeegee and application fluid"],
+ gearknob:["Gear knob with correct thread adaptor"],
+ bonnetstruts:["Bonnet strut kit","Brackets (supplied)"]
+};
+
+/* ---------- DATA: stage requirements ---------- */
+const STAGE_REQS = [
+ {n:"Stage 1",sub:"Software on a standard car",soft:["Stage 1 map (OBD or bench flash)","Gearbox software on DSG/DCT/auto cars"],hw:["None required","Induction kit optional"],cons:["99 RON fuel","Fresh oil and filter","New spark plugs at the map's gap"],chk:["Baseline power run and data log","No fault codes or warning lights","Insurer told before driving"]},
+ {n:"Stage 2",sub:"Map for breathing hardware",soft:["Stage 2 or custom dyno map","Gearbox software (auto) at the higher torque"],hw:["Uprated intercooler","Downpipe with high-flow sports cat","Induction kit or turbo inlet","Uprated clutch (manual cars, often needed)","Alloy boost pipes (platform-dependent)"],cons:["Colder spark plugs gapped per tuner","Shorter oil-change interval","Uprated brake pads"],chk:["Emissions check on a gas analyser","Post-map data logs","Insurance re-quote"]},
+ {n:"Stage 3",sub:"Bigger turbo and fuelling",soft:["Custom dyno calibration with wideband logging"],hw:["Hybrid or big turbo with new lines, gaskets and studs","High-pressure fuel pump and/or injectors","Uprated clutch and flywheel","Oil cooler","Big brake kit and LSD strongly advised"],cons:["Higher-spec oil","Very short service intervals","Regular plug checks"],chk:["Dyno time booked with the calibrator","Specialist insurance","Budget for driveline repairs"]}
+];
+
+/* ---------- DATA: Laird Performance catalogue (from laird-performance.co.uk, 30 Sept 2026) ---------- */
+const LAIRD = {
+ fiestast:{tune:["Stage 1: 240–255bhp, 260–275lb ft · workshop tune from £379.99 (optional dyno runs)","Stage 1 with remote tune device: up to 255bhp · £599.99","Stage 2: 260–270bhp, 290–300lb ft · workshop from £439.99","Stage 2 with remote tune device: up to 270bhp · £609.99","Stage 3: up to 315bhp · workshop £599.99 (hardware needed)"],
+  style:[["Maxton front splitter V1–V3","£174"],["Maxton front racing splitter V1/V2","£119–£159"],["Maxton front splitter V4 with flaps","£219"],["Maxton front bumper canards V1–V3","£44–£89"],["Maxton side skirt diffusers V1–V4","£174"],["Maxton side skirts V2 with flaps","£219"],["Maxton rear side splitters","£79–£109"],["Maxton rear valance V1–V3","£174"],["Maxton spoiler cap V1–V3 / spoiler lip","£129"],["Maxton bonnet extension","from £159"],["Maxton / Style 1 headlight eyebrows","£49–£49.95"],["Maxton front grille (ST 2018-)","£132"],["Maxton rear window extension","£154"],["Rear diffuser + Milltek GPF-back exhaust","from £1,559"],["Airtec aluminium under tray","£396"],["Airtec rear diffuser extension","£53.54"],["Airtec / carbon weighted gear knob","£50–£63.75"],["Hub-centric wheel spacers","£72.95–£79.95"],["Sun strip / body vinyls","from £15"]]},
+ focusst:{tune:["Stage 1: up to 355bhp and 549Nm · workshop upload £399.99 (rolling road optional)","Switchable power: normal mode about 20% down, full power in Sport","Recommended with an SD Performance or Airtec intake"],
+  style:[["Maxton Focus Mk4 ST/ST-Line front splitter","£149"],["Airtec aluminium under tray","£479.50"],["SD wheel spacers","from £76.95"],["Carbon fibre weighted gear knob","£50"],["Sun strip / body vinyls","from £15"]]}
+};
 
 /* ---------- DATA: model-year variants (UK spec) and body style ---------- */
 const BODY = {golfgti:"hatch",golfr:"hatch",civicr:"hatch",gryaris:"hatch3",i30n:"hatch",focusst:"hatch",fiestast:"hatch3",rs3:"hatch",a45s:"hatch",m2:"coupe",supra:"coupe",cayman:"mid",a110:"mid",mx5:"roadster",gr86:"coupe"};
@@ -805,7 +938,7 @@ const VARIANTS = {
   {label:"2019–2021 · launch",ps:280,nm:420,z62:5.7,note:"Performance Pack added adaptive dampers, launch control and rev-matching."},
   {label:"2022–2025 · facelift",ps:280,nm:420,z62:5.7,note:"New nose and larger touchscreen; optional Recaro seats. Production ended 2025."}],
  fiestast:[
-  {label:"2018–2019 · launch",ps:200,nm:290,z62:6.5,s1:[215,230],s2:[230,250],note:"Performance Pack brings the Quaife LSD and launch control."},
+  {label:"2018–2019 · launch",ps:200,nm:290,z62:6.5,s1:[235,255],s2:[255,270],note:"Performance Pack brings the Quaife LSD and launch control."},
   {label:"2020–2021 · torque update",ps:200,nm:320,z62:6.5,note:"Torque raised to 320Nm."},
   {label:"2022–2023 · facelift",ps:200,nm:320,z62:6.5,note:"New nose, digital cluster and Recaro seats. Final Fiesta ST."}],
  rs3:[
@@ -844,7 +977,7 @@ const DIFF = [
 const PRESETS = {
  road:["health","tyres","winter","align","fluid","pads","coilovers","arb","stage1","tcu","intake","gpfback","immob","tracker","dashcam"],
  track:["health","tuition","tyres","fluid","pads","lines","align","coilovers","arb","bbk","stage1","ic","oilcool","seats","laptimer"],
- show:["tyres","align","coilovers","forged","wrap","splitter","valved","reartint","intake","immob","dashcam","obdlock"]
+ show:["tyres","align","coilovers","forged","wrap","splitter","sideskirt","diffuser","spoilercap","eyebrows","valved","reartint","intake","immob","dashcam","obdlock"]
 };
 const LEGAL_LABEL = {ok:"Road legal · declare",check:"MOT risk · check",track:"Track only",illegal:"Illegal on road"};
 const ORDER_LABEL = {1:"Stage A · Foundations & security",2:"Stage B · Chassis & brakes",3:"Stage C · Stage 1 power & sound",4:"Stage D · Stage 2 & looks",5:"Stage E · Big power & motorsport"};
@@ -982,6 +1115,7 @@ function photoBlock(c){
 }
 function renderCar(){
   renderPlatform();
+  renderStageReqs();
   const c = car(), vi = varIndex(c.id), vars = VARIANTS[c.id];
   const pst = Math.round(c.ps / (c.kg/1000));
   $("#carspec").innerHTML = `
@@ -1067,6 +1201,8 @@ function renderMods(){
         <div><dt>Insurance</dt><dd>${m.declare?"Declare to your insurer before driving.":"Not normally a modification, but tell your insurer if unsure."}</dd></div>
         ${m.req?`<div><dt>Needs first</dt><dd>${m.req.map(r=>esc(byId[r].name)).join(", ")}</dd></div>`:""}
         ${m.scot?`<div><dt>Glasgow &amp; Scotland</dt><dd>${esc(m.scot)}</dd></div>`:""}
+        ${KIT[m.id]?`<div><dt>What you'll need</dt><dd><ul class="kitlist">${KIT[m.id].map(k=>`<li>${esc(k)}</li>`).join("")}</ul></dd></div>`:""}
+        ${m.src?`<div><dt>Local example</dt><dd>${esc(m.src)}</dd></div>`:""}
       </dl></details>
       <button type="button" class="addbtn" data-add="${m.id}" aria-pressed="${inb}">${inb?"In build ✓":"Add to build"}</button>
     </article>`;
@@ -1094,6 +1230,7 @@ function renderBuild(){
   const groups = {};
   a.mods.slice().sort((x,y) => x.order-y.order || x.diff-y.diff).forEach(m => (groups[m.order] = groups[m.order] || []).push(m));
   const keys = Object.keys(groups);
+  renderShop();
   $("#buildlist").innerHTML = keys.length ? keys.map(k => `<div class="stage"><h5>${ORDER_LABEL[k]}</h5>${groups[k].map(m => `
     <div class="brow"><div><b>${esc(m.name)}</b> <span class="legal ${m.legal}" style="margin-left:6px">${LEGAL_LABEL[m.legal]}</span></div><span class="c">${gbp(m.cost[0])}–${gbp(m.cost[1])}</span><button type="button" class="xbtn" data-remove="${m.id}" aria-label="Remove ${esc(m.name)}">✕</button></div>`).join("")}</div>`).join("")
     : `<div class="empty">Your build is empty. Add mods from the list above, or start from a preset.</div>`;
@@ -1221,6 +1358,7 @@ const PLATFORM = {
 
 /* ---------- DATA: garages (Trustpilot checked 30 Sept 2026) ---------- */
 const GARAGES = [
+ {n:"Laird Performance",g:"tune",area:"Cambuslang, Glasgow G72",tp:null,tpNote:"No Trustpilot profile found · IMI Professional Register listed",screen:"pass",svc:["Rolling road","In-house Ford EcoBoost tuning","Remote tune devices","Styling parts","Performance parts","HP Tuners"],p:"Specialists in Ford EcoBoost tuning and parts, also Mercedes, Hyundai and BMW, with their own LP-Outlaw hardware and in-house software. Sells Maxton and Airtec styling for Fiesta and Focus ST. No emissions deletes advertised. Mon–Fri 8:30–17:30; 07542 752997.",url:"https://www.laird-performance.co.uk/"},
  {n:"Dyna Tune",g:"tune",area:"East Kilbride (≈30 min from Glasgow)",tp:null,tpNote:"No Trustpilot profile found",screen:"pass",svc:["Hub dyno","Remaps","Diagnostics","Standalone ECUs"],p:"Dynapack hub dyno. Lists Link, UpRev, Nistune and other engine-management tuning. No emissions-delete services advertised on its site. Check Google reviews and forum feedback.",url:"https://dynatune.co.uk/"},
  {n:"Autotec Scotland",g:"tune",area:"Inverclyde",tp:null,tpNote:"No Trustpilot profile found",screen:"pass",svc:["4WD rolling road","Quantum remaps","Laser alignment","Diagnostics"],p:"4WD Dyno Developments rolling road in a dedicated cell with a customer viewing area, plus four-wheel alignment. No emissions deletes advertised on its tuning page.",url:"https://autotecscotland.co.uk/services/performance-tuning/"},
  {n:"Quantum Tuning (Glasgow dealer)",g:"tune",area:"Glasgow G3 · national network",tp:4.1,count:905,tpNote:"Score is for the whole Quantum network; only 12 reviews in the last year",screen:"caution",svc:["Remaps","TCU","Dyno","Mobile"],p:"Network reviews praise response and professionalism; complaints cover value and aftercare. The Glasgow dealer page advertises 'DPF solutions', so ask exactly what that means before booking.",url:"https://glasgow.quantumtuning.co.uk/"},
@@ -1262,6 +1400,54 @@ function renderPlatform(){
   $("#platName").textContent = `${c.name} · ${c.yearLabel}`;
   $("#platTools").innerHTML = p.t.map(t => `<li>${esc(t)}</li>`).join("");
   $("#platNotes").innerHTML = p.n.map(t => `<li>${esc(t)}</li>`).join("");
+}
+
+
+function renderStageReqs(){
+  const c = car();
+  const na = /naturally aspirated/i.test(c.engine);
+  const paddle = /DSG|DCT|dual-clutch|S tronic|auto|PDK/i.test(c.box);
+  const manual = /manual|MT/i.test(c.box);
+  $("#stageNote").textContent = na
+    ? `${c.name} is naturally aspirated: stage 2 and 3 turbo hardware doesn't apply. Gains come from intake, exhaust, map and, for big numbers, a forced-induction kit.`
+    : `Requirements for a turbo petrol. Notes in blue are specific to the ${c.name} (${c.yearLabel}).`;
+  $("#stagereqs").innerHTML = STAGE_REQS.map((st,i) => {
+    const notes = [];
+    if(!na){
+      const r = i===0 ? c.s1 : i===1 ? c.s2 : null;
+      if(r) notes.push(`Typical result: ${r[0]}–${r[1]}PS from ${c.ps}PS stock.`);
+      if(i===2) notes.push(c.ceiling);
+      if(paddle && i<2) notes.push("Your gearbox options include a paddle-shift or auto: budget for TCU software.");
+      if(manual && i>=1) notes.push("Manual versions: the standard clutch is the usual weak point here.");
+    }
+    return `<div class="sreq"><h4>${st.n}</h4><p class="note">${esc(st.sub)}</p>
+      <div><h5>Software</h5><ul>${st.soft.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+      <div><h5>Hardware</h5><ul>${st.hw.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+      <div><h5>Consumables</h5><ul>${st.cons.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+      <div><h5>Checks &amp; paperwork</h5><ul>${st.chk.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+      ${notes.map(n=>`<p class="carnote">${esc(n)}</p>`).join("")}</div>`;
+  }).join("");
+  const L = LAIRD[c.id], lp = $("#lairdPanel");
+  if(L){
+    lp.innerHTML = `<p class="eyebrow">Local specialist · Laird Performance, Cambuslang</p>
+      <h3 style="margin-top:6px">Laird packages for the ${esc(c.name)}</h3>
+      <div class="two" style="margin-top:12px">
+        <div><p class="eyebrow" style="color:var(--muted)">Tuning (tuner-quoted, bhp)</p><ul class="watch">${L.tune.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>
+        <div><p class="eyebrow" style="color:var(--muted)">Styling &amp; visual parts</p><div style="overflow-x:auto"><table class="ltable"><tbody>${L.style.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join("")}</tbody></table></div></div>
+      </div>
+      <p class="note" style="margin-top:12px">Prices and figures from Laird's website on 30 September 2026; check current stock and fitment. <a href="https://www.laird-performance.co.uk/" target="_blank" rel="noopener">laird-performance.co.uk ↗</a></p>`;
+  } else {
+    lp.innerHTML = `<p class="eyebrow">Local specialist · Laird Performance, Cambuslang</p><p style="margin-top:8px;color:#d3d1c9">Laird's tuning and styling range centres on Ford EcoBoost cars, with some Mercedes, Hyundai and BMW support. Select the Fiesta ST or Focus ST in the garage to see their packages and Maxton styling prices, or <a href="https://www.laird-performance.co.uk/" target="_blank" rel="noopener">check their site</a> for your model.</p>`;
+  }
+}
+function renderShop(){
+  const done = new Set(store.get("cr_shop", []));
+  const items = new Map();
+  state.build.forEach(id => (KIT[id]||[]).forEach(k => { if(!items.has(k)) items.set(k, []); items.get(k).push(byId[id].name); }));
+  const el = $("#shoplist");
+  if(!items.size){ el.innerHTML = `<p class="note">Add mods to see what you'll need to buy and book.</p>`; return; }
+  let i = 0;
+  el.innerHTML = `<div class="shop">${[...items].map(([k,from]) => { const id = "shop"+(i++); return `<label for="${id}"><input type="checkbox" id="${id}" data-item="${esc(k)}"${done.has(k)?" checked":""}><span>${esc(k)}</span><small>${esc(from.length>1?from.length+" mods":from[0])}</small></label>`; }).join("")}</div>`;
 }
 
 /* ---------- init & events ---------- */
@@ -1332,6 +1518,10 @@ function init(){
   $$("[data-preset]").forEach(b => b.addEventListener("click", () => {
     state.build = PRESETS[b.dataset.preset].slice(); renderMods(); renderBuild(); toast("Preset loaded");
   }));
+  $("#shoplist").addEventListener("change", e => {
+    const k = e.target.dataset && e.target.dataset.item; if(k == null) return;
+    const done = new Set(store.get("cr_shop", [])); e.target.checked ? done.add(k) : done.delete(k); store.set("cr_shop", [...done]);
+  });
   $("#clearbuild").addEventListener("click", () => { state.build = []; renderMods(); renderBuild(); toast("Build cleared"); });
   ["glass","film","pane"].forEach(id => $("#"+id).addEventListener("input", updateTint));
   ["lezfuel","lezyear","lezmonth"].forEach(id => $("#"+id).addEventListener("change", updateLez));
