@@ -1,0 +1,1343 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Hot hatch and sports car tuning guide for Glasgow and Scotland: model-year specs, remap options, rated mods, build planner, screened garages and UK legal checks.">
+<meta name="theme-color" content="#0e1116">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Clydeside Redline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a night drive through Glasgow under sodium streetlamps. Instrument-cluster hero, then garage → mods → build → guide → Scotland, one long page with a sticky nav. Deliberately single dark theme. */
+:root{
+  --asphalt:#0e1116;      /* page ground, blue-tinted black */
+  --panel:#161b23;        /* raised surfaces */
+  --panel-2:#1d2430;
+  --line:#2b3342;
+  --fg:#ece7dc;           /* warm lamp-lit white */
+  --muted:#96a0b1;
+  --sodium:#ffae2b;       /* accent: sodium streetlight amber */
+  --sodium-dim:#ffae2b33;
+  --led:#78bdff;          /* secondary: LED/data blue */
+  --led-dim:#78bdff2e;
+  --ok:#52d493; --ok-dim:#52d49326;
+  --warn:#f2cf4a; --warn-dim:#f2cf4a26;
+  --bad:#ff5d62; --bad-dim:#ff5d6226;
+  --track:#c69cff; --track-dim:#c69cff26;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"Barlow","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{background:var(--asphalt);color:var(--fg);font:16px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+a{color:var(--led)}
+a:hover{color:var(--fg)}
+:focus-visible{outline:2px solid var(--sodium);outline-offset:2px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1;margin:0;letter-spacing:.01em}
+h2{font-size:clamp(2.2rem,5vw,3.4rem);font-weight:800;text-transform:uppercase}
+h3{font-size:1.45rem;font-weight:800;text-transform:uppercase}
+p{margin:0}
+.wrap{max-width:1200px;margin:0 auto;padding-inline:clamp(16px,3vw,32px)}
+.eyebrow{font:500 .74rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--sodium)}
+.lede{color:var(--muted);max-width:65ch;font-size:1.05rem}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--mono)}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--asphalt) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:18px;padding-block:10px;overflow-x:auto;scrollbar-width:none}
+.nav .wrap::-webkit-scrollbar{display:none}
+.brand{font:900 1.25rem/1 var(--display);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;color:var(--fg);text-decoration:none}
+.brand span{color:var(--sodium)}
+.nav a.tab{font:600 .82rem/1 var(--body);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-decoration:none;white-space:nowrap;padding:8px 2px;border-bottom:2px solid transparent}
+.nav a.tab:hover{color:var(--fg);border-color:var(--sodium)}
+.navcount{margin-left:auto;white-space:nowrap;font:500 .78rem/1 var(--mono);color:var(--asphalt);background:var(--sodium);padding:7px 10px;border-radius:99px;text-decoration:none}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+#trails{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--asphalt) 18%,transparent 70%),linear-gradient(0deg,var(--asphalt),transparent 40%);pointer-events:none}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:32px;align-items:center;padding-block:clamp(40px,7vw,84px)}
+.hero h1{font-size:clamp(3.6rem,11vw,8.4rem);font-weight:900;text-transform:uppercase;line-height:.84;letter-spacing:-.005em}
+.hero h1 em{font-style:normal;color:var(--sodium);display:block;text-shadow:0 0 38px #ffae2b55}
+.hero .lede{margin-top:18px;color:#c9ccd2}
+.hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.pill{font:500 .74rem/1 var(--mono);letter-spacing:.06em;border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:7px 10px;border-radius:99px;white-space:nowrap}
+.gauge-wrap{justify-self:center;width:min(100%,380px)}
+.gauge-wrap svg{width:100%;height:auto;display:block}
+.gauge-cap{text-align:center;margin-top:6px;font:500 .8rem/1.4 var(--mono);color:var(--muted)}
+.needle{transition:transform 1.2s cubic-bezier(.2,.9,.25,1.15);transform-box:view-box;transform-origin:150px 150px}
+@media (max-width:820px){.hero .wrap{grid-template-columns:1fr}.hero::after{background:linear-gradient(0deg,var(--asphalt) 10%,transparent 80%)}}
+
+section{padding-block:clamp(48px,7vw,88px);border-bottom:1px solid var(--line)}
+.sec-head{display:grid;gap:12px;margin-bottom:28px}
+
+/* garage */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:99px;padding:3px;background:var(--panel);gap:2px}
+.seg button{all:unset;cursor:pointer;font:600 .8rem/1 var(--body);letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:99px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--sodium);color:var(--asphalt)}
+.seg button:focus-visible{outline:2px solid var(--sodium)}
+.carlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(172px,1fr));gap:8px;margin-top:16px}
+.carbtn{all:unset;box-sizing:border-box;cursor:pointer;display:grid;gap:4px;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);transition:border-color .2s,transform .2s}
+.carbtn:hover{border-color:var(--muted);transform:translateY(-1px)}
+.carbtn[aria-pressed="true"]{border-color:var(--sodium);background:linear-gradient(160deg,#ffae2b1f,var(--panel) 60%)}
+.carbtn:focus-visible{outline:2px solid var(--sodium)}
+.carbtn b{font:800 1.12rem/1.05 var(--display);text-transform:uppercase}
+.carbtn small{font:400 .74rem/1.3 var(--mono);color:var(--muted)}
+.cardetail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px;margin-top:22px}
+@media (max-width:900px){.cardetail{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:clamp(16px,2.4vw,24px);min-width:0}
+.spec{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin-top:14px;font-size:.95rem}
+.spec dt{font:500 .72rem/1.8 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.spec dd{margin:0;min-width:0}
+.bignums{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:16px}
+.bignum{display:grid}
+.bignum b{font:900 2.4rem/1 var(--display);font-variant-numeric:tabular-nums}
+.bignum span{font:500 .7rem/1.4 var(--mono);color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.chartbox{overflow-x:auto}
+.chartbox svg{display:block;width:100%;min-width:480px;height:auto}
+ul.watch{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+ul.watch li{position:relative;padding-left:20px;color:#d6d4cc;font-size:.95rem}
+ul.watch li::before{content:"";position:absolute;left:2px;top:.55em;width:8px;height:8px;border:2px solid var(--sodium);transform:rotate(45deg)}
+.note{font-size:.82rem;color:var(--muted)}
+
+/* airflow diagram */
+.flowbox{overflow-x:auto;margin-bottom:22px;border:1px solid var(--line);border-radius:14px;background:radial-gradient(ellipse at 50% 120%,#ffae2b14,transparent 60%),var(--panel)}
+.flowbox svg{display:block;min-width:760px;width:100%;height:auto}
+.fnode{cursor:pointer}
+.fnode rect{fill:var(--panel-2);stroke:var(--line);stroke-width:1.5;transition:stroke .2s,fill .2s}
+.fnode:hover rect,.fnode:focus rect{stroke:var(--sodium)}
+.fnode.on rect{stroke:var(--sodium);fill:#ffae2b22}
+.fnode:focus{outline:none}
+.fnode text{fill:var(--fg);font:600 13px var(--body);text-transform:uppercase;letter-spacing:.06em}
+.fnode .sub{fill:var(--muted);font:400 10.5px var(--mono);text-transform:none;letter-spacing:0}
+.flowpipe{fill:none;stroke:var(--led);stroke-width:3;stroke-dasharray:6 10;animation:flow 1.1s linear infinite;opacity:.8}
+.flowpipe.hot{stroke:var(--sodium)}
+@keyframes flow{to{stroke-dashoffset:-32}}
+
+/* filters */
+.filters{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(2,minmax(0,1fr));gap:10px;align-items:end}
+@media (max-width:760px){.filters{grid-template-columns:1fr}}
+label.f{display:grid;gap:6px;font:500 .72rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+input[type=search],select{width:100%;font:500 1rem/1.2 var(--body);color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+input[type=range]{width:100%;accent-color:var(--sodium)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{all:unset;cursor:pointer;font:600 .74rem/1 var(--body);letter-spacing:.06em;text-transform:uppercase;padding:8px 11px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.chip[aria-pressed="true"]{color:var(--fg);border-color:currentColor}
+.chip:focus-visible{outline:2px solid var(--sodium)}
+.chip[data-s="thin"][aria-pressed="true"]{color:var(--fg);background:var(--panel-2)}
+.chip.ok[aria-pressed="true"]{color:var(--ok);background:var(--ok-dim)}
+.chip.check[aria-pressed="true"]{color:var(--warn);background:var(--warn-dim)}
+.chip.track[aria-pressed="true"]{color:var(--track);background:var(--track-dim)}
+.chip.illegal[aria-pressed="true"]{color:var(--bad);background:var(--bad-dim)}
+.resultline{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin:18px 0 10px;font:500 .8rem/1.4 var(--mono);color:var(--muted)}
+.linkbtn{all:unset;cursor:pointer;color:var(--led);text-decoration:underline;text-underline-offset:3px}
+.linkbtn:focus-visible{outline:2px solid var(--sodium)}
+
+/* mod cards */
+.mods{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.mod{display:flex;flex-direction:column;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0;position:relative;overflow:hidden}
+.mod::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--stripe,var(--line))}
+.mod[data-legal=ok]{--stripe:var(--ok)}
+.mod[data-legal=check]{--stripe:var(--warn)}
+.mod[data-legal=track]{--stripe:var(--track)}
+.mod[data-legal=illegal]{--stripe:var(--bad)}
+.mod.inbuild{border-color:var(--sodium);box-shadow:0 0 0 1px var(--sodium) inset}
+.mod-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.mod h4{margin:4px 0 0;font:800 1.3rem/1.05 var(--display);text-transform:uppercase}
+.cat{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.legal{flex:none;font:600 .66rem/1 var(--body);letter-spacing:.08em;text-transform:uppercase;padding:6px 8px;border-radius:6px;white-space:nowrap}
+.legal.ok{color:var(--ok);background:var(--ok-dim)}
+.legal.check{color:var(--warn);background:var(--warn-dim)}
+.legal.track{color:var(--track);background:var(--track-dim)}
+.legal.illegal{color:var(--bad);background:var(--bad-dim)}
+.mod p{font-size:.93rem;color:#d3d1c9}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border-top:1px solid var(--line);padding-top:10px}
+.stats div{display:grid;gap:3px;min-width:0}
+.stats span{font:500 .64rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.stats b{font:600 .88rem/1.25 var(--body);font-variant-numeric:tabular-nums}
+.pips{display:inline-flex;gap:3px;vertical-align:middle}
+.pips i{width:9px;height:9px;border-radius:2px;background:var(--line)}
+.pips i.on{background:var(--sodium)}
+.pips.d4 i.on,.pips.d5 i.on{background:var(--bad)}
+details.more{border-top:1px solid var(--line);padding-top:8px}
+details.more summary{cursor:pointer;font:600 .78rem/1.4 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--led);list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::after{content:" +"}
+details.more[open] summary::after{content:" –"}
+details.more dl{display:grid;gap:8px;margin:10px 0 0}
+details.more dt{font:500 .66rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+details.more dd{margin:2px 0 0;font-size:.9rem;color:#d3d1c9}
+.addbtn{all:unset;box-sizing:border-box;cursor:pointer;text-align:center;font:700 .8rem/1 var(--body);letter-spacing:.1em;text-transform:uppercase;padding:11px;border-radius:9px;border:1px solid var(--sodium);color:var(--sodium);margin-top:auto}
+.addbtn:hover{background:var(--sodium-dim)}
+.addbtn[aria-pressed="true"]{background:var(--sodium);color:var(--asphalt)}
+.addbtn:focus-visible{outline:2px solid var(--fg)}
+.empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
+
+/* build */
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;font:700 .8rem/1 var(--body);letter-spacing:.08em;text-transform:uppercase;padding:11px 14px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--fg)}
+.btn:hover{border-color:var(--sodium)}
+.btn:focus-visible{outline:2px solid var(--sodium)}
+.btn.ghost{background:transparent;color:var(--muted)}
+.buildgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:20px;align-items:start}
+@media (max-width:900px){.buildgrid{grid-template-columns:1fr}}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tile{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:4px;min-width:0}
+.tile span{font:500 .66rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tile b{font:900 1.9rem/1 var(--display);font-variant-numeric:tabular-nums}
+.tile small{color:var(--muted);font-size:.8rem}
+.flags{display:grid;gap:8px;margin-top:14px}
+.flag{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:10px 12px;border-radius:10px;font-size:.9rem}
+.flag::before{content:"";width:10px;height:10px;margin-top:.4em;border-radius:50%;background:currentColor}
+.flag.bad{background:var(--bad-dim);color:var(--bad)}
+.flag.warn{background:var(--warn-dim);color:var(--warn)}
+.flag.track{background:var(--track-dim);color:var(--track)}
+.flag.good{background:var(--ok-dim);color:var(--ok)}
+.flag span{color:var(--fg)}
+.stagecol{display:grid;gap:16px}
+.stage h5{margin:0 0 8px;font:500 .7rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--sodium)}
+.brow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:.93rem}
+.brow b{font-weight:600}
+.brow .c{font:500 .8rem/1 var(--mono);color:var(--muted);white-space:nowrap}
+.xbtn{all:unset;cursor:pointer;width:26px;height:26px;display:grid;place-items:center;border-radius:6px;color:var(--muted);border:1px solid var(--line)}
+.xbtn:hover{color:var(--bad);border-color:var(--bad)}
+.xbtn:focus-visible{outline:2px solid var(--sodium)}
+
+/* guide */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;counter-reset:s}
+.step{counter-increment:s;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:8px;align-content:start}
+.step::before{content:counter(s,decimal-leading-zero);font:900 2.6rem/1 var(--display);color:var(--sodium);opacity:.9}
+.step h4{margin:0;font:800 1.2rem/1.1 var(--display);text-transform:uppercase}
+.step p{font-size:.93rem;color:#d3d1c9}
+.diffscale{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+@media (max-width:760px){.diffscale{grid-template-columns:1fr}}
+.dlev{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:6px;align-content:start;min-width:0}
+.dlev b{font:900 1.1rem/1 var(--display);text-transform:uppercase}
+.dlev p{font-size:.86rem;color:#cfcdc5}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+@media (max-width:900px){.two{grid-template-columns:1fr}}
+ul.tick{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:10px}
+ul.tick li{display:grid;grid-template-columns:22px 1fr;gap:8px;font-size:.95rem}
+ul.tick li::before{content:"✓";color:var(--ok);font-weight:700}
+ul.tick.x li::before{content:"✕";color:var(--bad)}
+
+/* tint */
+.tintviz{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:center;margin-top:12px}
+@media (max-width:560px){.tintviz{grid-template-columns:1fr}}
+.tintviz svg{width:100%;height:auto;display:block}
+.verdict{font:800 1.4rem/1.1 var(--display);text-transform:uppercase}
+.verdict.ok{color:var(--ok)} .verdict.bad{color:var(--bad)}
+.ctl{display:grid;gap:4px;margin-top:10px}
+.ctl label{font:500 .72rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between}
+
+/* scotland */
+.lawgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}
+.law{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:8px;align-content:start}
+.law h4{margin:0;font:800 1.15rem/1.1 var(--display);text-transform:uppercase}
+.law p{font-size:.92rem;color:#d3d1c9}
+.law .src{font:400 .75rem/1.3 var(--mono);color:var(--muted)}
+.lezform{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+@media (max-width:560px){.lezform{grid-template-columns:1fr}}
+.lezout{margin-top:12px;padding:14px;border-radius:10px;font-size:.95rem}
+.lezout.ok{background:var(--ok-dim)} .lezout.warn{background:var(--warn-dim)} .lezout.bad{background:var(--bad-dim)}
+.lezout b{display:block;font:800 1.25rem/1.1 var(--display);text-transform:uppercase;margin-bottom:4px}
+.lezout.ok b{color:var(--ok)} .lezout.warn b{color:var(--warn)} .lezout.bad b{color:var(--bad)}
+.venues{display:grid;gap:10px;margin-top:12px}
+.venue{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.venue b{font-weight:600}
+.venue span{font:500 .76rem/1.3 var(--mono);color:var(--muted);text-align:right}
+.venue p{grid-column:1/-1;font-size:.88rem;color:var(--muted)}
+.sources ol{margin:12px 0 0;padding-left:1.4em;display:grid;gap:8px;font-size:.92rem;color:#d3d1c9}
+footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
+
+/* remaps */
+.rtable{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+.rtable table{width:100%;min-width:760px;border-collapse:collapse;font-size:.92rem}
+.rtable th{font:500 .68rem/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 14px;background:var(--panel-2);border-bottom:1px solid var(--line)}
+.rtable td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:#d3d1c9}
+.rtable tr:last-child td{border-bottom:0}
+.rtable td b{color:var(--fg);font-weight:700;display:block;font-family:var(--display);font-size:1.15rem;text-transform:uppercase;letter-spacing:.02em}
+.platform{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-top:12px}
+@media (max-width:760px){.platform{grid-template-columns:1fr}}
+.featgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.feat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:6px;align-content:start}
+.feat h4{margin:0;font:800 1.05rem/1.1 var(--display);text-transform:uppercase;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.feat p{font-size:.88rem;color:#d3d1c9}
+.flash{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:760px){.flash{grid-template-columns:1fr}}
+/* garages */
+.gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.gcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.gcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--stripe,var(--line))}
+.gcard[data-screen=pass]{--stripe:var(--ok)}
+.gcard[data-screen=caution]{--stripe:var(--warn)}
+.gcard[data-screen=fail]{--stripe:var(--bad)}
+.gcard[data-screen=thin]{--stripe:var(--muted)}
+.gcard h4{margin:0;font:800 1.3rem/1.05 var(--display);text-transform:uppercase}
+.gcard p{font-size:.9rem;color:#d3d1c9}
+.tp{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.stars{display:inline-flex;gap:2px}
+.stars i{width:16px;height:16px;display:block;background:var(--line);clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.stars i.on{background:var(--sodium)}
+.stars i.half{background:linear-gradient(90deg,var(--sodium) 50%,var(--line) 50%)}
+.tpscore{font:900 1.7rem/1 var(--display);font-variant-numeric:tabular-nums}
+.tpmeta{font:500 .74rem/1.3 var(--mono);color:var(--muted)}
+.svc{display:flex;flex-wrap:wrap;gap:5px}
+.svc span{font:500 .68rem/1 var(--mono);padding:5px 7px;border-radius:6px;background:var(--panel-2);color:var(--muted);border:1px solid var(--line)}
+.screen{font:600 .68rem/1 var(--body);letter-spacing:.08em;text-transform:uppercase;padding:6px 8px;border-radius:6px;white-space:nowrap}
+.screen.pass{color:var(--ok);background:var(--ok-dim)} .screen.caution{color:var(--warn);background:var(--warn-dim)}
+.screen.fail{color:var(--bad);background:var(--bad-dim)} .screen.thin{color:var(--muted);background:var(--panel-2)}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(140%);background:var(--sodium);color:var(--asphalt);font:700 .85rem/1 var(--body);padding:12px 16px;border-radius:99px;transition:transform .25s;z-index:30;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<nav class="nav" aria-label="Sections">
+  <div class="wrap">
+    <a class="brand" href="#top">Clydeside <span>Redline</span></a>
+    <a class="tab" href="#garage">Garage</a>
+    <a class="tab" href="#mods">Mod list</a>
+    <a class="tab" href="#remaps">Remaps</a>
+    <a class="tab" href="#build">Build planner</a>
+    <a class="tab" href="#guide">How to choose</a>
+    <a class="tab" href="#scotland">Scotland &amp; the law</a>
+    <a class="tab" href="#garages">Garages</a>
+    <a class="tab" href="#sources">Sources</a>
+    <a class="navcount" href="#build" id="navcount">Build · 0</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <canvas id="trails" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Hot hatch &amp; sports car tuning · Glasgow &amp; the west of Scotland</p>
+      <h1>Clydeside <em>Redline</em></h1>
+      <p class="lede">Pick your car, see what it makes stock and what owners and tuners typically get from it, then plan a build that stays road legal, insurable and MOT-proof on Scottish roads. Every modification is rated for difficulty, cost and legality.</p>
+      <div class="hero-meta">
+        <span class="pill">15 cars · 30 model-year variants</span>
+        <span class="pill" id="modcountpill">52 modifications</span>
+        <span class="pill">UK law · checked Sept 2026</span>
+        <span class="pill">Glasgow LEZ aware</span>
+      </div>
+    </div>
+    <div class="gauge-wrap">
+      <svg id="gauge" viewBox="0 0 300 300" role="img" aria-labelledby="gaugeTitle">
+        <title id="gaugeTitle">Power gauge for the selected car</title>
+        <g id="gaugeTicks"></g>
+        <line class="needle" id="needleS1" x1="150" y1="150" x2="262" y2="150" stroke="var(--led)" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+        <line class="needle" id="needle" x1="150" y1="150" x2="266" y2="150" stroke="var(--sodium)" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="150" cy="150" r="14" fill="var(--panel-2)" stroke="var(--sodium)" stroke-width="2"/>
+        <text x="150" y="212" text-anchor="middle" fill="var(--fg)" style="font:900 44px var(--display)" id="gaugePS" class="num">0</text>
+        <text x="150" y="232" text-anchor="middle" fill="var(--muted)" style="font:500 11px var(--mono);letter-spacing:.12em">PS · STOCK</text>
+        <text x="150" y="252" text-anchor="middle" fill="var(--led)" style="font:500 11px var(--mono)" id="gaugeS1">stage 1 ~</text>
+      </svg>
+      <p class="gauge-cap" id="gaugeCap">—</p>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- GARAGE -->
+<section id="garage">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">01 · Garage</p>
+      <h2>Choose your car</h2>
+      <p class="lede">Manufacturer UK figures for the current or last-sold spec. Stage figures are typical ranges reported by owners' forums and UK tuners on 99 RON super unleaded; your car, fuel and tuner will differ.</p>
+    </div>
+    <div class="seg" role="group" aria-label="Filter cars">
+      <button type="button" data-cls="all" aria-pressed="true">All</button>
+      <button type="button" data-cls="hatch" aria-pressed="false">Hot hatch</button>
+      <button type="button" data-cls="sports" aria-pressed="false">Sports car</button>
+    </div>
+    <div class="carlist" id="carlist"></div>
+    <div class="cardetail">
+      <div class="panel" id="carspec"></div>
+      <div class="panel">
+        <p class="eyebrow">Power ladder</p>
+        <h3 style="margin-top:6px">Stock → stage 1 → stage 2</h3>
+        <div class="chartbox" style="margin-top:12px"><svg id="ladder" viewBox="0 0 640 190" role="img" aria-label="Power by tuning stage"></svg></div>
+        <p class="note" style="margin-top:6px">Solid bar = low end of the reported range; lighter extension = high end. Gains assume a healthy car, custom or reputable off-the-shelf map and 99 RON fuel.</p>
+        <p class="eyebrow" style="margin-top:18px">Owner-reported watch items</p>
+        <ul class="watch" id="watch"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODS -->
+<section id="mods">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">02 · Modification list</p>
+      <h2>The full mod list</h2>
+      <p class="lede">Built from owners' forums, UK tuner guidance, the DVSA MOT manual and GOV.UK rules. Tap a part of the air path to filter, open any card for the detail, and add mods to your build.</p>
+    </div>
+
+    <div class="flowbox" role="group" aria-label="Air path diagram. Select a part to filter the mod list.">
+      <svg viewBox="0 0 1000 250" id="flow">
+        <text x="24" y="30" fill="var(--muted)" style="font:500 11px var(--mono);letter-spacing:.14em">AIR PATH · TURBO PETROL (TYPICAL HOT HATCH)</text>
+        <path class="flowpipe" d="M130 110 H190"/>
+        <path class="flowpipe" d="M310 110 H370"/>
+        <path class="flowpipe" d="M490 110 H550"/>
+        <path class="flowpipe hot" d="M610 150 V190 H370"/>
+        <path class="flowpipe hot" d="M310 190 H250 M190 190 H130"/>
+        <path class="flowpipe hot" d="M70 190 H40"/>
+        <g class="fnode" tabindex="0" role="button" data-part="intake"><rect x="20" y="80" width="110" height="60" rx="10"/><text x="75" y="106" text-anchor="middle">Intake</text><text class="sub" x="75" y="124" text-anchor="middle">filter · airbox</text></g>
+        <g class="fnode" tabindex="0" role="button" data-part="turbo"><rect x="190" y="80" width="120" height="60" rx="10"/><text x="250" y="106" text-anchor="middle">Turbo</text><text class="sub" x="250" y="124" text-anchor="middle">compressor · inlet</text></g>
+        <g class="fnode" tabindex="0" role="button" data-part="intercooler"><rect x="370" y="80" width="120" height="60" rx="10"/><text x="430" y="106" text-anchor="middle">Intercooler</text><text class="sub" x="430" y="124" text-anchor="middle">charge pipes</text></g>
+        <g class="fnode" tabindex="0" role="button" data-part="ecu"><rect x="550" y="70" width="140" height="80" rx="10"/><text x="620" y="102" text-anchor="middle">Engine + ECU</text><text class="sub" x="620" y="120" text-anchor="middle">map · fuel · TCU</text><text class="sub" x="620" y="136" text-anchor="middle">clutch · cooling</text></g>
+        <g class="fnode" tabindex="0" role="button" data-part="downpipe"><rect x="370" y="165" width="120" height="50" rx="10"/><text x="430" y="186" text-anchor="middle">Downpipe</text><text class="sub" x="430" y="203" text-anchor="middle">+ catalyst</text></g>
+        <g class="fnode" tabindex="0" role="button" data-part="gpf"><rect x="190" y="165" width="120" height="50" rx="10"/><text x="250" y="186" text-anchor="middle">GPF / OPF</text><text class="sub" x="250" y="203" text-anchor="middle">particulate filter</text></g>
+        <g class="fnode" tabindex="0" role="button" data-part="catback"><rect x="20" y="165" width="110" height="50" rx="10"/><text x="75" y="186" text-anchor="middle">Cat-back</text><text class="sub" x="75" y="203" text-anchor="middle">silencers · tips</text></g>
+        <g transform="translate(730 72)">
+          <text x="0" y="0" fill="var(--muted)" style="font:500 10.5px var(--mono);letter-spacing:.12em">KEY</text>
+          <line x1="0" y1="18" x2="36" y2="18" stroke="var(--led)" stroke-width="3" stroke-dasharray="6 10"/><text x="46" y="22" fill="var(--fg)" style="font:400 12px var(--body)">Intake air (cold side)</text>
+          <line x1="0" y1="42" x2="36" y2="42" stroke="var(--sodium)" stroke-width="3" stroke-dasharray="6 10"/><text x="46" y="46" fill="var(--fg)" style="font:400 12px var(--body)">Exhaust gas (hot side)</text>
+          <text x="0" y="78" fill="var(--muted)" style="font:400 12px var(--body)">Catalyst and GPF must stay:</text>
+          <text x="0" y="96" fill="var(--muted)" style="font:400 12px var(--body)">removal fails the MOT and is an</text>
+          <text x="0" y="114" fill="var(--muted)" style="font:400 12px var(--body)">offence on the road.</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="filters">
+      <label class="f" for="q">Search mods<input type="search" id="q" placeholder="coilovers, remap, tint…" autocomplete="off"></label>
+      <label class="f" for="catsel">Category<select id="catsel"><option value="">All categories</option></select></label>
+      <label class="f" for="diffmax">Max difficulty · <span id="diffval">5</span>/5<input type="range" id="diffmax" min="1" max="5" value="5"></label>
+    </div>
+    <div class="chips" role="group" aria-label="Legal status">
+      <button type="button" class="chip ok" data-legal="ok" aria-pressed="true">Road legal · declare</button>
+      <button type="button" class="chip check" data-legal="check" aria-pressed="true">Legal if compliant · MOT risk</button>
+      <button type="button" class="chip track" data-legal="track" aria-pressed="true">Track / motorsport</button>
+      <button type="button" class="chip illegal" data-legal="illegal" aria-pressed="true">Illegal on the road</button>
+    </div>
+    <div class="resultline"><span id="resultcount"></span><button type="button" class="linkbtn" id="resetf">Reset filters</button></div>
+    <div class="mods" id="modgrid"></div>
+  </div>
+</section>
+
+
+<!-- REMAPS -->
+<section id="remaps">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">03 · Remap options</p>
+      <h2>Remapping, explained</h2>
+      <p class="lede">A remap rewrites the engine computer's targets for boost, fuel and ignition. How it's done, who writes the file and what features go in it matter as much as the headline number.</p>
+    </div>
+
+    <div class="rtable">
+      <table>
+        <thead><tr><th>Type</th><th>What you get</th><th>Typical UK cost</th><th>Best for</th><th>Watch out for</th></tr></thead>
+        <tbody id="remaptypes"></tbody>
+      </table>
+    </div>
+
+    <div class="panel" style="margin-top:20px">
+      <p class="eyebrow">For your selected car</p>
+      <h3 style="margin-top:6px" id="platName">—</h3>
+      <div class="platform">
+        <div><p class="eyebrow" style="color:var(--muted)">Tools UK owners commonly use</p><ul class="watch" id="platTools"></ul></div>
+        <div><p class="eyebrow" style="color:var(--muted)">Platform notes</p><ul class="watch" id="platNotes"></ul></div>
+      </div>
+      <p class="note" style="margin-top:12px">Tool support changes with ECU software versions. Confirm your exact car and ECU version with the tuner before paying.</p>
+    </div>
+
+    <h3 style="margin:36px 0 12px">How the file gets on the car</h3>
+    <div class="flash">
+      <div class="law"><h4>OBD flash</h4><p>Written through the diagnostic port in 10–30 minutes. Quick and reversible if the tuner saves your original file.</p></div>
+      <div class="law"><h4>Bench / boot mode</h4><p>The ECU is removed and opened to read or unlock it. Needed on many newer protected ECUs. Takes longer and must be done carefully to avoid damage.</p></div>
+      <div class="law"><h4>Handheld flasher</h4><p>A device or app you own (e.g. Accessport, FlashPro, bootmod3 or MHD-style tools) that stores the stock file and lets you switch maps and data-log yourself.</p></div>
+    </div>
+
+    <h3 style="margin:36px 0 12px">Map features and extras</h3>
+    <div class="featgrid" id="remapfeats"></div>
+  </div>
+</section>
+
+<!-- BUILD -->
+<section id="build">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">04 · Build planner</p>
+      <h2>Plan the build</h2>
+      <p class="lede">Your build is checked as you go: cost, estimated power for the selected car, the hardest job on the list, what to tell your insurer, and anything that will fail an MOT or break the law. It's saved in this browser.</p>
+    </div>
+    <div class="presets" role="group" aria-label="Preset builds">
+      <button type="button" class="btn" data-preset="road">Preset · Glasgow fast road</button>
+      <button type="button" class="btn" data-preset="track">Preset · Knockhill track day</button>
+      <button type="button" class="btn" data-preset="show">Preset · Show &amp; meet</button>
+      <button type="button" class="btn ghost" id="clearbuild">Clear build</button>
+    </div>
+    <div class="buildgrid">
+      <div class="panel">
+        <p class="eyebrow" id="buildcar">—</p>
+        <div class="tiles" style="margin-top:12px">
+          <div class="tile"><span>Estimated power</span><b id="t-power" class="num">—</b><small id="t-powersub">stock</small></div>
+          <div class="tile"><span>Parts + fitting</span><b id="t-cost" class="num">£0</b><small id="t-costsub">typical UK range</small></div>
+          <div class="tile"><span>Hardest job</span><b id="t-diff">—</b><small id="t-diffsub">no mods yet</small></div>
+          <div class="tile"><span>Declare to insurer</span><b id="t-dec" class="num">0</b><small>modifications</small></div>
+        </div>
+        <p class="eyebrow" style="margin-top:20px">Build checks</p>
+        <div class="flags" id="flags"></div>
+      </div>
+      <div class="panel">
+        <p class="eyebrow">Recommended fitting order</p>
+        <div class="stagecol" id="buildlist" style="margin-top:12px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GUIDE -->
+<section id="guide">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">05 · How to choose</p>
+      <h2>Choosing mods in the right order</h2>
+      <p class="lede">The most common regret on owners' forums is buying power first. This is the order experienced owners and UK tuners recommend.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><h4>Decide the car's job</h4><p>Daily through Glasgow traffic and speed bumps, weekend runs up the A82 and A83, Knockhill days, or meets. A car set up for one does the others worse. Write the job down and test every purchase against it.</p></div>
+      <div class="step"><h4>Prove it's healthy</h4><p>Get a baseline dyno run, a data log, a boost-leak test and a look at service history. Tuning a tired engine finds its weak point faster. Fix faults first; an engine warning light is an MOT fail on its own.</p></div>
+      <div class="step"><h4>Phone your insurer first</h4><p>Get quotes for the finished build before buying parts. Some insurers refuse remaps or stage 2 outright. Everything that differs from factory spec must be declared, including mods a previous owner fitted.</p></div>
+      <div class="step"><h4>Tyres, brakes, alignment</h4><p>Quality tyres, high-temperature fluid, better pads and a fast-road alignment change more on a wet B-road than 40PS. They're cheap, reversible and make every later mod work better.</p></div>
+      <div class="step"><h4>Chassis before power</h4><p>Dampers, anti-roll bars and bushes let you use what the car already has. Keep the ride height sensible: Scottish roads, potholes and city speed humps punish slammed cars.</p></div>
+      <div class="step"><h4>Add power in stages</h4><p>Stage 1 map on a stock car, then supporting hardware (intercooler, intake, downpipe with a high-flow cat) for stage 2. Log after each change. Budget for clutch, gearbox software and cooling as power rises.</p></div>
+      <div class="step"><h4>Choose the tuner carefully</h4><p>Use a business with a dyno that shows before-and-after graphs, data-logs the car, can put it back to stock, and refuses emissions deletes. If a garage advertises DPF, cat or EGR removal, go elsewhere.</p></div>
+      <div class="step"><h4>Record, declare, maintain</h4><p>Keep receipts and dyno sheets, update your insurer the day a mod is fitted, shorten oil-change intervals on tuned engines, and tell DVLA about changes it lists, such as colour, engine or body.</p></div>
+    </div>
+
+    <h3 style="margin:44px 0 14px">Difficulty scale</h3>
+    <div class="diffscale" id="diffscale"></div>
+
+    <div class="two" style="margin-top:36px">
+      <div class="panel">
+        <p class="eyebrow">Picking a tuner</p>
+        <h3 style="margin-top:6px">Questions to ask</h3>
+        <ul class="tick">
+          <li><span>Can I see before-and-after dyno graphs from a car like mine, on your dyno?</span></li>
+          <li><span>Is the map custom to my car, or a tuned off-the-shelf file, and what AFR, timing and boost targets does it run?</span></li>
+          <li><span>Will you data-log on the road after mapping, and can you return the car to the original software?</span></li>
+          <li><span>Does the map need a gearbox (TCU) update, and is that included?</span></li>
+          <li><span>What do you recommend changing on service intervals, plugs and oil grade?</span></li>
+          <li><span>Is your work covered by traders' insurance, and what happens if something fails?</span></li>
+        </ul>
+        <p class="eyebrow" style="margin-top:20px">Walk away if they</p>
+        <ul class="tick x">
+          <li><span>Offer DPF, GPF, catalyst, EGR or AdBlue removal "for off-road use"</span></li>
+          <li><span>Quote peak power without showing a graph or data log</span></li>
+          <li><span>Say a mod is "MOT-proof" or doesn't need declaring</span></li>
+        </ul>
+      </div>
+      <div class="panel">
+        <p class="eyebrow">Visual guide · window tint</p>
+        <h3 style="margin-top:6px">Will your front tint pass?</h3>
+        <p class="note" style="margin-top:6px">UK law measures the glass and film together. Most modern glass already blocks some light, so a "70%" film on factory glass usually ends up well under 70%.</p>
+        <div class="tintviz">
+          <svg viewBox="0 0 260 150" aria-hidden="true">
+            <path d="M20 130 L60 40 Q66 26 82 26 L200 26 Q222 26 230 44 L244 130 Z" fill="var(--panel-2)" stroke="var(--line)" stroke-width="2"/>
+            <path id="tintpane" d="M34 124 L68 46 Q72 36 84 36 L198 36 Q214 36 220 50 L232 124 Z" fill="#000" opacity=".3"/>
+            <path d="M84 50 L120 50 L110 70 Z" fill="var(--fg)" opacity=".18"/>
+            <text x="132" y="96" text-anchor="middle" fill="var(--fg)" style="font:900 30px var(--display)" id="tintnum" class="num">56%</text>
+          </svg>
+          <div>
+            <p class="verdict bad" id="tintverdict">Fails</p>
+            <p class="note" id="tintnote">Front side windows need at least 70% combined light transmission.</p>
+          </div>
+        </div>
+        <div class="ctl"><label for="glass">Factory glass VLT <span id="glassv" class="num">80%</span></label><input type="range" id="glass" min="70" max="92" value="80"></div>
+        <div class="ctl"><label for="film">Film VLT <span id="filmv" class="num">70%</span></label><input type="range" id="film" min="5" max="95" value="70"></div>
+        <div class="ctl"><label for="pane">Which glass</label>
+          <select id="pane"><option value="side">Front side windows (min 70%)</option><option value="screen">Windscreen (min 75%)</option><option value="rear">Rear windows (no minimum)</option></select>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCOTLAND -->
+<section id="scotland">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">06 · Scotland &amp; the law</p>
+      <h2>Glasgow rules of the road</h2>
+      <p class="lede">What actually gets modified cars stopped, failed or uninsured in Scotland, plus where to measure and use the power legally.</p>
+    </div>
+
+    <div class="two">
+      <div class="panel">
+        <p class="eyebrow">Glasgow Low Emission Zone</p>
+        <h3 style="margin-top:6px">Quick LEZ check</h3>
+        <p class="note" style="margin-top:6px">Enforced since 1 June 2023 by number-plate cameras across the city centre inside the M8, the Clyde and High Street. This is a rule-of-thumb check; confirm with the official checker.</p>
+        <div class="lezform">
+          <label class="f" for="lezfuel">Fuel<select id="lezfuel"><option value="petrol">Petrol</option><option value="diesel">Diesel</option><option value="hybrid">Petrol hybrid</option><option value="ev">Electric</option></select></label>
+          <label class="f" for="lezyear">First registered<select id="lezyear"></select></label>
+          <label class="f" for="lezmonth">Month<select id="lezmonth"></select></label>
+        </div>
+        <div class="lezout" id="lezout"></div>
+        <p class="note" style="margin-top:10px">Penalty starts at £60 (£30 if paid within 14 days) and doubles for repeat breaches up to £480 for a car. There is no daily charge: non-compliant cars simply may not enter. Official checker: <a href="https://www.glasgow.gov.uk/LEZ" target="_blank" rel="noopener">glasgow.gov.uk/LEZ</a></p>
+      </div>
+      <div class="panel">
+        <p class="eyebrow">Measure it, then use it</p>
+        <h3 style="margin-top:6px">Dynos &amp; track</h3>
+        <div class="venues">
+          <div class="venue"><b>Knockhill Racing Circuit</b><span>Fife · ~1 hr from Glasgow</span><p>Scotland's national circuit. Open-pitlane car track days and newcomer track nights. Strict 105dB static noise limit, so check a loud exhaust before you book.</p></div>
+          <div class="venue"><b>Dyna Tune</b><span>East Kilbride</span><p>Dynapack hub dyno, remapping and diagnostics, around 30 minutes from the city centre.</p></div>
+          <div class="venue"><b>Autotec Scotland</b><span>Inverclyde</span><p>4WD Dyno Developments rolling road and laser alignment ramps; recommended for Greenock and Port Glasgow owners on local forums.</p></div>
+          <div class="venue"><b>Star Performance</b><span>Glenrothes, Fife</span><p>Long-standing Scottish rolling road often recommended on marque forums for consistent power runs.</p></div>
+        </div>
+        <p class="note" style="margin-top:10px">Listed because owners recommend them on PistonHeads and marque forums, not as an endorsement. See the <a href="#garages">screened garage list</a> for review data. Check they're still trading, read recent reviews and ask the tuner questions above.</p>
+      </div>
+    </div>
+
+    <div class="lawgrid" style="margin-top:20px">
+      <div class="law"><h4>Emissions equipment</h4><p>A car that had a catalyst or particulate filter from new fails the MOT if it's missing, and using it on the road is already an offence under the Construction and Use Regulations. The DfT consulted until 6 September 2026 on making DPF/GPF removal, cat removal, AdBlue and EGR tampering explicit offences with fines from £1,000.</p><span class="src">DVSA · DfT in-use emissions consultation, 2026</span></div>
+      <div class="law"><h4>Insurance</h4><p>Anything that differs from factory spec is a modification and must be declared, including work done by a previous owner. The Financial Ombudsman has warned that undeclared mods lead to voided policies and rejected claims.</p><span class="src">Financial Ombudsman Service, via Which?</span></div>
+      <div class="law"><h4>Headlights</h4><p>LED bulbs in halogen headlamp units fail the MOT on cars first used from 1 April 1986 ("light source and lamp not compatible"), whatever the packaging says. Only complete LED headlamp units approved for LED are legal.</p><span class="src">DVSA MOT inspection manual 4.1.4</span></div>
+      <div class="law"><h4>Window tint</h4><p>From 1 April 1985 on: windscreen at least 75% light through, front side windows at least 70%. Rear glass has no limit. Police and DVSA measure it and can issue a prohibition notice.</p><span class="src">GOV.UK tinted vehicle windows</span></div>
+      <div class="law"><h4>Noise &amp; anti-social driving</h4><p>Exhausts must not be louder than when the car was built or have been altered to increase noise. In Scotland, the Antisocial Behaviour etc. (Scotland) Act 2004 lets police seize a car used in a way that causes alarm or annoyance after a warning. Crackle maps and revving at meets are the usual trigger.</p><span class="src">Construction &amp; Use Regs · ASB (Scotland) Act 2004 s.126</span></div>
+      <div class="law"><h4>Telling DVLA</h4><p>A remap doesn't go on your V5C, but DVLA must be told about changes it lists, including colour (a full-colour wrap counts), engine or cylinder capacity, fuel type, chassis or body changes and seating.</p><span class="src">GOV.UK change vehicle details</span></div>
+      <div class="law"><h4>Scottish weather</h4><p>Winter salt eats aftermarket fasteners, braided-line fittings and bare exhausts. Use stainless hardware, underbody wax and a dedicated winter or all-season tyre set; summer tyres like the Pilot Sport 4S lose grip sharply below about 7°C.</p><span class="src">Tyre manufacturer guidance · owner experience</span></div>
+      <div class="law"><h4>Fuel</h4><p>Tuners map for 99 RON (Shell V-Power, Tesco Momentum 99, Esso Synergy Supreme+ 99). Filling with 95 RON on a stage 2 map invites knock and pulled timing. E85 is not sold at UK forecourts, so flex-fuel builds are mostly for enthusiasts with their own supply.</p><span class="src">UK tuner guidance</span></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- GARAGES -->
+<section id="garages">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">07 · Garages near Glasgow</p>
+      <h2>Garages, screened</h2>
+      <p class="lede">Trustpilot scores checked on 30 September 2026, plus our own screen: any business that advertises emissions deletes (DPF, GPF, EGR, AdBlue or catalyst removal) is flagged, because that work is illegal on the road and a sign of how the business operates.</p>
+    </div>
+    <div class="seg" role="group" aria-label="Filter garages" id="gfilter">
+      <button type="button" data-g="all" aria-pressed="true">All</button>
+      <button type="button" data-g="tune" aria-pressed="false">Remap &amp; dyno</button>
+      <button type="button" data-g="tyre" aria-pressed="false">Tyres, alignment, MOT</button>
+      <button type="button" data-g="parts" aria-pressed="false">Parts</button>
+    </div>
+    <div class="chips" role="group" aria-label="Screen result" id="gscreen" style="margin-top:12px">
+      <button type="button" class="chip ok" data-s="pass" aria-pressed="true">Passes screen</button>
+      <button type="button" class="chip check" data-s="caution" aria-pressed="true">Caution</button>
+      <button type="button" class="chip" data-s="thin" aria-pressed="true">Too few reviews</button>
+      <button type="button" class="chip illegal" data-s="fail" aria-pressed="true">Advertises deletes</button>
+    </div>
+    <div class="gcards" id="gcards" style="margin-top:16px"></div>
+
+    <div class="two" style="margin-top:24px">
+      <div class="panel">
+        <p class="eyebrow">Reading the scores</p>
+        <h3 style="margin-top:6px">Why most local tuners have no Trustpilot score</h3>
+        <ul class="watch">
+          <li>Small independent Scottish tuners mostly collect Google and Facebook reviews, not Trustpilot. "No profile" isn't a bad sign on its own.</li>
+          <li>Under about 20 reviews, one angry or glowing review swings the score. Check how recent the reviews are, too.</li>
+          <li>National networks (Quantum, chains) have one score for hundreds of branches. Your local branch may be better or worse.</li>
+          <li>Profiles that are unclaimed or don't invite reviews may not be representative, as Trustpilot itself notes.</li>
+          <li>Cross-check with owners' clubs and forums for your model, and ask to see dyno graphs from cars like yours.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <p class="eyebrow">Garage services to book, in order</p>
+        <h3 style="margin-top:6px">What to use each type of garage for</h3>
+        <ul class="tick">
+          <li><span><b>Tyre and alignment centres:</b> performance tyres, four-wheel alignment after suspension work, MOT.</span></li>
+          <li><span><b>Performance specialist with a dyno:</b> baseline power run, remap, gearbox software, data-logging, stage 2 hardware.</span></li>
+          <li><span><b>Marque specialist or main dealer:</b> warranty work, recalls, software updates on newer cars.</span></li>
+          <li><span><b>Security installer (Thatcham-approved):</b> trackers and CAN-bus immobilisers, with an installation certificate for your insurer.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<section id="sources" class="sources">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">08 · Sources</p>
+      <h2>Where this comes from</h2>
+      <p class="lede">Legal points are from government, regulator and circuit sources, checked on 30 September 2026. Power figures are manufacturer data plus owner and tuner consensus; treat them as a guide.</p>
+    </div>
+    <ol>
+      <li><a href="https://www.glasgow.gov.uk/article/3982/Glasgow-s-LEZ-Key-Information" target="_blank" rel="noopener">Glasgow City Council: Glasgow's LEZ key information</a></li>
+      <li><a href="https://www.rac.co.uk/drive/advice/emissions/glasgow-low-emission-zone-lez/" target="_blank" rel="noopener">RAC: Glasgow Low Emission Zone guide</a></li>
+      <li><a href="https://www.gov.uk/tinted-vehicle-window-rules" target="_blank" rel="noopener">GOV.UK: Tinted vehicle windows, the law</a></li>
+      <li><a href="https://www.gov.uk/change-vehicle-details-registration-certificate" target="_blank" rel="noopener">GOV.UK: Change vehicle details on a V5C</a></li>
+      <li><a href="https://mattersoftesting.blog.gov.uk/diesel-particulate-filters-protecting-the-environment-and-the-mots-integrity/" target="_blank" rel="noopener">DVSA Matters of Testing: DPFs and the MOT</a></li>
+      <li><a href="https://www.evo.co.uk/news/209071/car-emissions-consultation-ends-soon-with-uks-tuned-and-modified-vehicles-targeted" target="_blank" rel="noopener">evo: DfT emissions consultation and tuned cars (2026)</a></li>
+      <li><a href="https://www.motorcyclenews.com/news/2026/august/vehicle-emissions-law-change-proposal/" target="_blank" rel="noopener">MCN: What the DfT in-use emissions proposal covers</a></li>
+      <li><a href="https://www.autodoc.co.uk/info/legality-of-replacing-h7-halogen-bulbs-with-leds" target="_blank" rel="noopener">Autodoc: DVSA MOT manual on LED conversions</a></li>
+      <li><a href="https://www.which.co.uk/news/article/could-modifying-your-car-invalidate-your-insurance-aZnBi4x6pXo7" target="_blank" rel="noopener">Which?: Could modifying your car invalidate your insurance?</a></li>
+      <li><a href="https://www.adrianflux.co.uk/blog/2024/02/how-popular-modifications-affect-your-car-insurance/" target="_blank" rel="noopener">Adrian Flux: How popular modifications affect insurance</a></li>
+      <li><a href="https://www.knockhill.com/trackdays/Trackday-FAQs" target="_blank" rel="noopener">Knockhill: Trackday FAQs and noise limit</a></li>
+      <li><a href="https://dynatune.co.uk/aboutus/" target="_blank" rel="noopener">Dyna Tune, East Kilbride</a> · <a href="https://autotecscotland.co.uk/services/performance-tuning/" target="_blank" rel="noopener">Autotec Scotland</a></li>
+      <li><a href="https://www.pistonheads.com/gassing/topic.asp?h=0&amp;f=118&amp;t=1635495" target="_blank" rel="noopener">PistonHeads Scotland forum: Glasgow-area rolling roads</a></li>
+      <li>Trustpilot profiles checked 30 Sept 2026: <a href="https://www.trustpilot.com/review/www.atseuromaster.co.uk" target="_blank" rel="noopener">ATS Euromaster</a>, <a href="https://www.trustpilot.com/review/www.kwik-fit.com" target="_blank" rel="noopener">Kwik Fit</a>, <a href="https://www.trustpilot.com/review/www.national.co.uk" target="_blank" rel="noopener">National Tyres</a>, <a href="https://www.trustpilot.com/review/www.halfords.com" target="_blank" rel="noopener">Halfords</a>, <a href="https://www.trustpilot.com/review/quantumtuning.co.uk" target="_blank" rel="noopener">Quantum Tuning</a>, <a href="https://www.trustpilot.com/review/tuneitscotland.co.uk" target="_blank" rel="noopener">Tune-it Scotland</a>, <a href="https://www.trustpilot.com/review/caraholicsremap.co.uk" target="_blank" rel="noopener">Car'aholics Remapping</a>, <a href="https://www.trustpilot.com/review/awesomegti.com" target="_blank" rel="noopener">Awesome GTI</a>, <a href="https://www.trustpilot.com/review/www.merlinmotorsport.co.uk" target="_blank" rel="noopener">Merlin Motorsport</a></li>
+      <li>Business websites for services offered: <a href="https://www.psiperformance.co.uk/" target="_blank" rel="noopener">PSI Performance</a>, <a href="https://glasgow.quantumtuning.co.uk/" target="_blank" rel="noopener">Quantum Glasgow</a>, <a href="https://tuneitscotland.co.uk/" target="_blank" rel="noopener">Tune-it Scotland</a></li>
+      <li>Manufacturer UK press and brochure data for each model; owners' manuals for fuel grade, oil specification and track-use warranty wording.</li>
+    </ol>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Clydeside Redline is a planning guide, not professional, legal or insurance advice. Power gains, costs and difficulty are typical ranges. Always confirm with your insurer, a qualified technician and current GOV.UK guidance before modifying a car.</p>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ---------- DATA: cars ---------- */
+const CARS = [
+ {id:"golfgti",name:"VW Golf GTI",gen:"Mk8 / Mk8.5",cls:"hatch",years:"2020–",engine:"2.0 TSI four-cylinder (EA888 evo4)",layout:"FWD, electronic front diff lock",box:"7-speed DSG (Mk8 also 6MT)",ps:265,psNote:"Mk8 245PS; Mk8.5 from 2024 265PS",nm:370,z62:5.9,kg:1430,s1:[295,315],s2:[330,355],ceiling:"The standard turbo runs out of breath around 350PS; more needs a bigger turbo.",watch:["DSG torque limits: budget for a gearbox (TCU) map with any big engine map","Direct injection: intake-valve carbon build-up at high mileage","Plastic charge pipe and coolant housings are common failure points on EA888 engines","Factory petrol particulate filter (GPF) must stay"],status:"On sale"},
+ {id:"golfr",name:"VW Golf R",gen:"Mk8 / Mk8.5",cls:"hatch",years:"2020–",engine:"2.0 TSI four-cylinder (EA888 evo4, larger turbo)",layout:"AWD with rear torque-vectoring",box:"7-speed DSG",ps:333,psNote:"Mk8 320PS; Mk8.5 from 2024 333PS",nm:420,z62:4.6,kg:1550,s1:[375,400],s2:[400,430],ceiling:"Stage 2 is the sweet spot; beyond it you need turbo, fuel and gearbox hardware.",watch:["DSG needs a TCU map for stage 1 torque","Rear drive unit gets hot on track: fluid changes matter","GPF fitted from the factory","Brakes are the first limit on track"],status:"On sale"},
+ {id:"civicr",name:"Honda Civic Type R",gen:"FL5",cls:"hatch",years:"2022–",engine:"2.0 VTEC Turbo four-cylinder (K20C1)",layout:"FWD, helical LSD",box:"6-speed manual",ps:329,psNote:"UK spec",nm:420,z62:5.4,kg:1430,s1:[345,365],s2:[365,390],ceiling:"Big gains need turbo work; most owners stop at intake, intercooler and a flash tune.",watch:["Clutch and flywheel are the first weak link with more torque","Intake heat soak on track and in traffic","Front tyres wear fast on track days","Check new-car availability: many UK buyers are on the used market"],status:"New and used"},
+ {id:"gryaris",name:"Toyota GR Yaris",gen:"GXPA16",cls:"hatch",years:"2020–",engine:"1.6 turbo three-cylinder (G16E-GTS)",layout:"AWD (GR-Four), optional Torsen diffs",box:"6MT; 8-speed auto from 2024",ps:280,psNote:"2020–23 cars 261PS / 360Nm",nm:390,z62:5.5,kg:1280,s1:[300,320],s2:[320,350],ceiling:"High-output builds exist but engine strength on hard-tuned cars is widely debated on owners' forums.",watch:["Owners' forums discuss engine failures on some hard-tuned, heavily tracked cars: tune conservatively and log","Clutch heat in repeated launches","Rear diff and gearbox oil temperatures on track","Early cars had a recall list: check it's all done"],status:"On sale"},
+ {id:"i30n",name:"Hyundai i30 N",gen:"PDe",cls:"hatch",years:"2017–2024",engine:"2.0 T-GDi four-cylinder (Theta II)",layout:"FWD, electronic LSD",box:"6MT or 8-speed wet DCT",ps:280,psNote:"Performance model; early base cars 250PS",nm:392,z62:5.9,kg:1480,s1:[300,320],s2:[320,345],ceiling:"Stage 2 plus a hybrid turbo is where most UK builds end.",watch:["No longer sold new in the UK: buy on history","DCT needs gearbox software for bigger torque","Clutch on manuals above stage 2","Rev-matching and N modes reset after battery disconnection on some cars"],status:"Used market"},
+ {id:"focusst",name:"Ford Focus ST",gen:"Mk4",cls:"hatch",years:"2019–2025",engine:"2.3 EcoBoost four-cylinder",layout:"FWD, electronic LSD",box:"6MT or 7-speed auto",ps:280,psNote:"Diesel ST 190PS not covered",nm:420,z62:5.7,kg:1510,s1:[320,335],s2:[335,360],ceiling:"Strong torque already; clutch and front tyres limit what's usable.",watch:["Clutch slip on manuals is common above stage 1","Front tyres and torque steer in the wet","Heat soak in stop-start city traffic","Production ended in 2025: buy on service history"],status:"Used market"},
+ {id:"fiestast",name:"Ford Fiesta ST",gen:"Mk8",cls:"hatch",years:"2018–2023",engine:"1.5 EcoBoost three-cylinder",layout:"FWD, Quaife LSD on Performance Pack",box:"6-speed manual",ps:200,psNote:"Torque 290Nm on pre-2020 cars",nm:320,z62:6.5,kg:1262,s1:[220,235],s2:[235,255],ceiling:"Turbo size limits stage 2; bigger numbers need a hybrid turbo.",watch:["Clutch is the usual stage 2 limit","Performance Pack (LSD) cars are the ones to buy","Rear beam: adjustable settings are limited, so dampers matter","Out of production: parts support is still very good"],status:"Used market"},
+ {id:"rs3",name:"Audi RS 3",gen:"8Y",cls:"hatch",years:"2021–",engine:"2.5 TFSI five-cylinder",layout:"AWD with RS Torque Splitter",box:"7-speed S tronic",ps:400,psNote:"Sportback and saloon",nm:500,z62:3.8,kg:1575,s1:[460,490],s2:[490,530],ceiling:"Big-turbo builds go much further, but need gearbox and fuel upgrades.",watch:["S tronic needs a TCU map for extra torque","Petrol particulate filter (OPF) fitted: keep it","Brakes and cooling on track","Warranty: engine software changes can affect claims"],status:"On sale"},
+ {id:"a45s",name:"Mercedes-AMG A 45 S",gen:"W177",cls:"hatch",years:"2019–2025",engine:"2.0 turbo four-cylinder (M139)",layout:"AWD (4MATIC+) with Drift Mode",box:"8-speed dual-clutch",ps:421,psNote:"Most powerful production four-cylinder of its time",nm:500,z62:3.9,kg:1635,s1:[470,495],s2:[495,530],ceiling:"Already very highly stressed from the factory; margins are smaller than on other cars here.",watch:["Highly stressed stock engine: choose a conservative map","DCT software for torque","Cooling and oil temperature on track","Insurance for tuned AMGs is limited to specialist insurers"],status:"Used market"},
+ {id:"m2",name:"BMW M2",gen:"G87",cls:"sports",years:"2023–",engine:"3.0 twin-turbo straight-six (S58)",layout:"RWD, Active M Differential",box:"8-speed auto or 6MT",ps:480,psNote:"2025 update 480PS; earlier cars 460PS",nm:600,z62:4.0,kg:1725,s1:[540,570],s2:[570,620],ceiling:"The S58 takes a lot of power; traction is the practical limit on a wet Scottish road.",watch:["Traction, not power, is the limit: tyres and diff first","Manual cars have lower torque (550Nm)","GPF fitted from the factory","Weight: brakes and tyres work hard on track"],status:"On sale"},
+ {id:"supra",name:"Toyota GR Supra",gen:"A90",cls:"sports",years:"2019–2026",engine:"3.0 turbo straight-six (BMW B58)",layout:"RWD, active diff",box:"8-speed auto; 6MT from 2022",ps:340,psNote:"UK 3.0 models",nm:500,z62:4.3,kg:1570,s1:[390,420],s2:[410,450],ceiling:"B58 responds very well; gearbox and fuel system set the next ceiling.",watch:["Auto gearbox benefits from TCU tuning","Petrol particulate filter fitted","Rear tyres go quickly with extra torque","Final model year 2026: long-term parts support via BMW engine"],status:"On sale, ending"},
+ {id:"cayman",name:"Porsche 718 Cayman GTS 4.0",gen:"982",cls:"sports",years:"2020–2025",engine:"4.0 naturally aspirated flat-six",layout:"Mid-engine, RWD, mechanical LSD",box:"6MT or 7-speed PDK",ps:400,psNote:"PDK 430Nm",nm:420,z62:4.5,kg:1405,s1:[410,420],s2:[420,440],ceiling:"Naturally aspirated: small gains from software. Spend on chassis, brakes and tyres.",watch:["Remaps give little on NA engines; value is in response and sound","Porsche warranty and Approved cover can be affected by engine software","Keep original parts for resale","Track: brake fluid and pads first"],status:"Used market"},
+ {id:"a110",name:"Alpine A110 S",gen:"AS1",cls:"sports",years:"2019–2026",engine:"1.8 turbo four-cylinder",layout:"Mid-engine, RWD",box:"7-speed dual-clutch",ps:300,psNote:"Standard A110 252PS",nm:340,z62:4.2,kg:1109,s1:[320,335],s2:[335,350],ceiling:"The dual-clutch torque rating limits large gains.",watch:["DCT torque rating limits torque increases","Very light car: tyres and alignment transform it","Aluminium body: repairs need specialists","Production ending 2026"],status:"On sale, ending"},
+ {id:"mx5",name:"Mazda MX-5 2.0",gen:"ND",cls:"sports",years:"2015–",engine:"2.0 Skyactiv-G four-cylinder, naturally aspirated",layout:"Front-engine RWD, LSD on most 2.0s",box:"6-speed manual",ps:184,psNote:"From 2018 update",nm:205,z62:6.5,kg:1070,s1:[188,198],s2:[195,210],ceiling:"Naturally aspirated: supercharger or turbo kits from UK specialists are the route to real power.",watch:["Soft factory damping: dampers and alignment are the biggest wins","Remap gains are small","Forced induction kits need clutch and cooling work","Roof seals and drains: check on Scottish cars"],status:"On sale"},
+ {id:"gr86",name:"Toyota GR86",gen:"ZN8",cls:"sports",years:"2022–2024",engine:"2.4 flat-four, naturally aspirated (FA24)",layout:"Front-engine RWD, Torsen LSD",box:"6-speed manual",ps:234,psNote:"Limited UK allocation",nm:250,z62:6.3,kg:1275,s1:[240,250],s2:[245,260],ceiling:"Naturally aspirated; software smooths the mid-range torque dip rather than adding much peak power.",watch:["Oil temperature on track: an oil cooler is a common first mod","Remaps mainly fix the mid-range torque dip","Limited UK numbers: keep receipts, values are strong","Summer tyres from factory: plan a winter set"],status:"Used market"}
+];
+
+/* ---------- DATA: mods ---------- */
+/* legal: ok = road legal, declare | check = legal only if compliant, MOT risk | track = track/motorsport | illegal = illegal on the road */
+const MODS = [
+ {id:"health",cat:"Foundations",part:"ecu",name:"Baseline health check",what:"Dyno power run, data log, boost-leak (smoke) test, compression or leak-down test and a service-history review.",why:"Shows whether the engine is making its rated power and finds faults before you add stress.",diff:1,who:"Pro",cost:[80,250],gain:"Knowledge, not power",legal:"ok",declare:false,mot:"No effect.",scot:"Dyna Tune, Autotec and Star Performance all run power checks.",order:1,goals:["road","track","show"]},
+ {id:"tyres",cat:"Wheels & tyres",part:null,name:"Performance summer tyres",what:"Top-tier summer tyres in the factory size, e.g. Michelin Pilot Sport 5 or 4S, Continental SportContact 7, Bridgestone Potenza Sport.",why:"The biggest single gain in braking, wet grip and steering feel.",diff:1,who:"Pro",cost:[600,1400],gain:"Grip and braking",legal:"ok",declare:false,mot:"Must meet the load and speed rating and 1.6mm legal tread.",scot:"Summer tyres lose grip sharply below about 7°C. Pair with a winter or all-season set from October.",order:1,goals:["road","track","show"]},
+ {id:"winter",cat:"Wheels & tyres",part:null,name:"Winter or all-season set",what:"A second set of wheels with winter tyres or all-season tyres such as Michelin CrossClimate 2, often one size smaller.",why:"Keeps the car usable and safe through a Scottish winter and saves the summer tyres.",diff:1,who:"DIY",cost:[700,1600],gain:"Cold-weather grip",legal:"ok",declare:true,mot:"Wheels must suit the car's load and fitment.",scot:"Many insurers don't raise premiums for winter tyres but still want them declared.",order:1,goals:["road"]},
+ {id:"align",cat:"Foundations",part:null,name:"Fast-road alignment",what:"Four-wheel laser alignment to a fast-road spec: a little more negative camber, corrected toe.",why:"Sharper turn-in and even tyre wear. Essential after any suspension change.",diff:4,who:"Pro",cost:[80,200],gain:"Turn-in and stability",legal:"ok",declare:false,mot:"No effect.",order:1,goals:["road","track","show"]},
+ {id:"fluid",cat:"Brakes",part:null,name:"High-temperature brake fluid",what:"Fresh DOT 4 racing or DOT 5.1 fluid with a higher boiling point.",why:"Stops the pedal going long after a hard run or track session.",diff:2,who:"DIY+",cost:[40,120],gain:"Fade resistance",legal:"ok",declare:false,mot:"Brake performance is tested; bleed properly.",order:1,goals:["road","track"]},
+ {id:"pads",cat:"Brakes",part:null,name:"Fast-road brake pads",what:"Uprated pads from brands like EBC, Ferodo, Pagid or Carbotech, matched to fast-road or track use.",why:"More bite and heat tolerance than standard pads.",diff:2,who:"DIY+",cost:[90,280],gain:"Stopping and fade",legal:"ok",declare:true,mot:"Must be R90 approved for road use.",order:1,goals:["road","track"]},
+ {id:"lines",cat:"Brakes",part:null,name:"Braided brake lines",what:"Stainless-braided hoses replacing rubber flexi hoses.",why:"Firmer, more consistent pedal.",diff:3,who:"DIY+",cost:[80,200],gain:"Pedal feel",legal:"ok",declare:true,mot:"Must be type-approved and correctly routed; hoses are inspected.",scot:"Choose coated lines and stainless fittings: salt attacks cheap fittings.",order:1,goals:["track"]},
+
+ {id:"springs",cat:"Chassis",part:null,name:"Lowering springs",what:"Shorter, stiffer springs on the factory dampers, usually 20–35mm lower.",why:"Cheapest way to lower and reduce roll.",diff:3,who:"DIY+",cost:[250,550],gain:"Stance and less roll",legal:"ok",declare:true,mot:"Tyres must not foul; headlamp aim must be reset.",scot:"Glasgow speed humps and potholes: stay at or above 30mm drop.",order:2,req:["align"],goals:["show","road"]},
+ {id:"coilovers",cat:"Chassis",part:null,name:"Adjustable coilovers",what:"Height- and damping-adjustable suspension from firms like KW, Bilstein, Öhlins, BC or Nitron (UK).",why:"Tunable ride and handling, and corner weighting for track use.",diff:3,who:"DIY+",cost:[900,3500],gain:"Handling and control",legal:"ok",declare:true,mot:"Tyres must not foul; headlamp aim reset.",scot:"Set damping softer for broken B-roads; keep a road height you can live with.",order:2,req:["align"],goals:["road","track","show"]},
+ {id:"arb",cat:"Chassis",part:null,name:"Anti-roll bars",what:"Stiffer or adjustable front and rear anti-roll bars.",why:"Tunes balance: a stiffer rear bar reduces understeer in FWD hot hatches.",diff:3,who:"DIY+",cost:[250,700],gain:"Balance and less roll",legal:"ok",declare:true,mot:"No effect if fitted correctly.",order:2,goals:["road","track"]},
+ {id:"bushes",cat:"Chassis",part:null,name:"Polyurethane bushes",what:"Poly bushes (e.g. Powerflex) replacing rubber suspension or subframe bushes.",why:"Tighter, more precise suspension movement.",diff:4,who:"Pro",cost:[150,700],gain:"Precision",legal:"ok",declare:true,mot:"Wear is inspected; fit correctly greased.",order:2,goals:["track"]},
+ {id:"mounts",cat:"Drivetrain",part:"ecu",name:"Engine and gearbox mounts",what:"Stiffer engine, gearbox and dogbone mounts or inserts.",why:"Less wheel hop and sharper gear changes.",diff:3,who:"DIY+",cost:[100,450],gain:"Throttle and shift feel",legal:"ok",declare:true,mot:"No effect.",scot:"Adds cabin vibration; rough Scottish roads make it more noticeable.",order:2,goals:["road","track"]},
+ {id:"strutbar",cat:"Chassis",part:null,name:"Strut brace",what:"A bar linking the front suspension towers.",why:"Small stiffness gain; mostly visual on modern cars.",diff:1,who:"DIY",cost:[80,250],gain:"Minor stiffness",legal:"ok",declare:true,mot:"No effect.",order:2,goals:["show"]},
+ {id:"lsd",cat:"Drivetrain",part:"ecu",name:"Limited-slip differential",what:"A mechanical LSD such as a Quaife ATB for cars without one.",why:"Puts power down out of wet corners instead of spinning the inside wheel.",diff:4,who:"Pro",cost:[1100,2200],gain:"Traction",legal:"ok",declare:true,mot:"No effect.",order:2,goals:["road","track"]},
+ {id:"bbk",cat:"Brakes",part:null,name:"Big brake kit",what:"Larger multi-piston calipers and discs from AP Racing, Alcon, Brembo or similar.",why:"Repeatable stopping on track, more thermal capacity.",diff:3,who:"Pro",cost:[1800,5000],gain:"Brake capacity",legal:"ok",declare:true,mot:"Must clear wheels; brake balance should stay sensible.",order:2,rec:["fluid"],goals:["track"]},
+ {id:"discs",cat:"Brakes",part:null,name:"Two-piece discs",what:"Lightweight discs with alloy bells and replaceable rotors.",why:"Less unsprung weight and better heat handling.",diff:2,who:"DIY+",cost:[700,1600],gain:"Weight and fade",legal:"ok",declare:true,mot:"Checked for condition and thickness.",order:2,goals:["track"]},
+
+ {id:"stage1",cat:"Engine",part:"ecu",name:"Stage 1 remap",what:"ECU software for a standard car: boost, fuel and ignition adjusted for 99 RON.",why:"The biggest power-per-pound upgrade on turbo cars.",diff:4,who:"Pro",cost:[350,900],gain:"Turbo cars +10–20%",legal:"check",declare:true,mot:"Legal if emissions stay in limits, no warning lights and all emissions equipment works.",scot:"Use 99 RON; many insurers load premiums heavily or refuse.",order:3,rec:["health"],goals:["road","track"]},
+ {id:"tcu",cat:"Drivetrain",part:"ecu",name:"Gearbox (TCU) software",what:"Transmission software to raise torque limits and adjust shift and launch behaviour on DSG/DCT/auto cars.",why:"Stops torque limiting and clutch slip on tuned dual-clutch cars.",diff:4,who:"Pro",cost:[300,700],gain:"Faster shifts, holds torque",legal:"ok",declare:true,mot:"No effect.",order:3,req:["stage1"],goals:["road","track"]},
+ {id:"intake",cat:"Engine",part:"intake",name:"Induction kit / intake",what:"Enclosed intake with a cold-air feed and high-flow filter, e.g. from Eventuri, Forge, ITG or Racingline.",why:"More induction sound, small power gain on tuned cars.",diff:1,who:"DIY",cost:[150,900],gain:"+0–10PS (more with map)",legal:"ok",declare:true,mot:"No effect.",scot:"Open cone filters pull hot air and water on wet roads; choose an enclosed design.",order:3,goals:["road","show"]},
+ {id:"turboinlet",cat:"Engine",part:"turbo",name:"Turbo inlet / muffler delete",what:"Larger turbo inlet pipe replacing the restrictive or noise-damping factory item.",why:"Better flow for stage 2 and more turbo noise.",diff:2,who:"DIY+",cost:[120,350],gain:"Supports stage 2",legal:"ok",declare:true,mot:"No effect.",order:3,goals:["road","track"]},
+ {id:"ic",cat:"Engine",part:"intercooler",name:"Uprated intercooler",what:"Larger front-mount intercooler from Forge, Wagner, Mishimoto or similar.",why:"Cooler charge air: consistent power, less heat soak.",diff:3,who:"DIY+",cost:[400,1100],gain:"Holds power, supports stage 2",legal:"ok",declare:true,mot:"No effect.",order:3,goals:["road","track"]},
+ {id:"chargepipes",cat:"Engine",part:"intercooler",name:"Alloy boost / charge pipes",what:"Metal or silicone boost pipes replacing plastic factory pipes.",why:"Plastic pipes can crack under extra boost on some platforms (e.g. EA888).",diff:2,who:"DIY+",cost:[120,400],gain:"Reliability",legal:"ok",declare:true,mot:"No effect.",order:3,goals:["road","track"]},
+ {id:"catback",cat:"Exhaust",part:"catback",name:"Cat-back exhaust",what:"Aftermarket system from the catalyst/GPF back: Milltek (UK), Scorpion (UK), Akrapovič, Remus.",why:"Sound and a small weight saving.",diff:3,who:"DIY+",cost:[700,3500],gain:"Sound, +0–5PS",legal:"check",declare:true,mot:"Must not be louder than a standard exhaust in a way that breaks noise rules; must keep all emissions parts.",scot:"Choose a resonated or valved system. Knockhill's limit is 105dB static.",order:3,goals:["road","show"]},
+ {id:"valved",cat:"Exhaust",part:"catback",name:"Valved exhaust",what:"Cat-back system with electronically controlled valves.",why:"Quiet around town and at home, open on the right road.",diff:3,who:"DIY+",cost:[1200,4500],gain:"Sound control",legal:"check",declare:true,mot:"As cat-back. Keep valves closed in built-up areas.",scot:"Valves closed through the city and at meets keeps attention from Police Scotland.",order:3,goals:["road","show"]},
+ {id:"downpipe",cat:"Exhaust",part:"downpipe",name:"Downpipe with high-flow cat",what:"Larger downpipe keeping a catalytic converter (usually 200-cell sports cat).",why:"Main flow gain for stage 2 turbo builds.",diff:4,who:"Pro",cost:[500,1300],gain:"Enables stage 2",legal:"check",declare:true,mot:"Sports cats can fail emissions or light the EML. Must keep a working catalyst and GPF; not type-approved in many cases.",scot:"Ask the tuner to prove emissions on their gas analyser before an MOT.",order:4,req:["stage1"],goals:["track"]},
+ {id:"stage2",cat:"Engine",part:"ecu",name:"Stage 2 remap",what:"Map for supporting hardware: usually intake, intercooler, downpipe with high-flow cat.",why:"The next big step once hardware removes restrictions.",diff:5,who:"Pro",cost:[400,1100],gain:"Turbo cars +20–30% over stock",legal:"check",declare:true,mot:"As stage 1; sports-cat emissions are the usual MOT risk.",order:4,req:["stage1","ic","downpipe"],rec:["tcu","clutch","pads"],goals:["track"]},
+ {id:"clutch",cat:"Drivetrain",part:"ecu",name:"Uprated clutch",what:"Organic or paddle clutch rated for more torque, often with a single-mass flywheel.",why:"Stock clutches on manual cars often slip beyond stage 1.",diff:4,who:"Pro",cost:[700,1600],gain:"Holds torque",legal:"ok",declare:true,mot:"No effect.",scot:"Heavy pedal and chatter in Glasgow traffic with aggressive clutches.",order:4,goals:["road","track"]},
+ {id:"oilcool",cat:"Engine",part:"ecu",name:"Oil cooler",what:"Thermostatic oil cooler kit (e.g. Mocal) for track use.",why:"Keeps oil temperature in check across a full session.",diff:4,who:"Pro",cost:[400,1000],gain:"Track reliability",legal:"ok",declare:true,mot:"No effect if no leaks.",order:4,goals:["track"]},
+ {id:"hybrid",cat:"Engine",part:"turbo",name:"Hybrid / big turbo (stage 3)",what:"Larger or hybrid turbocharger with custom mapping.",why:"The route past the standard turbo's limit.",diff:5,who:"Pro",cost:[2500,7000],gain:"+35–60% over stock",legal:"check",declare:true,mot:"Emissions and warning lights; many insurers decline.",order:5,req:["stage2","fuel","clutch"],rec:["oilcool","bbk"],goals:["track"]},
+ {id:"fuel",cat:"Engine",part:"ecu",name:"Fuel system upgrade",what:"Uprated high-pressure fuel pump and/or injectors.",why:"Needed when fuel demand exceeds stock capacity.",diff:5,who:"Pro",cost:[700,2500],gain:"Supports stage 3",legal:"ok",declare:true,mot:"No effect.",order:5,goals:["track"]},
+ {id:"e85",cat:"Engine",part:"ecu",name:"Flex-fuel / E85 kit",what:"Ethanol-content sensor and map to run ethanol blends.",why:"More knock resistance and power.",diff:5,who:"Pro",cost:[600,1500],gain:"+5–10% over pump fuel map",legal:"check",declare:true,mot:"Emissions must pass on the fuel used.",scot:"E85 isn't sold at UK forecourts; supply is by drum from specialist suppliers.",order:5,goals:["track"]},
+ {id:"box",cat:"Engine",part:"ecu",name:"Plug-in tuning box",what:"Piggyback module altering sensor signals rather than re-writing the ECU.",why:"Removable and cheap, but less refined than a proper map.",diff:1,who:"DIY",cost:[200,600],gain:"+5–15%",legal:"check",declare:true,mot:"As a remap. Removing it before a claim doesn't remove the duty to declare.",order:3,goals:["road"]},
+ {id:"crackle",cat:"Engine",part:"ecu",name:"Overrun 'pops & bangs' map",what:"Fuel and ignition changes that make the exhaust crackle off-throttle.",why:"Sound only; no performance benefit.",diff:4,who:"Pro",cost:[100,300],gain:"None",legal:"check",declare:true,mot:"Hard on catalysts and GPFs; a failed cat fails the MOT.",scot:"A common reason for noise complaints and police attention at meets.",order:3,goals:["show"]},
+ {id:"decat",cat:"Exhaust",part:"downpipe",name:"Cat removal / decat pipe",what:"Removing the catalytic converter.",why:"Listed so you can recognise it: don't do it on a road car.",diff:4,who:"Pro",cost:[200,600],gain:"Small, emissions sky-high",legal:"illegal",declare:true,mot:"MOT fail. Using it on the road is an offence, with tougher penalties proposed in 2026.",scot:"Many insurers treat it as grounds to void cover.",order:5,goals:[]},
+ {id:"gpfdel",cat:"Exhaust",part:"gpf",name:"GPF / OPF removal",what:"Removing the petrol particulate filter fitted to most hot hatches since 2018.",why:"Listed so you can recognise it: don't do it on a road car.",diff:4,who:"Pro",cost:[200,800],gain:"Small",legal:"illegal",declare:true,mot:"Illegal on the road. The DfT names DPF/GPF deletion as always illegal in its 2026 proposals.",order:5,goals:[]},
+ {id:"gpfback",cat:"Exhaust",part:"gpf",name:"GPF-back exhaust",what:"Cat-back style system starting after the particulate filter, keeping it in place.",why:"The legal way to get sound on GPF-equipped cars.",diff:3,who:"DIY+",cost:[800,3000],gain:"Sound",legal:"check",declare:true,mot:"As cat-back: GPF stays, noise rules apply.",order:3,goals:["road","show"]},
+
+ {id:"forged",cat:"Wheels & tyres",part:null,name:"Lightweight forged wheels",what:"Forged or flow-formed wheels from BBS, OZ, Rotiform, Team Dynamics (UK) and others.",why:"Less unsprung and rotating weight: sharper steering, better ride.",diff:1,who:"DIY",cost:[1400,5000],gain:"Response and ride",legal:"ok",declare:true,mot:"Tyres must not foul; correct load rating.",scot:"Deep-dish, low-profile wheels suffer on potholed roads. Budget for wheel insurance or keep the size sensible.",order:4,goals:["show","track"]},
+ {id:"spacers",cat:"Wheels & tyres",part:null,name:"Hub-centric wheel spacers",what:"Spacers with longer bolts to push wheels out.",why:"Fills the arches; small change to track width.",diff:2,who:"DIY+",cost:[80,250],gain:"Stance",legal:"check",declare:true,mot:"Tyres must stay inside the bodywork; bolts must have full thread engagement.",order:4,goals:["show"]},
+ {id:"splitter",cat:"Aero & body",part:null,name:"Front splitter / rear wing",what:"Front lip or splitter, rear wing or diffuser.",why:"Looks; some downforce at track speeds.",diff:2,who:"DIY+",cost:[150,2500],gain:"Looks, some downforce",legal:"check",declare:true,mot:"No sharp edges; must not obscure number plates or lights.",scot:"Low splitters and Glasgow speed humps don't mix.",order:4,goals:["show","track"]},
+ {id:"wrap",cat:"Aero & body",part:null,name:"Wrap or paint protection film",what:"Full colour-change wrap or clear PPF.",why:"New colour or stone-chip protection.",diff:3,who:"Pro",cost:[1500,5000],gain:"Looks and protection",legal:"ok",declare:true,mot:"No effect.",scot:"A full colour change must be reported to DVLA on the V5C.",order:4,goals:["show"]},
+ {id:"reartint",cat:"Lighting & glass",part:null,name:"Rear window tint",what:"Tint film on rear side windows and rear screen.",why:"Privacy and heat reduction.",diff:3,who:"Pro",cost:[150,350],gain:"Privacy",legal:"ok",declare:true,mot:"No legal limit behind the front seats.",order:4,goals:["show","road"]},
+ {id:"fronttint",cat:"Lighting & glass",part:null,name:"Dark front side tint",what:"Tint on the front side windows below 70% combined light transmission.",why:"Listed so you can recognise it: police can issue a prohibition notice.",diff:3,who:"Pro",cost:[100,250],gain:"None",legal:"illegal",declare:true,mot:"Illegal below 70% (front sides) or 75% (windscreen).",order:4,goals:[]},
+ {id:"ledbulbs",cat:"Lighting & glass",part:null,name:"LED bulbs in halogen lamps",what:"Retrofit LED bulbs in headlamps designed for halogen.",why:"Listed so you can recognise it. For LED light, fit complete approved LED headlamp units.",diff:1,who:"DIY",cost:[30,120],gain:"None legal",legal:"illegal",declare:true,mot:"MOT fail: 'light source and lamp not compatible'.",order:4,goals:[]},
+
+ {id:"seats",cat:"Interior & safety",part:null,name:"Bucket seats",what:"Fixed-back or reclining buckets from Recaro, Corbeau (UK), Cobra (UK) or Sparco on proper subframes.",why:"Holds you in place so you can feel the car.",diff:3,who:"DIY+",cost:[600,3000],gain:"Driver support",legal:"check",declare:true,mot:"Seat must be securely mounted; airbag warning light is a fail.",scot:"Side-airbag seats need a resistor or coding done properly.",order:4,goals:["track"]},
+ {id:"harness",cat:"Interior & safety",part:null,name:"Harness + harness bar",what:"Four- or six-point harness mounted to a harness bar or cage.",why:"Motorsport restraint. Not a road-safety upgrade.",diff:4,who:"Pro",cost:[300,900],gain:"Track restraint",legal:"track",declare:true,mot:"Standard seatbelts must stay fitted and working for road use.",order:5,req:["seats"],goals:["track"]},
+ {id:"cage",cat:"Interior & safety",part:null,name:"Half or full roll cage",what:"Bolt-in or welded cage built to Motorsport UK specs.",why:"Required for many race series.",diff:5,who:"Pro",cost:[700,4000],gain:"Motorsport safety",legal:"track",declare:true,mot:"Road use without helmets is dangerous; padding required.",order:5,goals:["track"]},
+ {id:"tracker",cat:"Security",part:null,name:"Thatcham-approved tracker",what:"Thatcham S5 or S7 category tracking unit with monitoring subscription.",why:"Recovers stolen cars; some insurers require one on tuned or high-value cars.",diff:4,who:"Pro",cost:[250,700],gain:"Theft recovery",legal:"ok",declare:true,mot:"No effect.",order:1,goals:["road","show","track"]},
+ {id:"immob",cat:"Security",part:null,name:"CAN-bus immobiliser",what:"Ghost-style immobiliser needing a PIN sequence on factory buttons before the car will start.",why:"Defeats keyless relay and OBD key-programming theft.",diff:4,who:"Pro",cost:[400,700],gain:"Theft prevention",legal:"ok",declare:true,mot:"No effect.",scot:"Hot hatches and M cars are high-theft models in the central belt.",order:1,goals:["road","show","track"]},
+ {id:"obdlock",cat:"Security",part:"ecu",name:"OBD port lock",what:"Physical lock or relocated OBD port.",why:"Slows thieves who programme new keys through the port.",diff:1,who:"DIY",cost:[50,150],gain:"Theft deterrent",legal:"ok",declare:false,mot:"Tester needs access to the port: bring the key.",order:1,goals:["road","show"]},
+ {id:"dashcam",cat:"Security",part:null,name:"Front and rear dash cam",what:"Hard-wired front and rear camera with parking mode.",why:"Evidence for insurance claims and hit-and-runs.",diff:2,who:"DIY+",cost:[150,400],gain:"Evidence",legal:"ok",declare:false,mot:"Must not block more than a small area of the windscreen.",order:1,goals:["road","show"]},
+ {id:"laptimer",cat:"Interior & safety",part:"ecu",name:"Lap timer / data logger",what:"GPS lap timer with OBD logging such as an AIM Solo or RaceBox.",why:"Shows real improvement from driving and mods.",diff:1,who:"DIY",cost:[150,700],gain:"Data",legal:"ok",declare:false,mot:"No effect.",order:2,goals:["track"]},
+ {id:"tuition",cat:"Foundations",part:null,name:"Driver tuition",what:"Circuit coaching or a Knockhill driver development session.",why:"The best lap-time gain per pound on any car.",diff:1,who:"Pro",cost:[150,500],gain:"Seconds per lap",legal:"ok",declare:false,mot:"No effect.",scot:"Knockhill runs newcomer track nights with extra support.",order:1,goals:["track"]}
+];
+
+/* ---------- DATA: model-year variants (UK spec) and body style ---------- */
+const BODY = {golfgti:"hatch",golfr:"hatch",civicr:"hatch",gryaris:"hatch3",i30n:"hatch",focusst:"hatch",fiestast:"hatch3",rs3:"hatch",a45s:"hatch",m2:"coupe",supra:"coupe",cayman:"mid",a110:"mid",mx5:"roadster",gr86:"coupe"};
+const VARIANTS = {
+ golfgti:[
+  {label:"2020–2023 · Mk8 GTI",ps:245,nm:370,z62:6.3,box:"6MT or 7-speed DSG",s1:[290,305],s2:[320,345],note:"Launch car. Last GTI offered with a manual gearbox."},
+  {label:"2021–2023 · Mk8 GTI Clubsport",ps:300,nm:400,z62:5.6,box:"7-speed DSG",s1:[330,350],s2:[350,375],note:"Higher-boost model with the Nürburgring driving mode."},
+  {label:"2024– · Mk8.5 GTI",ps:265,nm:370,z62:5.9,box:"7-speed DSG only",note:"Facelift: more power, new infotainment with physical-style buttons back, manual dropped."}],
+ golfr:[
+  {label:"2021–2023 · Mk8 R",ps:320,nm:420,z62:4.7,s1:[365,390],s2:[390,420],note:"Launch car with R-Performance torque vectoring and Drift mode option."},
+  {label:"2024– · Mk8.5 R",ps:333,nm:420,z62:4.6,note:"Facelift with 13PS more and updated interior and software."}],
+ civicr:[
+  {label:"2023– · FL5 (UK deliveries)",ps:329,nm:420,z62:5.4,note:"Revealed 2022, UK customer cars from early 2023. One trim, six-speed manual only."}],
+ gryaris:[
+  {label:"2020–2023 · original",ps:261,nm:360,z62:5.5,box:"6-speed manual",s1:[295,310],s2:[315,340],note:"Launch car. Circuit Pack added Torsen front and rear diffs and firmer suspension."},
+  {label:"2024– · updated",ps:280,nm:390,z62:5.5,box:"6MT or 8-speed GR-DAT auto",note:"Strengthened engine, revised driving position and dash, first automatic option."}],
+ i30n:[
+  {label:"2017–2020 · pre-facelift Performance",ps:275,nm:353,z62:6.1,box:"6-speed manual",s1:[295,310],s2:[310,335],note:"UK buyers could also get a 250PS non-Performance model."},
+  {label:"2021–2024 · facelift",ps:280,nm:392,z62:5.9,box:"6MT or 8-speed wet DCT",note:"More torque, lighter forged-wheel option, first DCT. No longer sold new in the UK."}],
+ focusst:[
+  {label:"2019–2021 · launch",ps:280,nm:420,z62:5.7,note:"Performance Pack added adaptive dampers, launch control and rev-matching."},
+  {label:"2022–2025 · facelift",ps:280,nm:420,z62:5.7,note:"New nose and larger touchscreen; optional Recaro seats. Production ended 2025."}],
+ fiestast:[
+  {label:"2018–2019 · launch",ps:200,nm:290,z62:6.5,s1:[215,230],s2:[230,250],note:"Performance Pack brings the Quaife LSD and launch control."},
+  {label:"2020–2021 · torque update",ps:200,nm:320,z62:6.5,note:"Torque raised to 320Nm."},
+  {label:"2022–2023 · facelift",ps:200,nm:320,z62:6.5,note:"New nose, digital cluster and Recaro seats. Final Fiesta ST."}],
+ rs3:[
+  {label:"2021–2024 · 8Y pre-facelift",ps:400,nm:500,z62:3.8,note:"Launch car with RS Torque Splitter and RS Torque Rear drift mode."},
+  {label:"2025– · 8Y facelift",ps:400,nm:500,z62:3.8,note:"Revised styling and cabin; same five-cylinder output in the UK."}],
+ a45s:[
+  {label:"2019–2022 · pre-facelift",ps:421,nm:500,z62:3.9,note:"UK got the S model only."},
+  {label:"2023–2025 · facelift",ps:421,nm:500,z62:3.9,note:"New MBUX and styling tweaks. Production ended 2025."}],
+ m2:[
+  {label:"2023–2024 · G87 launch",ps:460,nm:550,z62:4.1,s1:[520,550],s2:[550,600],note:"Six-speed manual or eight-speed auto, both 550Nm."},
+  {label:"2025– · G87 update",ps:480,nm:600,z62:4.0,note:"20PS more; auto torque up to 600Nm, manual stays at 550Nm."}],
+ supra:[
+  {label:"2019–2021 · 3.0 auto",ps:340,nm:500,z62:4.3,box:"8-speed auto only",note:"Launch. A 2.0 four-cylinder model (258PS) was also sold but isn't covered here."},
+  {label:"2022–2026 · 3.0 with manual option",ps:340,nm:500,z62:4.3,box:"8-speed auto or 6MT",note:"Six-speed manual added; final model year 2026."}],
+ cayman:[
+  {label:"2020–2025 · 718 GTS 4.0",ps:400,nm:420,z62:4.5,note:"Six-speed manual from launch, PDK added later (430Nm). Petrol 718 production ended 2025."}],
+ a110:[
+  {label:"2019–2021 · A110 S",ps:292,nm:320,z62:4.4,s1:[315,325],s2:[325,340],note:"Firmer, lower chassis than the standard A110."},
+  {label:"2022–2026 · updated A110 S",ps:300,nm:340,z62:4.2,note:"Power and torque update with new infotainment. Production ending 2026."}],
+ mx5:[
+  {label:"2015–2018 · ND 2.0",ps:160,nm:200,z62:7.3,s1:[165,172],s2:[170,180],note:"Original 2.0 with a lower rev limit."},
+  {label:"2019–2023 · ND 2.0 revised",ps:184,nm:205,z62:6.5,note:"Revised engine revs to 7,500rpm; telescopic steering column added."},
+  {label:"2024– · ND3",ps:184,nm:205,z62:6.5,note:"New LED lights, larger screen and an asymmetric LSD on manual 2.0 cars."}],
+ gr86:[
+  {label:"2022–2024 · GR86 (UK)",ps:234,nm:250,z62:6.3,note:"Sold in the UK for two years only in limited numbers."}]
+};
+
+const DIFF = [
+ {n:"Bolt-on",t:"Basic hand tools, a driveway, under an hour. Plug-in or clip-on parts."},
+ {n:"Home garage",t:"Axle stands, torque wrench, trolley jack. Brakes, pads, fluid, simple bolt-ons."},
+ {n:"Skilled DIY",t:"Spring compressors, penetrating oil for seized bolts, ideally a lift. Suspension and exhausts."},
+ {n:"Specialist",t:"Alignment rig, diagnostic and coding tools, gearbox removal. Clutches, LSDs, software."},
+ {n:"Professional",t:"Engine internals, turbos, custom calibration on a dyno, fabrication and cages."}
+];
+
+const PRESETS = {
+ road:["health","tyres","winter","align","fluid","pads","coilovers","arb","stage1","tcu","intake","gpfback","immob","tracker","dashcam"],
+ track:["health","tuition","tyres","fluid","pads","lines","align","coilovers","arb","bbk","stage1","ic","oilcool","seats","laptimer"],
+ show:["tyres","align","coilovers","forged","wrap","splitter","valved","reartint","intake","immob","dashcam","obdlock"]
+};
+const LEGAL_LABEL = {ok:"Road legal · declare",check:"MOT risk · check",track:"Track only",illegal:"Illegal on road"};
+const ORDER_LABEL = {1:"Stage A · Foundations & security",2:"Stage B · Chassis & brakes",3:"Stage C · Stage 1 power & sound",4:"Stage D · Stage 2 & looks",5:"Stage E · Big power & motorsport"};
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const byId = Object.fromEntries(MODS.map(m => [m.id, m]));
+const gbp = n => "£" + Math.round(n).toLocaleString("en-GB");
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 1800); }
+
+let state = {
+  car: store.get("cr_car", "golfr"),
+  cls: "all",
+  build: store.get("cr_build", []).filter(id => byId[id]),
+  q: "", cat: "", diffMax: 5, legal: new Set(["ok","check","track","illegal"]), part: null
+};
+if(!CARS.some(c => c.id === state.car)) state.car = "golfr";
+state.vi = store.get("cr_vi", {});
+state.photos = store.get("cr_photos", {});
+function savePhotos(){ try{ localStorage.setItem("cr_photos", JSON.stringify(state.photos)); }catch(e){ toast("Photo shown, but too large to keep after reload"); } }
+const base = () => CARS.find(c => c.id === state.car);
+function varIndex(id){ const n = VARIANTS[id].length; const v = state.vi[id]; return (Number.isInteger(v) && v >= 0 && v < n) ? v : n-1; }
+function effective(c, vi){
+  const v = VARIANTS[c.id][vi];
+  return Object.assign({}, c, {ps:v.ps, nm:v.nm, z62:v.z62, box:v.box || c.box, s1:v.s1 || c.s1, s2:v.s2 || c.s2, psNote:v.note, yearLabel:v.label});
+}
+const car = () => effective(base(), varIndex(state.car));
+
+/* ---------- pure build analysis (tested) ---------- */
+function analyseBuild(ids, c){
+  const mods = ids.map(id => byId[id]).filter(Boolean);
+  const has = id => ids.includes(id);
+  const cost = mods.reduce((a,m) => [a[0]+m.cost[0], a[1]+m.cost[1]], [0,0]);
+  let power = {lo:c.ps, hi:c.ps, label:"stock", plus:false};
+  if(has("hybrid")) power = {lo:c.s2[1], hi:c.s2[1], label:"stage 3 · tuner-specific", plus:true};
+  else if(has("stage2")) power = {lo:c.s2[0], hi:c.s2[1], label:"stage 2 estimate", plus:false};
+  else if(has("stage1")) power = {lo:c.s1[0], hi:c.s1[1], label:"stage 1 estimate", plus:false};
+  else if(has("box")) power = {lo:Math.round(c.ps*1.05), hi:Math.round(c.ps*1.12), label:"tuning box estimate", plus:false};
+  const diff = mods.reduce((a,m) => Math.max(a, m.diff), 0);
+  const declare = mods.filter(m => m.declare).length;
+  const flags = [];
+  mods.filter(m => m.legal === "illegal").forEach(m => flags.push({k:"bad", t:m.name + ": illegal on the road and an MOT fail. Remove it from a road build."}));
+  mods.filter(m => m.legal === "track").forEach(m => flags.push({k:"track", t:m.name + ": motorsport part. " + m.mot}));
+  mods.forEach(m => (m.req||[]).forEach(r => { if(!has(r)) flags.push({k:"warn", t:m.name + " needs " + byId[r].name.toLowerCase() + "."}); }));
+  mods.forEach(m => (m.rec||[]).forEach(r => { if(!has(r)) flags.push({k:"warn", t:m.name + ": owners recommend adding " + byId[r].name.toLowerCase() + "."}); }));
+  const powerMod = ["stage1","stage2","hybrid","box"].some(has);
+  if(powerMod && !has("tyres")) flags.push({k:"warn", t:"More power without better tyres: grip will be the limit on wet Scottish roads."});
+  if(powerMod && !has("pads") && !has("bbk")) flags.push({k:"warn", t:"More power on standard brakes: add fast-road pads at least."});
+  if((has("stage1")||has("stage2")) && /DSG|DCT|dual-clutch|S tronic|auto/i.test(c.box) && !has("tcu") && !/manual only/i.test(c.box)) flags.push({k:"warn", t:c.name + " is often a paddle-shift car: add gearbox (TCU) software if yours is."});
+  if(/naturally aspirated/i.test(c.engine) && (has("stage2")||has("downpipe")||has("ic"))) flags.push({k:"warn", t:c.name + " is naturally aspirated: turbo-car parts like intercoolers and stage 2 maps don't apply."});
+  const checks = mods.filter(m => m.legal === "check");
+  if(checks.length) flags.push({k:"warn", t:checks.length + " mod" + (checks.length>1?"s":"") + " can cause an MOT or noise problem if done badly: " + checks.map(m => m.name.toLowerCase()).join(", ") + "."});
+  if(powerMod) flags.push({k:"warn", t:"Get an insurance quote before the remap; some insurers refuse tuned cars."});
+  if(mods.length && !flags.some(f => f.k === "bad" || f.k === "track")) flags.push({k:"good", t:"Everything here can be road legal when fitted properly and declared."});
+  return {mods, cost, power, diff, declare, flags};
+}
+
+/* ---------- gauge ---------- */
+const G = {cx:150, cy:150, r:112, max:700, start:135, sweep:270};
+const ang = ps => G.start + (Math.min(ps, G.max)/G.max)*G.sweep;
+function pt(a, r){ const t = a*Math.PI/180; return [G.cx + r*Math.cos(t), G.cy + r*Math.sin(t)]; }
+function drawGaugeTicks(){
+  let s = "";
+  const [ax, ay] = pt(G.start, G.r), [bx, by] = pt(G.start+G.sweep, G.r);
+  s += `<path d="M${ax} ${ay} A${G.r} ${G.r} 0 1 1 ${bx} ${by}" fill="none" stroke="var(--line)" stroke-width="10" stroke-linecap="round"/>`;
+  const [rx, ry] = pt(ang(550), G.r);
+  s += `<path d="M${rx} ${ry} A${G.r} ${G.r} 0 0 1 ${bx} ${by}" fill="none" stroke="var(--bad)" stroke-width="10" stroke-linecap="round" opacity=".85"/>`;
+  for(let v=0; v<=G.max; v+=50){
+    const a = ang(v), major = v%100===0;
+    const [x1,y1] = pt(a, G.r-14), [x2,y2] = pt(a, G.r-(major?30:22));
+    s += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${v>=550?"var(--bad)":"var(--fg)"}" stroke-width="${major?2.5:1.2}" opacity="${major?.9:.5}"/>`;
+    if(major){ const [tx,ty] = pt(a, G.r-44); s += `<text x="${tx.toFixed(1)}" y="${(ty+4).toFixed(1)}" text-anchor="middle" fill="var(--muted)" style="font:500 11px var(--mono)">${v}</text>`; }
+  }
+  $("#gaugeTicks").innerHTML = s;
+}
+function updateGauge(){
+  const c = car();
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  $("#needle").style.transform = `rotate(${ang(c.ps)}deg)`;
+  $("#needleS1").style.transform = `rotate(${ang(c.s1[1])}deg)`;
+  const el = $("#gaugePS"), from = +el.textContent || 0, to = c.ps, t0 = performance.now();
+  if(reduce){ el.textContent = to; }
+  else { (function step(t){ const p = Math.min(1,(t-t0)/900), e = 1-Math.pow(1-p,3); el.textContent = Math.round(from+(to-from)*e); if(p<1) requestAnimationFrame(step); })(t0); }
+  $("#gaugeS1").textContent = `stage 1 ~${c.s1[0]}–${c.s1[1]} PS`;
+  $("#gaugeCap").textContent = `${c.name} · ${c.yearLabel}`;
+}
+
+/* ---------- garage ---------- */
+function renderCarList(){
+  const list = CARS.filter(c => state.cls === "all" || c.cls === state.cls);
+  $("#carlist").innerHTML = list.map(c => `<button type="button" class="carbtn" data-car="${c.id}" aria-pressed="${c.id===state.car}"><b>${esc(c.name)}</b><small>${esc(c.gen)} · ${c.ps}PS · ${esc(c.layout.split(",")[0])}</small></button>`).join("");
+}
+function silhouette(body, name){
+  const shapes = {
+    hatch:{b:"M28 110 V76 Q28 60 44 52 L86 38 Q96 33 112 33 L220 33 Q238 33 252 43 L294 67 L352 77 Q371 81 373 97 V110 Z",w:"M56 60 L92 44 L150 44 L150 64 Z M158 44 L216 44 L266 67 L158 66 Z"},
+    hatch3:{b:"M32 110 V78 Q32 62 48 54 L90 40 Q100 35 116 35 L214 35 Q232 35 246 45 L290 68 L350 78 Q370 82 372 98 V110 Z",w:"M60 62 L96 46 L212 46 L262 69 L64 66 Z"},
+    coupe:{b:"M24 108 V88 Q26 74 58 68 L112 60 Q152 34 200 32 L228 32 Q262 36 292 60 L356 72 Q375 76 377 94 V108 Z",w:"M122 62 Q156 42 198 41 L222 41 Q250 44 272 62 Z"},
+    mid:{b:"M24 108 V86 Q26 72 62 66 L126 56 Q156 36 192 35 L220 36 Q250 44 272 62 L352 76 Q373 80 375 96 V108 Z",w:"M136 58 Q162 44 192 43 L214 44 Q238 50 254 62 Z M100 72 L128 70 L124 84 L104 84 Z"},
+    roadster:{b:"M26 108 V88 Q30 74 62 72 L158 68 L196 48 L206 48 L216 68 L354 78 Q374 82 376 98 V108 Z",w:"M184 66 L198 52 L204 52 L208 66 Z"}
+  };
+  const s = shapes[body] || shapes.hatch;
+  return `<svg viewBox="0 0 400 150" role="img" aria-label="Illustrated side profile: ${esc(name)} body style" style="width:100%;height:auto;display:block">
+    <defs><linearGradient id="bodyg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--panel-2)"/><stop offset="1" stop-color="var(--asphalt)"/></linearGradient>
+    <radialGradient id="floorg" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="var(--sodium)" stop-opacity=".35"/><stop offset="1" stop-color="var(--sodium)" stop-opacity="0"/></radialGradient></defs>
+    <ellipse cx="200" cy="134" rx="190" ry="12" fill="url(#floorg)"/>
+    <path d="${s.b}" fill="url(#bodyg)" stroke="var(--sodium)" stroke-width="2" stroke-linejoin="round"/>
+    <path d="${s.w}" fill="var(--led)" opacity=".22"/>
+    <path d="M352 84 L372 88" stroke="var(--fg)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M30 86 L40 84" stroke="var(--bad)" stroke-width="4" stroke-linecap="round"/>
+    <g fill="var(--asphalt)" stroke="var(--fg)" stroke-width="2"><circle cx="92" cy="110" r="24"/><circle cx="310" cy="110" r="24"/></g>
+    <g fill="none" stroke="var(--muted)" stroke-width="1.5"><circle cx="92" cy="110" r="13"/><circle cx="310" cy="110" r="13"/></g>
+    <text x="392" y="146" text-anchor="end" fill="var(--muted)" style="font:400 9px var(--mono)">illustration · not to scale</text>
+  </svg>`;
+}
+function photoBlock(c){
+  const raw = state.photos[c.id], img = (typeof raw === "string" && raw.startsWith("data:image/")) ? raw : null;
+  const q = encodeURIComponent(`${c.name} ${c.gen}`);
+  return `<figure style="margin:0;display:grid;gap:8px">
+    <div style="border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--asphalt);aspect-ratio:8/3;max-width:100%;display:grid;place-items:center">
+      ${img ? `<img src="${img}" alt="Your photo of the ${esc(c.name)}" style="width:100%;height:100%;object-fit:cover">` : silhouette(BODY[c.id], c.name)}
+    </div>
+    <figcaption style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <label class="btn" for="photoIn" style="padding:9px 12px">${img ? "Change photo" : "Add your own photo"}</label>
+      <input type="file" id="photoIn" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0">
+      ${img ? `<button type="button" class="btn ghost" id="photoClear" style="padding:9px 12px">Remove photo</button>` : ""}
+      <a href="https://commons.wikimedia.org/w/index.php?search=${q}&title=Special:MediaSearch&type=image" target="_blank" rel="noopener" class="note">Real photos on Wikimedia Commons ↗</a>
+    </figcaption>
+  </figure>`;
+}
+function renderCar(){
+  renderPlatform();
+  const c = car(), vi = varIndex(c.id), vars = VARIANTS[c.id];
+  const pst = Math.round(c.ps / (c.kg/1000));
+  $("#carspec").innerHTML = `
+    ${photoBlock(c)}
+    <p class="eyebrow" style="margin-top:16px">${c.cls==="hatch"?"Hot hatch":"Sports car"} · ${esc(c.status)}</p>
+    <h3 style="margin-top:6px;font-size:2rem">${esc(c.name)} <span style="color:var(--muted)">${esc(c.gen)}</span></h3>
+    <p class="eyebrow" style="margin-top:14px;color:var(--muted)">Model year</p>
+    <div class="chips" role="group" aria-label="Model year variant" style="margin-top:8px">
+      ${vars.map((v,i) => `<button type="button" class="chip ok" data-vi="${i}" aria-pressed="${i===vi}">${esc(v.label)}</button>`).join("")}
+    </div>
+    <p style="margin-top:10px;font-size:.93rem;color:#d3d1c9">${esc(c.psNote)}</p>
+    <div class="bignums">
+      <div class="bignum"><b>${c.ps}</b><span>PS</span></div>
+      <div class="bignum"><b>${c.nm}</b><span>Nm</span></div>
+      <div class="bignum"><b>${c.z62.toFixed(1)}</b><span>0–62 s</span></div>
+      <div class="bignum"><b>${pst}</b><span>PS / tonne</span></div>
+    </div>
+    <dl class="spec">
+      <dt>Variant</dt><dd>${esc(c.yearLabel)}</dd>
+      <dt>Years</dt><dd>${esc(c.years)}</dd>
+      <dt>Engine</dt><dd>${esc(c.engine)}</dd>
+      <dt>Drive</dt><dd>${esc(c.layout)}</dd>
+      <dt>Gearbox</dt><dd>${esc(c.box)}</dd>
+      <dt>Kerb wt</dt><dd class="num">~${c.kg.toLocaleString("en-GB")} kg</dd>
+      <dt>Ceiling</dt><dd>${esc(c.ceiling)}</dd>
+    </dl>
+    <p class="note" style="margin-top:14px">Owner's manual checks before tuning: minimum fuel grade, oil specification, and the warranty wording on track use and software changes.</p>`;
+  $("#watch").innerHTML = c.watch.map(w => `<li>${esc(w)}</li>`).join("");
+  renderLadder(c);
+}
+function renderLadder(c){
+  const W = 640, L = 92, R = 24, top = 16, rowH = 44, barH = 22;
+  const maxV = Math.ceil((c.s2[1]*1.08)/50)*50;
+  const step = maxV > 400 ? 100 : 50;
+  const x = v => L + (v/maxV)*(W-L-R);
+  const rows = [["Stock",c.ps,c.ps],["Stage 1",c.s1[0],c.s1[1]],["Stage 2",c.s2[0],c.s2[1]]];
+  let s = "";
+  for(let v=0; v<=maxV; v+=step){
+    s += `<line x1="${x(v)}" y1="${top-4}" x2="${x(v)}" y2="${top+rowH*3}" stroke="var(--line)" stroke-width="1"/>`;
+    s += `<text x="${x(v)}" y="${top+rowH*3+16}" text-anchor="middle" fill="var(--muted)" style="font:500 11px var(--mono)">${v}</text>`;
+  }
+  rows.forEach(([lab,lo,hi],i) => {
+    const y = top + i*rowH + (rowH-barH)/2;
+    const col = i===0 ? "var(--fg)" : i===1 ? "var(--sodium)" : "var(--bad)";
+    s += `<text x="0" y="${y+barH/2+5}" fill="var(--fg)" style="font:700 14px var(--body);text-transform:uppercase;letter-spacing:.06em">${lab}</text>`;
+    s += `<rect x="${L}" y="${y}" width="${x(lo)-L}" height="${barH}" rx="4" fill="${col}" opacity="${i===0?.35:.9}"/>`;
+    if(hi>lo) s += `<rect x="${x(lo)}" y="${y}" width="${x(hi)-x(lo)}" height="${barH}" rx="0" fill="${col}" opacity=".35"/>`;
+    const label = hi>lo ? `${lo}–${hi}` : `${lo}`;
+    const lx = x(hi)+8, anchorEnd = lx > W-70;
+    s += `<text x="${anchorEnd ? x(hi)-8 : lx}" y="${y+barH/2+5}" text-anchor="${anchorEnd?"end":"start"}" fill="${anchorEnd?"var(--asphalt)":"var(--fg)"}" style="font:500 12px var(--mono)" class="num">${label} PS</text>`;
+  });
+  $("#ladder").innerHTML = s;
+}
+
+/* ---------- mods ---------- */
+function pips(d){ return `<span class="pips d${d}" aria-label="Difficulty ${d} of 5">${[1,2,3,4,5].map(i => `<i class="${i<=d?"on":""}"></i>`).join("")}</span>`; }
+function filteredMods(){
+  const q = state.q.trim().toLowerCase();
+  return MODS.filter(m => (!state.cat || m.cat === state.cat)
+    && m.diff <= state.diffMax
+    && state.legal.has(m.legal)
+    && (!state.part || m.part === state.part)
+    && (!q || (m.name+" "+m.what+" "+m.cat+" "+m.why).toLowerCase().includes(q)));
+}
+function renderMods(){
+  const list = filteredMods();
+  $("#resultcount").textContent = `${list.length} of ${MODS.length} modifications` + (state.part ? ` · part: ${state.part}` : "");
+  if(!list.length){ $("#modgrid").innerHTML = `<div class="empty" style="grid-column:1/-1">No modifications match these filters. Try a wider difficulty or reset the filters.</div>`; return; }
+  $("#modgrid").innerHTML = list.map(m => {
+    const inb = state.build.includes(m.id);
+    return `<article class="mod${inb?" inbuild":""}" data-legal="${m.legal}">
+      <div class="mod-top"><div><span class="cat">${esc(m.cat)}</span><h4>${esc(m.name)}</h4></div><span class="legal ${m.legal}">${LEGAL_LABEL[m.legal]}</span></div>
+      <p>${esc(m.what)}</p>
+      <div class="stats">
+        <div><span>Difficulty</span><b>${pips(m.diff)}</b></div>
+        <div><span>Cost</span><b>${gbp(m.cost[0])}–${gbp(m.cost[1])}</b></div>
+        <div><span>Gain</span><b>${esc(m.gain)}</b></div>
+      </div>
+      <details class="more"><summary>Details</summary><dl>
+        <div><dt>Why</dt><dd>${esc(m.why)}</dd></div>
+        <div><dt>Who fits it</dt><dd>${m.who==="DIY"?"DIY friendly":m.who==="DIY+"?"Confident DIY or garage":"Specialist or tuner"} · ${DIFF[m.diff-1].n}</dd></div>
+        <div><dt>MOT &amp; law</dt><dd>${esc(m.mot)}</dd></div>
+        <div><dt>Insurance</dt><dd>${m.declare?"Declare to your insurer before driving.":"Not normally a modification, but tell your insurer if unsure."}</dd></div>
+        ${m.req?`<div><dt>Needs first</dt><dd>${m.req.map(r=>esc(byId[r].name)).join(", ")}</dd></div>`:""}
+        ${m.scot?`<div><dt>Glasgow &amp; Scotland</dt><dd>${esc(m.scot)}</dd></div>`:""}
+      </dl></details>
+      <button type="button" class="addbtn" data-add="${m.id}" aria-pressed="${inb}">${inb?"In build ✓":"Add to build"}</button>
+    </article>`;
+  }).join("");
+}
+function setPart(p){
+  state.part = state.part === p ? null : p;
+  $$(".fnode").forEach(n => n.classList.toggle("on", n.dataset.part === state.part));
+  renderMods();
+}
+
+/* ---------- build ---------- */
+function renderBuild(){
+  const c = car(), a = analyseBuild(state.build, c);
+  store.set("cr_build", state.build);
+  $("#navcount").textContent = `Build · ${state.build.length}`;
+  $("#buildcar").textContent = `${c.name} · ${c.yearLabel} · ${c.ps}PS stock`;
+  $("#t-power").textContent = a.power.lo===a.power.hi ? `${a.power.lo}${a.power.plus?"+":""}` : `${a.power.lo}–${a.power.hi}`;
+  $("#t-powersub").textContent = `PS · ${a.power.label}`;
+  $("#t-cost").textContent = a.mods.length ? `${gbp(a.cost[0])}–${gbp(a.cost[1])}` : "£0";
+  $("#t-diff").textContent = a.diff ? `${a.diff}/5` : "—";
+  $("#t-diffsub").textContent = a.diff ? DIFF[a.diff-1].n : "no mods yet";
+  $("#t-dec").textContent = a.declare;
+  $("#flags").innerHTML = a.flags.length ? a.flags.map(f => `<div class="flag ${f.k}"><span>${esc(f.t)}</span></div>`).join("") : `<p class="note">Add mods from the list or pick a preset to see checks here.</p>`;
+  const groups = {};
+  a.mods.slice().sort((x,y) => x.order-y.order || x.diff-y.diff).forEach(m => (groups[m.order] = groups[m.order] || []).push(m));
+  const keys = Object.keys(groups);
+  $("#buildlist").innerHTML = keys.length ? keys.map(k => `<div class="stage"><h5>${ORDER_LABEL[k]}</h5>${groups[k].map(m => `
+    <div class="brow"><div><b>${esc(m.name)}</b> <span class="legal ${m.legal}" style="margin-left:6px">${LEGAL_LABEL[m.legal]}</span></div><span class="c">${gbp(m.cost[0])}–${gbp(m.cost[1])}</span><button type="button" class="xbtn" data-remove="${m.id}" aria-label="Remove ${esc(m.name)}">✕</button></div>`).join("")}</div>`).join("")
+    : `<div class="empty">Your build is empty. Add mods from the list above, or start from a preset.</div>`;
+}
+function toggleBuild(id){
+  const i = state.build.indexOf(id);
+  if(i>=0){ state.build.splice(i,1); toast("Removed from build"); }
+  else { state.build.push(id); toast(byId[id].legal==="illegal" ? "Added, but it's illegal on the road" : "Added to build"); }
+  renderMods(); renderBuild();
+}
+
+/* ---------- guide visuals ---------- */
+function renderDiffScale(){
+  $("#diffscale").innerHTML = DIFF.map((d,i) => `<div class="dlev">${pips(i+1)}<b>${i+1} · ${d.n}</b><p>${d.t}</p><p class="note">${MODS.filter(m=>m.diff===i+1).length} mods in this list</p></div>`).join("");
+}
+function updateTint(){
+  const g = +$("#glass").value, f = +$("#film").value, pane = $("#pane").value;
+  const combined = Math.round(g*f/100);
+  $("#glassv").textContent = g+"%"; $("#filmv").textContent = f+"%";
+  $("#tintnum").textContent = combined+"%";
+  $("#tintpane").setAttribute("opacity", (0.08 + (1-combined/100)*0.85).toFixed(2));
+  const min = pane==="side" ? 70 : pane==="screen" ? 75 : 0;
+  const v = $("#tintverdict"), n = $("#tintnote");
+  if(pane==="rear"){ v.textContent = "Legal"; v.className = "verdict ok"; n.textContent = "No legal minimum for rear side windows or the rear screen."; }
+  else if(combined >= min){ v.textContent = "Passes"; v.className = "verdict ok"; n.textContent = `${combined}% combined is at or above the ${min}% minimum. Meters vary by a point or two, so leave a margin.`; }
+  else { v.textContent = "Fails"; v.className = "verdict bad"; n.textContent = `${combined}% combined is below the ${min}% minimum. Police or DVSA can issue a prohibition notice.`; }
+}
+
+/* ---------- LEZ ---------- */
+function lezVerdict(fuel, year, month){
+  const age = 2026 - year;
+  if(fuel === "ev") return {k:"ok", h:"Compliant", t:"Zero-emission vehicles can enter the zone."};
+  if(age >= 40) return {k:"warn", h:"Check historic exemption", t:"Vehicles over 40 years old in the historic tax class are exempt. Otherwise the Euro standard applies."};
+  if(fuel === "diesel"){
+    if(year > 2015 || (year === 2015 && month >= 9)) return {k:"ok", h:"Likely compliant", t:"Diesels registered from September 2015 generally meet Euro 6."};
+    if(year >= 2014) return {k:"warn", h:"Check your car", t:"Some diesels from 2014 to August 2015 met Euro 6 early; many didn't. Use the official checker."};
+    return {k:"bad", h:"Likely non-compliant", t:"Most diesels before 2014 are Euro 5 or older and can't enter the zone."};
+  }
+  if(year >= 2006) return {k:"ok", h:"Likely compliant", t:"Petrol cars (including hybrids) registered from 2006 generally meet Euro 4."};
+  if(year >= 2001) return {k:"warn", h:"Check your car", t:"Many petrol cars from 2001 to 2005 already met Euro 4. Check the V5C or the official checker."};
+  return {k:"bad", h:"Likely non-compliant", t:"Petrol cars before 2001 usually don't meet Euro 4."};
+}
+function updateLez(){
+  const r = lezVerdict($("#lezfuel").value, +$("#lezyear").value, +$("#lezmonth").value);
+  const o = $("#lezout"); o.className = "lezout " + r.k;
+  o.innerHTML = `<b>${r.h}</b>${esc(r.t)}`;
+}
+
+/* ---------- light trails canvas ---------- */
+function trails(){
+  const cv = $("#trails"), ctx = cv.getContext("2d");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W, H, lanes, running = true;
+  function size(){
+    const dpr = Math.min(devicePixelRatio||1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    lanes = Array.from({length:14}, (_,i) => ({
+      y: H*(0.35 + i*0.045), amp: 18 + (i%4)*10, ph: i*0.7,
+      col: i%3===0 ? "255,93,98" : i%3===1 ? "255,174,43" : "236,231,220",
+      cars: Array.from({length:3}, () => ({x: Math.random()*W, v: (i%2?1:-1)*(1.2+Math.random()*2.6)}))
+    }));
+    ctx.fillStyle = "#0e1116"; ctx.fillRect(0,0,W,H);
+    for(let k=0;k<160;k++) frame();
+  }
+  function laneY(l, x){ return l.y + Math.sin(x/W*Math.PI*1.6 + l.ph)*l.amp - x*0.08; }
+  function frame(){
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = "rgba(14,17,22,0.06)"; ctx.fillRect(0,0,W,H);
+    ctx.globalCompositeOperation = "lighter";
+    lanes.forEach(l => l.cars.forEach(c => {
+      const x0 = c.x; c.x += c.v;
+      if(c.x > W+40) c.x = -40; if(c.x < -40) c.x = W+40;
+      if(Math.abs(c.x-x0) > 60) return;
+      ctx.strokeStyle = `rgba(${l.col},0.55)`; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(x0, laneY(l,x0)); ctx.lineTo(c.x, laneY(l,c.x)); ctx.stroke();
+    }));
+  }
+  function loop(){ if(!running) return; frame(); requestAnimationFrame(loop); }
+  size();
+  addEventListener("resize", () => { clearTimeout(size._t); size._t = setTimeout(size, 150); });
+  if(!reduce){
+    document.addEventListener("visibilitychange", () => { running = !document.hidden; if(running) loop(); });
+    loop();
+  }
+}
+
+
+/* ---------- DATA: remaps ---------- */
+const REMAP_TYPES = [
+ {n:"Off-the-shelf stage map",w:"A tested file from a tuning brand for your engine and hardware level (stage 1, 2…).",c:"£350–£800",b:"Standard or lightly modified cars; proven, repeatable results.",x:"Not tailored to your car's health or fuel. Check it's the current version for your ECU."},
+ {n:"Custom dyno map",w:"A calibrator adjusts the file on a dyno and on the road using your car's logs.",c:"£500–£1,200",b:"Stage 2+, unusual combinations, track cars.",x:"Only as good as the calibrator. Ask for before/after graphs and logs."},
+ {n:"Handheld flasher + maps",w:"A device or app you buy that flashes maps, stores stock software and logs data.",c:"£500–£1,100",b:"Owners who want to switch maps, log, and return to stock for dealer visits.",x:"Returning to stock doesn't remove the duty to declare. Some ECUs record flash history."},
+ {n:"Gearbox (TCU) map",w:"Raises torque limits and changes shift speed, launch and clutch behaviour.",c:"£300–£700",b:"DSG, S tronic, DCT and auto cars with an engine map.",x:"Aggressive launch settings add wear to clutches and driveline."},
+ {n:"Piggyback module",w:"Plug-in box altering sensor signals (e.g. JB4-style units on BMW engines).",c:"£200–£700",b:"Leased or warranty-sensitive cars where removal matters.",x:"Less control than a full map; still a declarable modification."},
+ {n:"Economy map",w:"Reshapes torque delivery to reduce throttle use at low load.",c:"£250–£450",b:"Mainly diesels and vans. Small benefit on performance petrols.",x:"Real-world MPG depends on your right foot more than the file."}
+];
+const REMAP_FEATS = [
+ {n:"Launch control",l:"ok",t:"Holds revs for a set launch. Often already in the factory software; tuners adjust the rev point. Hard on clutches."},
+ {n:"Raised rev limit",l:"check",t:"A few hundred rpm more on some turbo engines. Adds little and increases wear; many tuners leave it standard."},
+ {n:"Torque-by-gear limits",l:"ok",t:"Less torque in first and second to protect the driveline and help traction on wet Scottish roads."},
+ {n:"Exhaust valve control",l:"check",t:"Changes when a factory valved exhaust opens. Keep it closed in town; noise rules still apply."},
+ {n:"Cold-start delete",l:"check",t:"Stops the loud high idle on start-up. Neighbour-friendly, but the cold start warms the catalyst: check emissions."},
+ {n:"Pops & bangs (overrun)",l:"check",t:"Fuel burned in the exhaust off-throttle. No performance gain, hard on catalysts and GPFs, and a magnet for noise complaints."},
+ {n:"Speed limiter changes",l:"check",t:"Raises the electronic top-speed limit. Only relevant on track; tyres must be rated for the speed."},
+ {n:"DPF / GPF / EGR / AdBlue 'solutions'",l:"illegal",t:"Software to run without emissions hardware. Illegal on the road, an MOT fail when detected, and named in the DfT's 2026 proposals."}
+];
+const PLATFORM = {
+ golfgti:{t:["APR, Revo, Unitronic, Racingline (VW Racing) and Integrated Engineering stage maps","Custom maps from UK VAG specialists","TCU map for the DSG"],n:["Newer Mk8/Mk8.5 ECUs often need unlocking on the bench before first flash","Stage 2 usually means downpipe with high-flow cat, intercooler and intake","Keep the GPF in place"]},
+ golfr:{t:["APR, Revo, Unitronic, Racingline and Integrated Engineering stage maps","DSG TCU map (essential at stage 1)","Custom dyno maps from VAG specialists"],n:["Rear drive unit software can be tuned for more rear bias","Newer ECUs may need a bench unlock","Brakes and cooling are the first limits on track"]},
+ civicr:{t:["Hondata FlashPro","KTuner","Custom calibration from Honda specialists"],n:["Plug-in flashers store the stock file and log data","Intake temperature is the main enemy: pair with an intercooler for track","Clutch capacity limits big torque gains"]},
+ gryaris:{t:["EcuTek through UK dealers","Custom maps from GR/Subaru-style specialists"],n:["Tune conservatively and log knock and temperatures","2024 updated engine differs from early cars: make sure the map matches","Check the recall list is complete before tuning"]},
+ i30n:{t:["Custom ECU and DCT maps from UK tuning specialists","Piggyback options for some model years"],n:["Facelift DCT cars need gearbox software for torque","Stage 2 hardware is widely available"]},
+ focusst:{t:["COBB Accessport","Custom maps from UK Ford specialists"],n:["Clutch is the weak point on manuals past stage 1","The 2.3 EcoBoost responds strongly to intercooler upgrades"]},
+ fiestast:{t:["COBB Accessport","Custom maps from UK Ford specialists"],n:["Performance Pack cars have the LSD that makes the power usable","Clutch is the usual limit at stage 2"]},
+ rs3:{t:["Custom and stage maps from UK Audi specialists","TCU map for the S tronic"],n:["ECU often needs bench work on newer software","Keep the OPF; five-cylinder tuners still reach big numbers without deleting it"]},
+ a45s:{t:["Specialist Mercedes-AMG tuners, usually bench-flashed","DCT software from the same tuners"],n:["The M139 is highly stressed stock: go conservative","Specialist insurance is almost always required once tuned"]},
+ m2:{t:["bootmod3","MHD","JB4-style piggyback","Custom maps from BMW M specialists"],n:["Flash tools store stock software and data-log","Traction on UK roads limits usable power, especially manual cars","Keep the GPF"]},
+ supra:{t:["bootmod3","MHD","EcuTek","JB4-style piggyback"],n:["The B58 is one of the most tunable engines here","Auto gearbox benefits from TCU tuning for launch and shift"]},
+ cayman:{t:["Custom maps from Porsche specialists","Porsche Tequipment / factory options where available"],n:["Naturally aspirated: remap gains are small","Consider warranty and Porsche Approved cover before any software change"]},
+ a110:{t:["Specialist Alpine/Renault tuners","DCT software from the same specialists"],n:["DCT torque rating caps the gains","Chassis, tyres and alignment give more than power"]},
+ mx5:{t:["Specialist MX-5 tuners, including UK forced-induction kit makers"],n:["Remap alone gives little on the NA 2.0","Turbo or supercharger kits need a full calibration"]},
+ gr86:{t:["EcuTek through UK dealers"],n:["Main benefit is filling the mid-range torque dip","Oil cooling matters more than power for track use"]}
+};
+
+/* ---------- DATA: garages (Trustpilot checked 30 Sept 2026) ---------- */
+const GARAGES = [
+ {n:"Dyna Tune",g:"tune",area:"East Kilbride (≈30 min from Glasgow)",tp:null,tpNote:"No Trustpilot profile found",screen:"pass",svc:["Hub dyno","Remaps","Diagnostics","Standalone ECUs"],p:"Dynapack hub dyno. Lists Link, UpRev, Nistune and other engine-management tuning. No emissions-delete services advertised on its site. Check Google reviews and forum feedback.",url:"https://dynatune.co.uk/"},
+ {n:"Autotec Scotland",g:"tune",area:"Inverclyde",tp:null,tpNote:"No Trustpilot profile found",screen:"pass",svc:["4WD rolling road","Quantum remaps","Laser alignment","Diagnostics"],p:"4WD Dyno Developments rolling road in a dedicated cell with a customer viewing area, plus four-wheel alignment. No emissions deletes advertised on its tuning page.",url:"https://autotecscotland.co.uk/services/performance-tuning/"},
+ {n:"Quantum Tuning (Glasgow dealer)",g:"tune",area:"Glasgow G3 · national network",tp:4.1,count:905,tpNote:"Score is for the whole Quantum network; only 12 reviews in the last year",screen:"caution",svc:["Remaps","TCU","Dyno","Mobile"],p:"Network reviews praise response and professionalism; complaints cover value and aftercare. The Glasgow dealer page advertises 'DPF solutions', so ask exactly what that means before booking.",url:"https://glasgow.quantumtuning.co.uk/"},
+ {n:"Tune-it Scotland",g:"tune",area:"Scotland",tp:3.7,count:1,tpNote:"1 review; profile unclaimed",screen:"thin",svc:["OBD tuning","Bench tuning","Carbon cleaning"],p:"Too little review data to judge. No emissions deletes advertised on its site.",url:"https://tuneitscotland.co.uk/"},
+ {n:"PSI Performance",g:"tune",area:"Yoker, Glasgow",tp:null,tpNote:"No Trustpilot profile found",screen:"fail",svc:["2WD dyno","Remaps","TCU"],p:"Has an in-house dyno and gearbox tuning, but its site promotes DPF, EGR and AdBlue 'solutions'. Flagged by our screen.",url:"https://www.psiperformance.co.uk/"},
+ {n:"Car'aholics Remapping",g:"tune",area:"Glasgow · mobile",tp:3.7,count:5,tpNote:"5 reviews, none in the last 12 months; website shown as closed",screen:"fail",svc:["Mobile remaps"],p:"Advertised DPF and EGR deletes as free add-ons. Appears no longer trading.",url:"https://www.trustpilot.com/review/caraholicsremap.co.uk"},
+ {n:"ATS Euromaster",g:"tyre",area:"Glasgow-area branches",tp:4.8,count:35382,tpNote:"National score",screen:"pass",svc:["Tyres","Alignment","MOT","Servicing"],p:"Highest-rated of the national tyre chains checked. Reviewers praise helpful staff and fair prices; complaints mention occasional overcharging and stock shortages.",url:"https://www.trustpilot.com/review/www.atseuromaster.co.uk"},
+ {n:"Kwik Fit",g:"tyre",area:"Glasgow-area branches + mobile fitting",tp:4.3,count:81727,tpNote:"National score",screen:"pass",svc:["Tyres","Mobile fitting","Alignment","MOT"],p:"Praised for friendly staff and mobile tyre fitting; complaints are mostly scheduling delays.",url:"https://www.trustpilot.com/review/www.kwik-fit.com"},
+ {n:"National Tyres and Autocare",g:"tyre",area:"Glasgow-area branches",tp:3.2,count:85029,tpNote:"National score",screen:"caution",svc:["Tyres","Alignment","MOT","Servicing"],p:"Branch staff often praised; complaints focus on cancelled appointments and poor updates. Confirm bookings the day before.",url:"https://www.trustpilot.com/review/www.national.co.uk"},
+ {n:"Halfords",g:"tyre",area:"Glasgow-area stores and Autocentres",tp:3.1,count:69826,tpNote:"Score covers the whole Halfords retail business",screen:"caution",svc:["Tyres","MOT","Fitting","Parts"],p:"Staff described as helpful; complaints about stock availability and unclear pricing before work starts. Get the price in writing.",url:"https://www.trustpilot.com/review/www.halfords.com"},
+ {n:"Awesome GTI",g:"parts",area:"UK · online",tp:3.8,count:26,tpNote:"26 reviews",screen:"caution",svc:["VAG performance parts"],p:"Mixed: good problem-solving from some staff, poor handling of faulty-part claims from others.",url:"https://www.trustpilot.com/review/awesomegti.com"},
+ {n:"Merlin Motorsport",g:"parts",area:"Chippenham · online",tp:3.6,count:14,tpNote:"14 reviews",screen:"thin",svc:["Motorsport parts","Seats","Harnesses"],p:"Small review count with both strong praise and some abrupt-service complaints.",url:"https://www.trustpilot.com/review/www.merlinmotorsport.co.uk"}
+];
+const SCREEN_LABEL = {pass:"Passes screen",caution:"Caution",thin:"Too few reviews",fail:"Advertises deletes"};
+let gState = {g:"all", s:new Set(["pass","caution","thin","fail"])};
+function starsHTML(v){
+  const r = Math.round(v*2)/2;
+  return `<span class="stars" aria-label="${v} out of 5 stars">${[1,2,3,4,5].map(i => `<i class="${i<=r?"on":(i-0.5===r?"half":"")}"></i>`).join("")}</span>`;
+}
+function renderGarages(){
+  const order = {pass:0,caution:1,thin:2,fail:3};
+  const list = GARAGES.filter(x => (gState.g==="all"||x.g===gState.g) && gState.s.has(x.screen))
+    .sort((a,b) => order[a.screen]-order[b.screen] || (b.tp||0)-(a.tp||0));
+  $("#gcards").innerHTML = list.length ? list.map(x => `<article class="gcard" data-screen="${x.screen}">
+    <div class="mod-top"><div><span class="cat">${esc(x.area)}</span><h4>${esc(x.n)}</h4></div><span class="screen ${x.screen}">${SCREEN_LABEL[x.screen]}</span></div>
+    <div class="tp">${x.tp!=null ? `<span class="tpscore">${x.tp.toFixed(1)}</span>${starsHTML(x.tp)}<span class="tpmeta">${x.count.toLocaleString("en-GB")} Trustpilot reviews</span>` : `<span class="tpmeta">Trustpilot: —</span>`}</div>
+    <p class="tpmeta">${esc(x.tpNote)}</p>
+    <div class="svc">${x.svc.map(v => `<span>${esc(v)}</span>`).join("")}</div>
+    <p>${esc(x.p)}</p>
+    <a href="${x.url}" target="_blank" rel="noopener" class="note">View source ↗</a>
+  </article>`).join("") : `<div class="empty" style="grid-column:1/-1">No garages match these filters.</div>`;
+}
+function renderRemaps(){
+  $("#remaptypes").innerHTML = REMAP_TYPES.map(r => `<tr><td><b>${esc(r.n)}</b></td><td>${esc(r.w)}</td><td class="num" style="white-space:nowrap">${esc(r.c)}</td><td>${esc(r.b)}</td><td>${esc(r.x)}</td></tr>`).join("");
+  $("#remapfeats").innerHTML = REMAP_FEATS.map(f => `<div class="feat"><h4><span>${esc(f.n)}</span><span class="legal ${f.l}">${LEGAL_LABEL[f.l]}</span></h4><p>${esc(f.t)}</p></div>`).join("");
+}
+function renderPlatform(){
+  const c = car(), p = PLATFORM[c.id];
+  $("#platName").textContent = `${c.name} · ${c.yearLabel}`;
+  $("#platTools").innerHTML = p.t.map(t => `<li>${esc(t)}</li>`).join("");
+  $("#platNotes").innerHTML = p.n.map(t => `<li>${esc(t)}</li>`).join("");
+}
+
+/* ---------- init & events ---------- */
+function init(){
+  $("#modcountpill").textContent = `${MODS.length} modifications`;
+  const cats = [...new Set(MODS.map(m => m.cat))];
+  $("#catsel").insertAdjacentHTML("beforeend", cats.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join(""));
+  const ys = []; for(let y=2026; y>=1980; y--) ys.push(`<option value="${y}"${y===2012?" selected":""}>${y}</option>`);
+  $("#lezyear").innerHTML = ys.join("");
+  $("#lezmonth").innerHTML = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].map((m,i) => `<option value="${i+1}">${m}</option>`).join("");
+  renderRemaps(); renderGarages(); drawGaugeTicks(); renderCarList(); renderCar(); updateGauge(); renderMods(); renderBuild(); renderDiffScale(); updateTint(); updateLez();
+  try{ trails(); }catch(e){}
+
+  $$(".seg button").forEach(b => b.addEventListener("click", () => {
+    state.cls = b.dataset.cls; $$(".seg button").forEach(x => x.setAttribute("aria-pressed", x===b)); renderCarList();
+  }));
+  $("#carlist").addEventListener("click", e => {
+    const b = e.target.closest("[data-car]"); if(!b) return;
+    state.car = b.dataset.car; store.set("cr_car", state.car);
+    renderCarList(); renderCar(); updateGauge(); renderBuild();
+  });
+  $("#q").addEventListener("input", e => { state.q = e.target.value; renderMods(); });
+  $$("#gfilter button").forEach(b => b.addEventListener("click", () => { gState.g = b.dataset.g; $$("#gfilter button").forEach(x => x.setAttribute("aria-pressed", x===b)); renderGarages(); }));
+  $$("#gscreen .chip").forEach(c => c.addEventListener("click", () => { const k = c.dataset.s; gState.s.has(k) ? gState.s.delete(k) : gState.s.add(k); c.setAttribute("aria-pressed", gState.s.has(k)); renderGarages(); }));
+  $("#carspec").addEventListener("click", e => {
+    const v = e.target.closest("[data-vi]");
+    if(v){ state.vi[state.car] = +v.dataset.vi; store.set("cr_vi", state.vi); renderCar(); updateGauge(); renderBuild(); return; }
+    if(e.target.closest("#photoClear")){ delete state.photos[state.car]; savePhotos(); renderCar(); }
+  });
+  $("#carspec").addEventListener("change", e => {
+    if(e.target.id !== "photoIn" || !e.target.files || !e.target.files[0]) return;
+    const file = e.target.files[0], id = state.car;
+    if(!/^image\//.test(file.type)){ toast("That file isn't an image"); return; }
+    const rd = new FileReader();
+    rd.onload = () => {
+      const im = new Image();
+      im.onload = () => {
+        const scale = Math.min(1, 1200/im.width), cv = document.createElement("canvas");
+        cv.width = Math.round(im.width*scale); cv.height = Math.round(im.height*scale);
+        cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
+        state.photos[id] = cv.toDataURL("image/jpeg", 0.82); savePhotos();
+        if(state.car === id) renderCar(); toast("Photo added");
+      };
+      im.onerror = () => toast("Couldn't read that image. Try a JPG or PNG.");
+      im.src = rd.result;
+    };
+    rd.onerror = () => toast("Couldn't read that file. Try another image.");
+    rd.readAsDataURL(file);
+  });
+  $("#catsel").addEventListener("change", e => { state.cat = e.target.value; renderMods(); });
+  $("#diffmax").addEventListener("input", e => { state.diffMax = +e.target.value; $("#diffval").textContent = e.target.value; renderMods(); });
+  $$(".chip[data-legal]").forEach(c => c.addEventListener("click", () => {
+    const k = c.dataset.legal; state.legal.has(k) ? state.legal.delete(k) : state.legal.add(k);
+    c.setAttribute("aria-pressed", state.legal.has(k)); renderMods();
+  }));
+  $("#resetf").addEventListener("click", () => {
+    state.q = ""; state.cat = ""; state.diffMax = 5; state.part = null; state.legal = new Set(["ok","check","track","illegal"]);
+    $("#q").value = ""; $("#catsel").value = ""; $("#diffmax").value = 5; $("#diffval").textContent = "5";
+    $$(".chip[data-legal]").forEach(c => c.setAttribute("aria-pressed","true")); $$(".fnode").forEach(n => n.classList.remove("on"));
+    renderMods();
+  });
+  $$(".fnode").forEach(n => {
+    n.addEventListener("click", () => setPart(n.dataset.part));
+    n.addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); setPart(n.dataset.part); } });
+  });
+  $("#modgrid").addEventListener("click", e => { const b = e.target.closest("[data-add]"); if(b) toggleBuild(b.dataset.add); });
+  $("#buildlist").addEventListener("click", e => { const b = e.target.closest("[data-remove]"); if(b) toggleBuild(b.dataset.remove); });
+  $$("[data-preset]").forEach(b => b.addEventListener("click", () => {
+    state.build = PRESETS[b.dataset.preset].slice(); renderMods(); renderBuild(); toast("Preset loaded");
+  }));
+  $("#clearbuild").addEventListener("click", () => { state.build = []; renderMods(); renderBuild(); toast("Build cleared"); });
+  ["glass","film","pane"].forEach(id => $("#"+id).addEventListener("input", updateTint));
+  ["lezfuel","lezyear","lezmonth"].forEach(id => $("#"+id).addEventListener("change", updateLez));
+}
+if(typeof window !== "undefined" && typeof document !== "undefined" && document.getElementById("carlist")) init();
+</script>
+
+</body>
+</html>
