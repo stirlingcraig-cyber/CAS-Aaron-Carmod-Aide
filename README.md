@@ -6,6 +6,7 @@ Hot hatch and sports car tuning guide for Glasgow and the west of Scotland.
 - Remap options, per-car tuning platforms and stage 1/2/3 requirements
 - Laird Performance (Cambuslang) tuning packages and Maxton/Airtec styling prices for Fiesta ST and Focus ST
 - 82 modifications (performance, styling and lighting) rated for difficulty, cost, gain, MOT and legal status, each with a "what you'll need" list
+- 3D build visualiser: rotate your car 360° (or switch to “On my photo” to see mods drawn onto your own side-on photo) and see body kit, stance, wheels, brakes, paint, lights, tint, exhaust and an engine x-ray update as you build
 - Quick-guide drop-down menus: DRL colour change, smoked/clear tail lights, insurance increase per mod, chameleon windscreen tint and sun strip
 - Brands & websites: Maxton Design, Milltek Sport, Scorpion Exhausts, with review data
 - Lighting lab: DRL colour visualiser with road-legal check, headlight options and costs, beam-pattern guide
@@ -14,7 +15,7 @@ Hot hatch and sports car tuning guide for Glasgow and the west of Scotland.
 - Glasgow LEZ checker, window-tint checker, Scottish law notes
 - Trustpilot-screened garage list (checked 30 September 2026)
 
-It's a single static page (`index.html`) with no build step. Fonts load from Google Fonts; everything else is inline.
+It's a single static page (`index.html`) with no build step. Fonts load from Google Fonts; the 3D view uses `three.min.js` (three.js r128, MIT licence) included in this folder; everything else is inline.
 
 ## Deploy on GitHub Pages
 

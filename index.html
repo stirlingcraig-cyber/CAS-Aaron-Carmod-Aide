@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Hot hatch and sports car tuning guide for Glasgow and Scotland: 21 cars, quick guides, remap stages, rated mods, lighting lab, insurance estimator, screened garages and parts brands.">
+<meta name="description" content="Hot hatch and sports car tuning guide for Glasgow and Scotland: 21 cars, 3D build visualiser with photo mode, quick guides, remap stages, rated mods, lighting lab, insurance estimator, screened garages and parts brands.">
 <meta name="theme-color" content="#0e1116">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <title>Clydeside Redline</title>
@@ -365,6 +365,43 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 .inslist div:last-child{border-bottom:0}
 .inslist b{font:500 .82rem var(--mono);color:var(--sodium);white-space:nowrap}
 .inslist b.z{color:var(--muted)} .inslist b.x{color:var(--bad)}
+
+.vizgrid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:980px){.vizgrid{grid-template-columns:1fr}}
+.vizstage{border:1px solid var(--line);border-radius:16px;background:radial-gradient(ellipse at 50% 85%,#ffae2b1c,transparent 55%),radial-gradient(ellipse at 50% 0%,#78bdff14,transparent 60%),#0a0c10;overflow:hidden;min-width:0}
+.vizbar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 14px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.vizbar b{font:800 1.15rem/1.1 var(--display);text-transform:uppercase}
+.vizcanvas{position:relative;width:100%}
+.vizcanvas canvas{display:block;width:100%;cursor:grab;touch-action:pan-y}
+.vizcanvas canvas:active{cursor:grabbing}
+.vizcanvas canvas:focus-visible{outline:2px solid var(--sodium);outline-offset:-2px}
+.vizctl{display:grid;gap:12px;padding:14px 16px;border-top:1px solid var(--line)}
+.vizrow{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center}
+.vizlab{font:500 .72rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.viztogs{display:flex;flex-wrap:wrap;gap:6px}
+.tog{all:unset;box-sizing:border-box;cursor:pointer;font:600 .76rem/1 var(--body);letter-spacing:.06em;text-transform:uppercase;padding:9px 12px;border-radius:99px;border:1px solid var(--line);color:var(--muted);background:var(--panel)}
+.tog[aria-pressed="true"]{color:var(--asphalt);background:var(--sodium);border-color:var(--sodium)}
+.tog:focus-visible{outline:2px solid var(--sodium)}
+.vizside .swatches{margin-top:10px}
+.vizpick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+@media (max-width:560px){.vizpick{grid-template-columns:1fr}}
+input[type=color]{width:100%;height:42px;padding:3px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;cursor:pointer}
+.vleg{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.vgroup{all:unset;cursor:pointer;font:500 .68rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--sodium);margin-right:4px}
+.vgroup:focus-visible{outline:2px solid var(--sodium)}
+.vchip{font:600 .72rem/1 var(--body);padding:6px 8px;border-radius:6px;background:var(--panel-2);border:1px solid var(--line)}
+.vchip.illegal{color:var(--bad);border-color:var(--bad)}
+.vchip.track{color:var(--track)}
+
+.vizmodebar{padding:10px 16px 0}
+.photostage{position:relative;background:#07080b;border-bottom:1px solid var(--line);margin-top:10px}
+#photoCanvas{display:block;width:100%;height:auto;max-height:70vh;object-fit:contain;cursor:crosshair}
+[hidden]{display:none!important}
+.photoempty{display:grid;place-items:center;gap:10px;padding:34px 18px;text-align:center;color:var(--muted);font-size:.92rem}
+.photoempty b{color:var(--fg)}
+.photomsg{padding:10px 16px 0;font-size:.88rem;color:#d3d1c9;min-height:1.5em}
+.photoswatch{width:30px;height:30px;border-radius:50%;border:2px solid var(--fg);align-self:center}
+.tog:disabled{opacity:.4;cursor:not-allowed}
 .toast{visibility:hidden;position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(140%);background:var(--sodium);color:var(--asphalt);font:700 .85rem/1 var(--body);padding:12px 16px;border-radius:99px;transition:transform .25s;z-index:30;white-space:nowrap}
 .toast.show{visibility:visible;transform:translateX(-50%) translateY(0)}
 </style>
@@ -380,6 +417,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
     <a class="tab" href="#remaps">Remaps</a>
     <a class="tab" href="#lighting">Lighting</a>
     <a class="tab" href="#build">Build planner</a>
+    <a class="tab" href="#viz">3D view</a>
     <a class="tab" href="#insurance">Insurance</a>
     <a class="tab" href="#guide">How to choose</a>
     <a class="tab" href="#scotland">Scotland &amp; the law</a>
@@ -844,11 +882,93 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 </section>
 
 
+
+<!-- VISUALISER -->
+<section id="viz">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">07 · Build visualiser</p>
+      <h2>See your build</h2>
+      <p class="lede">Your car in 3D, updating as you add mods: body kit, ride height, wheels and brakes, paint and finish, lights, tint, exhaust tips, and an engine x-ray showing the parts you've changed. Drag to turn it a full 360°, or switch to <b>On my photo</b> to see the mods on your own car.</p>
+    </div>
+    <div class="vizgrid">
+      <div class="vizstage">
+        <div class="vizbar"><b id="vizTitle">—</b><span id="vizStance" class="note"></span></div>
+        <div class="vizmodebar"><div class="seg" role="group" aria-label="View" id="vizMode">
+          <button type="button" data-mode="3d" aria-pressed="true">3D model</button>
+          <button type="button" data-mode="photo" aria-pressed="false">On my photo</button>
+        </div></div>
+        <div id="vizPhoto" hidden>
+          <div class="photostage">
+            <canvas id="photoCanvas" hidden aria-label="Your photo with the mods from your build drawn on"></canvas>
+            <div id="photoEmpty" class="photoempty">
+              <svg viewBox="0 0 220 80" aria-hidden="true" style="width:min(260px,70%)"><path d="M10 62 L22 40 Q30 28 52 26 L84 14 Q96 10 120 10 L150 10 Q168 12 182 24 L204 34 Q212 38 212 50 L212 62 Z" fill="none" stroke="var(--sodium)" stroke-width="2" stroke-dasharray="5 5"/><circle cx="56" cy="62" r="13" fill="none" stroke="var(--led)" stroke-width="2"/><circle cx="170" cy="62" r="13" fill="none" stroke="var(--led)" stroke-width="2"/><line x1="0" y1="76" x2="220" y2="76" stroke="var(--line)"/></svg>
+              <p><b>Side-on photo works best.</b> Stand level with the wheels, about two car lengths away, whole car in frame.</p>
+            </div>
+          </div>
+          <p class="photomsg" id="photoMsg" aria-live="polite"></p>
+          <div class="vizctl">
+            <div class="viztogs">
+              <label class="tog" for="photoIn2" style="cursor:pointer">Upload photo</label>
+              <input type="file" id="photoIn2" accept="image/*" class="sr">
+              <button type="button" class="tog" id="photoCal">Set wheels</button>
+              <button type="button" class="tog" id="photoPick">Pick paint colour</button>
+              <span class="photoswatch" id="photoSwatch" hidden></span>
+              <button type="button" class="tog" id="photoUseColour">Use in 3D</button>
+              <button type="button" class="tog" id="photoReset">Reset marks</button>
+            </div>
+            <div class="vizrow" id="photoSplitRow" hidden><label for="photoSplit" class="vizlab">Before / after</label><input type="range" id="photoSplit" min="0" max="100" value="100"></div>
+            <div class="vizrow" id="photoTolRow" hidden><label for="photoTol" class="vizlab">Paint match</label><input type="range" id="photoTol" min="10" max="70" value="34"></div>
+          </div>
+        </div>
+        <div id="viz3d">
+        <div id="vizCanvasWrap" class="vizcanvas"></div>
+        <div id="vizFallback" class="empty" hidden>The 3D view needs WebGL, which this browser or device has turned off. Your build list and checks still work.</div>
+        <div class="vizctl">
+          <div class="seg" role="group" aria-label="Camera angle" id="vizViews">
+            <button type="button" data-view="front34">Front ¾</button>
+            <button type="button" data-view="front">Front</button>
+            <button type="button" data-view="side">Side</button>
+            <button type="button" data-view="rear34">Rear ¾</button>
+            <button type="button" data-view="rear">Rear</button>
+            <button type="button" data-view="top">Top</button>
+            <button type="button" data-view="low">Low</button>
+          </div>
+          <div class="vizrow">
+            <label for="vizAngle" class="vizlab">360° <span id="vizAngleV" class="num">0°</span></label>
+            <input type="range" id="vizAngle" min="0" max="359" value="43">
+          </div>
+          <div class="viztogs">
+            <button type="button" class="tog" id="vizSpin" aria-pressed="true">Auto-spin</button>
+            <button type="button" class="tog" id="vizXray" aria-pressed="false">Engine x-ray</button>
+            <button type="button" class="tog" id="vizStock" aria-pressed="false">Compare stock</button>
+            <button type="button" class="tog" id="vizZoomIn" aria-label="Zoom in">＋</button>
+            <button type="button" class="tog" id="vizZoomOut" aria-label="Zoom out">－</button>
+          </div>
+        </div>
+        </div>
+      </div>
+      <div class="panel vizside">
+        <p class="eyebrow">Paint</p>
+        <div class="swatches" role="radiogroup" aria-label="Paint colour" id="vizPaints"></div>
+        <div class="vizpick">
+          <label class="f" for="vizPaintCustom">Any colour<input type="color" id="vizPaintCustom" value="#c8102e"></label>
+          <label class="f" for="vizFinish">Finish<select id="vizFinish"></select></label>
+          <label class="f" for="vizRim">Aftermarket wheel colour<select id="vizRim"></select></label>
+        </div>
+        <p class="note" style="margin-top:8px">A full colour change by paint or wrap must be reported to DVLA on the V5C, and declared to your insurer.</p>
+        <p class="eyebrow" style="margin-top:18px">On the model</p>
+        <div id="vizLegend" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- INSURANCE -->
 <section id="insurance">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">07 · Insurance cost</p>
+      <p class="eyebrow">08 · Insurance cost</p>
       <h2>What your build adds to the premium</h2>
       <p class="lede">An estimate built from a 2025 study that compared UK quotes with one modification changed at a time. Insurers load by type of mod, so three suspension parts count once. Real quotes vary widely with age, postcode, claims history and the insurer. Stacking several loadings can overstate the total: modified-car specialists often quote a whole build for less than the sum of its parts.</p>
     </div>
@@ -881,7 +1001,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="guide">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">08 · How to choose</p>
+      <p class="eyebrow">09 · How to choose</p>
       <h2>Choosing mods in the right order</h2>
       <p class="lede">The most common regret on owners' forums is buying power first. This is the order experienced owners and UK tuners recommend.</p>
     </div>
@@ -948,7 +1068,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="scotland">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">09 · Scotland &amp; the law</p>
+      <p class="eyebrow">10 · Scotland &amp; the law</p>
       <h2>Glasgow rules of the road</h2>
       <p class="lede">What actually gets modified cars stopped, failed or uninsured in Scotland, plus where to measure and use the power legally.</p>
     </div>
@@ -998,7 +1118,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="garages">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">10 · Garages near Glasgow</p>
+      <p class="eyebrow">11 · Garages near Glasgow</p>
       <h2>Garages, screened</h2>
       <p class="lede">Trustpilot scores checked on 30 September 2026, plus our own screen: any business that advertises emissions deletes (DPF, GPF, EGR, AdBlue or catalyst removal) is flagged, because that work is illegal on the road and a sign of how the business operates.</p>
     </div>
@@ -1047,7 +1167,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="sources" class="sources">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">11 · Sources</p>
+      <p class="eyebrow">12 · Sources</p>
       <h2>Where this comes from</h2>
       <p class="lede">Legal points are from government, regulator and circuit sources, checked on 30 September 2026. Power figures are manufacturer data plus owner and tuner consensus; treat them as a guide.</p>
     </div>
@@ -1086,6 +1206,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 </footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="three.min.js"></script>
 <script>
 "use strict";
 /* ---------- DATA: cars ---------- */
@@ -1497,6 +1618,7 @@ if(!CARS.some(c => c.id === state.car)) state.car = "golfr";
 state.vi = store.get("cr_vi", {});
 state.photos = store.get("cr_photos", {});
 function savePhotos(){ try{ localStorage.setItem("cr_photos", JSON.stringify(state.photos)); }catch(e){ toast("Photo shown, but too large to keep after reload"); } }
+function persistPhoto(id){ savePhotos(); }
 const base = () => CARS.find(c => c.id === state.car);
 function varIndex(id){ const n = VARIANTS[id].length; const v = state.vi[id]; return (Number.isInteger(v) && v >= 0 && v < n) ? v : n-1; }
 function effective(c, vi){
@@ -1723,7 +1845,7 @@ function renderBuild(){
   const groups = {};
   a.mods.slice().sort((x,y) => x.order-y.order || x.diff-y.diff).forEach(m => (groups[m.order] = groups[m.order] || []).push(m));
   const keys = Object.keys(groups);
-  renderShop(); renderLightTable(); renderInsurance();
+  renderShop(); renderLightTable(); renderInsurance(); vizRebuild();
   $("#buildlist").innerHTML = keys.length ? keys.map(k => `<div class="stage"><h5>${ORDER_LABEL[k]}</h5>${groups[k].map(m => `
     <div class="brow"><div><b>${esc(m.name)}</b> <span class="legal ${m.legal}" style="margin-left:6px">${LEGAL_LABEL[m.legal]}</span></div><span class="c">${gbp(m.cost[0])}–${gbp(m.cost[1])}</span><button type="button" class="xbtn" data-remove="${m.id}" aria-label="Remove ${esc(m.name)}">✕</button></div>`).join("")}</div>`).join("")
     : `<div class="empty">Your build is empty. Add mods from the list above, or start from a preset.</div>`;
@@ -1967,6 +2089,7 @@ function renderDrl(){
   $("#drlswatches").innerHTML = DRL_COLOURS.map(c => `<button type="button" class="sw" role="radio" data-c="${c.id}" aria-checked="${c.id===drl.c}" style="--c:${c.hex==="rgb"?"conic-gradient(#ff3b3b,#39e07a,#3d7bff,#c05cff,#ff3b3b)":c.hex}"><i${c.hex==="rgb"?' style="background:conic-gradient(#ff3b3b,#39e07a,#3d7bff,#c05cff,#ff3b3b)"':""}></i>${esc(c.n)}</button>`).join("");
   const c = DRL_COLOURS.find(x => x.id === drl.c);
   $("#drlstrips").setAttribute("stroke", c.hex === "rgb" ? "url(#rgbg)" : c.hex);
+  if(V.ok) vizRebuild();
   const o = $("#drlverdict");
   if(drl.m === "show"){
     o.className = "lezout " + (c.k === "ok" ? "ok" : "track");
@@ -2099,6 +2222,796 @@ function initGuides(){
   if(/^g-(drl|tail|ins|screen)$/.test(location.hash.slice(1))){ const d = $(location.hash); if(d) d.open = true; }
 }
 
+/* ---------- 3D build visualiser ---------- */
+const PAINTS = [
+ {n:"Flame red",c:"#c8102e"},{n:"Electric blue",c:"#1f4fd1"},{n:"Performance blue",c:"#3a7bd5"},{n:"Arctic white",c:"#eef0f2"},
+ {n:"Track grey",c:"#7d8186"},{n:"Midnight black",c:"#16171b"},{n:"Sodium orange",c:"#ff8a1c"},{n:"Racing green",c:"#0f4d32"},
+ {n:"Acid lime",c:"#9be22d"},{n:"Royal purple",c:"#5b2a86"},{n:"Sunburst yellow",c:"#f5c400"},{n:"Liquid silver",c:"#b9bec6"}
+];
+const DEFAULT_PAINT = {golfgti:"#c8102e",golfr:"#1f4fd1",civicr:"#eef0f2",gryaris:"#c8102e",i30n:"#3a7bd5",focusst:"#ff8a1c",fiestast:"#f5c400",rs3:"#7d8186",a45s:"#f5c400",m2:"#1f4fd1",supra:"#c8102e",cayman:"#7d8186",a110:"#1f4fd1",mx5:"#c8102e",gr86:"#eef0f2",pologti:"#c8102e",i20n:"#3a7bd5",focusrs:"#1f4fd1",m135i:"#7d8186",m140i:"#16171b",a35:"#b9bec6"};
+const FINISHES = {
+ gloss:{n:"Gloss",rough:.18,metal:.05,cc:1},
+ metallic:{n:"Metallic",rough:.3,metal:.6,cc:1},
+ satin:{n:"Satin",rough:.48,metal:.2,cc:.2},
+ matte:{n:"Matte",rough:.82,metal:.05,cc:0},
+ chameleon:{n:"Chameleon (colour-shift)",rough:.22,metal:.55,cc:1}
+};
+const RIMS = {gunmetal:{n:"Gunmetal",c:"#3b3f45"},silver:{n:"Silver",c:"#c9ccd1"},black:{n:"Gloss black",c:"#111214"},bronze:{n:"Bronze",c:"#8c6a3c"},white:{n:"White",c:"#e8e8e8"}};
+const VIZ_GROUPS = {
+ "Body & aero":["splitter","canards","sideskirt","rearsplit","diffuser","spoilercap","wingraise","bonnetext","eyebrows","grille","rearwin","undertray","sunstrip"],
+ "Suspension & stance":["springs","coilovers","spacers","arb","strutbar","bushes"],
+ "Wheels & brakes":["forged","winter","bbk","discs","pads"],
+ "Paint & glass":["wrap","reartint","fronttint","chameleon"],
+ "Lights":["oemled","aftled","halo","headtint","smokedtail","tailfilm","clearlens","drlcolour","drlcode","auxlamps"],
+ "Exhaust":["catback","valved","gpfback","downpipe","decat","gpfdel"],
+ "Engine (x-ray)":["intake","turboinlet","ic","chargepipes","stage1","stage2","box","tcu","hybrid","fuel","oilcool","clutch","lsd","e85","mounts"]
+};
+const VIZ_OF = {}; Object.entries(VIZ_GROUPS).forEach(([g,ids]) => ids.forEach(id => VIZ_OF[id] = g));
+const VIZ_VIEW = {"Body & aero":"front34","Suspension & stance":"side","Wheels & brakes":"side","Paint & glass":"front34","Lights":"front","Exhaust":"rear34","Engine (x-ray)":"front34"};
+const VIEWS = {front34:{yaw:.72,pitch:.16,dist:7.4},front:{yaw:0,pitch:.08,dist:6.8},side:{yaw:Math.PI/2,pitch:.06,dist:7.6},rear34:{yaw:Math.PI-.7,pitch:.16,dist:7.4},rear:{yaw:Math.PI,pitch:.08,dist:6.8},top:{yaw:.6,pitch:1.2,dist:8.2},low:{yaw:.9,pitch:-.04,dist:6.6}};
+/* Generic body styles (no manufacturer designs). Heights in metres; x = +front. */
+const VIZ_PROFILES = {
+ hatch:{len:4.26,wb:2.63,track:1.56,w:1.80,nose:.66,bonF:.82,scut:[1.0,.98],roofF:[.26,1.43],roofR:[-1.42,1.45],tailG:[-1.98,1.02],tailTop:1.0,belt:.98,roof:true,spoiler:true,doors:5,eng:"front"},
+ hatch3:{len:4.06,wb:2.56,track:1.54,w:1.77,nose:.66,bonF:.82,scut:[.95,.97],roofF:[.2,1.42],roofR:[-1.32,1.44],tailG:[-1.9,1.0],tailTop:.99,belt:.97,roof:true,spoiler:true,doors:3,eng:"front"},
+ coupe:{len:4.38,wb:2.5,track:1.6,w:1.84,nose:.6,bonF:.76,scut:[.42,.93],roofF:[-.28,1.31],roofR:[-.95,1.32],tailG:[-1.86,.99],tailTop:.99,belt:.93,roof:true,spoiler:false,duck:true,doors:2,eng:"front"},
+ mid:{len:4.2,wb:2.42,track:1.58,w:1.82,nose:.56,bonF:.72,scut:[.95,.88],roofF:[.3,1.24],roofR:[-.55,1.25],tailG:[-1.45,.98],tailTop:.98,belt:.9,roof:true,spoiler:false,duck:true,doors:2,eng:"mid"},
+ roadster:{len:3.95,wb:2.31,track:1.5,w:1.74,nose:.6,bonF:.74,scut:[.42,.9],roofF:[.04,1.2],roofR:null,tailG:null,tailTop:.93,belt:.9,roof:false,spoiler:false,duck:true,doors:2,eng:"front"}
+};
+let vizState = {paint:{}, finish:"gloss", rim:"gunmetal", xray:false, stock:false, spin:true, mode:"3d"};
+const V = {ok:false};
+function vizHas(id){ return !vizState.stock && state.build.includes(id); }
+
+/* --- studio environment (adapted from three.js RoomEnvironment, MIT licence) --- */
+function vizRoom(){
+  const sc = new THREE.Scene(), geo = new THREE.BoxGeometry();
+  const room = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({side:THREE.BackSide, color:0x30343c}));
+  room.position.set(-.757,13.219,.717); room.scale.set(31.713,28.305,28.591); sc.add(room);
+  const pl = new THREE.PointLight(0xffffff, 5, 28, 2); pl.position.set(.418,16.199,.3); sc.add(pl);
+  const area = (i, col) => { const m = new THREE.MeshBasicMaterial({color:col || 0xffffff}); m.color.multiplyScalar(i); return m; };
+  [[-16.116,14.37,8.208,.1,2.428,2.739,50],[-16.109,18.021,-8.207,.1,2.425,2.751,50],[14.904,12.198,-1.832,.15,4.265,6.331,17],[-.462,8.89,14.52,4.38,5.441,.088,43],[3.235,11.486,-12.541,2.5,2,.1,20],[0,20,0,1,.1,1,100]]
+    .forEach(([x,y,z,sx,sy,sz,i]) => { const l = new THREE.Mesh(geo, area(i)); l.position.set(x,y,z); l.scale.set(sx,sy,sz); sc.add(l); });
+  const warm = new THREE.Mesh(geo, area(14, 0xffae2b)); warm.position.set(12,3,10); warm.scale.set(6,.6,.1); sc.add(warm);
+  return sc;
+}
+function vizGroundTex(){
+  const cv = document.createElement("canvas"); cv.width = cv.height = 512;
+  const g = cv.getContext("2d");
+  const r = g.createRadialGradient(256,256,10,256,256,256);
+  r.addColorStop(0,"rgba(255,174,43,.20)"); r.addColorStop(.35,"rgba(255,174,43,.06)"); r.addColorStop(1,"rgba(14,17,22,0)");
+  g.fillStyle = r; g.fillRect(0,0,512,512);
+  g.strokeStyle = "rgba(120,189,255,.09)"; g.lineWidth = 1;
+  for(let i=0;i<=512;i+=32){ g.beginPath(); g.moveTo(i,0); g.lineTo(i,512); g.stroke(); g.beginPath(); g.moveTo(0,i); g.lineTo(512,i); g.stroke(); }
+  const t = new THREE.CanvasTexture(cv); t.encoding = THREE.sRGBEncoding; return t;
+}
+function vizShadowTex(){
+  const cv = document.createElement("canvas"); cv.width = 256; cv.height = 128;
+  const g = cv.getContext("2d"); const r = g.createRadialGradient(128,64,6,128,64,124);
+  r.addColorStop(0,"rgba(0,0,0,.9)"); r.addColorStop(.55,"rgba(0,0,0,.5)"); r.addColorStop(1,"rgba(0,0,0,0)");
+  g.fillStyle = r; g.fillRect(0,0,256,128); return new THREE.CanvasTexture(cv);
+}
+function vizTreadTex(){
+  const cv = document.createElement("canvas"); cv.width = 256; cv.height = 32;
+  const g = cv.getContext("2d"); g.fillStyle = "#808080"; g.fillRect(0,0,256,32);
+  g.fillStyle = "#2a2a2a"; for(let i=0;i<256;i+=8){ g.fillRect(i,0,3,32); } g.fillRect(0,9,256,2); g.fillRect(0,21,256,2);
+  const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(10,1); return t;
+}
+
+function initViz(){
+  const box = $("#vizCanvasWrap");
+  vizState = Object.assign(vizState, store.get("cr_viz", {}));
+  vizState.stock = false;
+  if(typeof THREE === "undefined" || !box){ $("#vizFallback").hidden = false; return; }
+  let renderer;
+  try{ renderer = new THREE.WebGLRenderer({antialias:true, alpha:true, preserveDrawingBuffer:true}); }
+  catch(e){ $("#vizFallback").hidden = false; return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = .85;
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.domElement.id = "vizCanvas";
+  renderer.domElement.setAttribute("role","img");
+  renderer.domElement.setAttribute("aria-label","3D model of your car with the mods in your build. Drag to rotate.");
+  box.appendChild(renderer.domElement);
+  const scene = new THREE.Scene();
+  try{ const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(vizRoom(), .04).texture; pm.dispose(); }catch(e){}
+  const camera = new THREE.PerspectiveCamera(30, 1, .1, 100);
+  scene.add(new THREE.HemisphereLight(0xdfe8ff, 0x0b0c10, .35));
+  const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(3.5,7,2.5);
+  key.castShadow = true; key.shadow.mapSize.set(1024,1024); key.shadow.radius = 4; key.shadow.bias = -.0005;
+  Object.assign(key.shadow.camera, {left:-3.4, right:3.4, top:3.4, bottom:-3.4, near:1, far:16});
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0xffae2b, .7); rim.position.set(-5,2.5,-4); scene.add(rim);
+  const ground = new THREE.Mesh(new THREE.CircleGeometry(7,64), new THREE.MeshBasicMaterial({map:vizGroundTex(), transparent:true, depthWrite:false}));
+  ground.rotation.x = -Math.PI/2; ground.position.y = -.002; scene.add(ground);
+  const sh = new THREE.Mesh(new THREE.PlaneGeometry(12,12), new THREE.ShadowMaterial({opacity:.38}));
+  sh.rotation.x = -Math.PI/2; sh.receiveShadow = true; scene.add(sh);
+  const contact = new THREE.Mesh(new THREE.PlaneGeometry(5.2,2.6), new THREE.MeshBasicMaterial({map:vizShadowTex(), transparent:true, depthWrite:false, opacity:.85}));
+  contact.rotation.x = -Math.PI/2; contact.position.y = .003; scene.add(contact);
+  Object.assign(V, {ok:true, renderer, scene, camera, box, car:null, yaw:VIEWS.front34.yaw, pitch:VIEWS.front34.pitch, dist:VIEWS.front34.dist, tYaw:null, tPitch:null, tDist:null, dirty:true, visible:true, anim:[], paintMat:null, last:performance.now(), tread:vizTreadTex()});
+  vizBindControls();
+  vizResize();
+  window.addEventListener("resize", () => { vizResize(); if(typeof photoRender === "function") photoRender(); });
+  if("IntersectionObserver" in window){
+    new IntersectionObserver(es => { V.visible = es[0].isIntersecting; if(V.visible) vizLoop(); }, {threshold:.01}).observe(box);
+  }
+  vizRebuild();
+  vizLoop();
+}
+function vizResize(){
+  if(!V.ok) return;
+  const w = V.box.clientWidth || 600, h = Math.max(260, Math.round(w * (w < 560 ? .78 : .52)));
+  V.renderer.setSize(w, h, false);
+  V.renderer.domElement.style.width = "100%"; V.renderer.domElement.style.height = h + "px";
+  V.camera.aspect = w / h; V.camera.updateProjectionMatrix(); V.dirty = true;
+}
+function vizSave(){ store.set("cr_viz", {paint:vizState.paint, finish:vizState.finish, rim:vizState.rim, xray:vizState.xray, spin:vizState.spin, mode:vizState.mode}); }
+function vizPaintHex(){ const c = car(); return vizState.paint[c.id] || DEFAULT_PAINT[c.id] || "#c8102e"; }
+
+/* --- materials --- */
+function vizMats(){
+  const fin = FINISHES[vizState.finish] || FINISHES.gloss;
+  const x = vizState.xray;
+  const ghost = m => { if(x){ m.transparent = true; m.opacity = .13; m.depthWrite = false; } return m; };
+  const glassOp = x ? .08 : .78;
+  return {
+    paint: ghost(new THREE.MeshPhysicalMaterial({color:vizPaintHex(), roughness:fin.rough, metalness:fin.metal, clearcoat:fin.cc, clearcoatRoughness:.04, envMapIntensity:.9})),
+    black: ghost(new THREE.MeshStandardMaterial({color:0x0b0c0f, roughness:.35, metalness:.2})),
+    trim: ghost(new THREE.MeshStandardMaterial({color:0x15171b, roughness:.65, metalness:.1})),
+    shut: ghost(new THREE.MeshBasicMaterial({color:0x050506})),
+    kit: new THREE.MeshPhysicalMaterial({side:THREE.DoubleSide, color:0x0b0b0d, roughness:.16, metalness:.1, clearcoat:1}),
+    glass: new THREE.MeshPhysicalMaterial({side:THREE.DoubleSide, color:0x0a0e14, roughness:.03, metalness:.2, transparent:true, opacity:glassOp, envMapIntensity:1.8, depthWrite:!x}),
+    rearGlass: new THREE.MeshPhysicalMaterial({side:THREE.DoubleSide, color:0x040507, roughness:.03, metalness:.2, transparent:true, opacity:x ? .08 : (vizHas("reartint") ? .97 : .8), envMapIntensity:1.6, depthWrite:!x}),
+    frontSide: new THREE.MeshPhysicalMaterial({side:THREE.DoubleSide, color:0x070a0f, roughness:.03, metalness:.2, transparent:true, opacity:x ? .08 : (vizHas("fronttint") ? .96 : .74), envMapIntensity:1.8, depthWrite:!x}),
+    screen: new THREE.MeshPhysicalMaterial({side:THREE.DoubleSide, color:vizHas("chameleon") ? 0x5a3cff : 0x0a0e14, roughness:.03, metalness:.25, transparent:true, opacity:x ? .08 : (vizHas("chameleon") ? .55 : .68), envMapIntensity:1.8, depthWrite:!x}),
+    tyre: new THREE.MeshStandardMaterial({color:0x141518, roughness:.88, metalness:0}),
+    tread: new THREE.MeshStandardMaterial({color:0x101113, roughness:.95, bumpMap:V.tread, bumpScale:.012}),
+    rim: new THREE.MeshPhysicalMaterial({color:(RIMS[vizState.rim] || RIMS.gunmetal).c, roughness:.25, metalness:.85, clearcoat:.6}),
+    stockRim: new THREE.MeshPhysicalMaterial({color:0xb7bcc4, roughness:.28, metalness:.9, clearcoat:.4}),
+    disc: new THREE.MeshStandardMaterial({color:0x777a80, roughness:.42, metalness:.9}),
+    hub: new THREE.MeshStandardMaterial({color:0x2b2d31, roughness:.6, metalness:.6}),
+    chrome: new THREE.MeshStandardMaterial({color:0xdadde2, roughness:.1, metalness:1}),
+    plateF: new THREE.MeshStandardMaterial({color:0xf2f2ee, roughness:.45}),
+    plateR: new THREE.MeshStandardMaterial({color:0xf2cf4a, roughness:.45}),
+    hi: new THREE.MeshStandardMaterial({color:0xffae2b, emissive:0xff8a00, emissiveIntensity:.55, roughness:.4, metalness:.3}),
+    stock: new THREE.MeshStandardMaterial({color:0x56607a, roughness:.6, metalness:.4}),
+    bad: new THREE.MeshStandardMaterial({color:0xff3b3b, emissive:0xff1a1a, emissiveIntensity:.6, transparent:true, opacity:.75}),
+    blueSil: new THREE.MeshStandardMaterial({color:0x2f7bff, emissive:0x113a99, emissiveIntensity:.5, roughness:.5})
+  };
+}
+function vizDispose(o){ o.traverse(n => { if(n.geometry) n.geometry.dispose(); if(n.material){ (Array.isArray(n.material) ? n.material : [n.material]).forEach(m => m.dispose()); } }); }
+function vizLin(root){
+  root.traverse(n => { if(!n.material) return; (Array.isArray(n.material) ? n.material : [n.material]).forEach(m => {
+    if(m.userData.lin) return; m.userData.lin = true;
+    if(m.color) m.color.convertSRGBToLinear(); if(m.emissive) m.emissive.convertSRGBToLinear();
+  }); });
+}
+
+/* --- small helpers --- */
+function mBox(w,h,d,mat,x,y,z){ const m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat); m.position.set(x,y,z); return m; }
+function mCyl(rt,rb,h,mat,seg){ return new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg || 24), mat); }
+function mTube(points, r, mat){ return new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(p[0],p[1],p[2]))), 32, r, 8, false), mat); }
+function mRound(w,h,d,mat,x,y,z){ const m = new THREE.Mesh(new THREE.SphereGeometry(.5,20,14), mat); m.scale.set(w,h,d); m.position.set(x,y,z); return m; }
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const smooth = (a,b,v) => { const t = clamp((v-a)/(b-a),0,1); return t*t*(3-2*t); };
+function interp(table, x){ // table sorted by x descending (front → rear)
+  if(x >= table[0][0]) return table[0][1];
+  for(let i=1;i<table.length;i++){ const [x1,y1] = table[i-1], [x2,y2] = table[i]; if(x >= x2){ const t = (x1-x)/(x1-x2); const s = t*t*(3-2*t); return y1 + (y2-y1)*s; } }
+  return table[table.length-1][1];
+}
+
+/* --- body shape functions (all in metres) --- */
+function vizShape(P){
+  const h = P.len/2, wb = P.wb/2, archR = .43, archY = .31;
+  const top = [[h+.001,P.nose-.1],[h-.07,P.nose],[h-.42,P.bonF],[P.scut[0],P.scut[1]],[-h+.5,P.belt+.01],[-h+.12,P.tailTop+(P.duck?.03:0)],[-h-.001,P.tailTop-.12]];
+  const yTop = x => interp(top, x);
+  const yBase = x => { let b = .26; if(x > h-.28) b = .26 + smooth(h-.28,h,x)*.06; if(x < -h+.3) b = .26 + smooth(-h+.3,-h,x)*.08;
+    [wb,-wb].forEach(xw => { const dx = x - xw; if(Math.abs(dx) < archR) b = Math.max(b, archY + Math.sqrt(archR*archR - dx*dx)); }); return b; };
+  const halfW = x => { const W = P.w/2; let k = 1; const e = .62;
+    if(x > h-e) k -= .17*Math.pow((x-(h-e))/e, 2.2); if(x < -h+e) k -= .13*Math.pow(((-h+e)-x)/e, 2.2);
+    k += .018*Math.exp(-Math.pow((x-wb)/.42,2)) + .028*Math.exp(-Math.pow((x+wb)/.45,2)); // wheel-arch haunches
+    return W*k; };
+  const sectZ = (x, y) => { // half-width of the body surface at (x,y)
+    const y0 = .22, y1 = yTop(x), yc = .52, hy = Math.max(.01, y1 - y0);
+    const tumble = 1 - .13*smooth(yc, y1, y) - .05*smooth(yc, y0, y);
+    const t = clamp(Math.abs((y - yc)/(y > yc ? (y1 - yc) : (yc - y0))), 0, 1);
+    const n = y > yc ? 3 : 4;
+    return halfW(x) * Math.pow(1 - Math.pow(t, n), 1/n) * tumble; };
+  const roofTop = P.roof ? [[P.scut[0],P.scut[1]],[P.roofF[0],P.roofF[1]],[P.roofF[0]-.25,P.roofF[1]+.02],[P.roofR[0]+.25,P.roofR[1]+.005],[P.roofR[0],P.roofR[1]-.01],[P.tailG[0],P.tailG[1]]] : null;
+  return {h, wb, archR, archY, yTop, yBase, halfW, sectZ, roofTop, gTop: x => roofTop ? interp(roofTop, x) : 0};
+}
+
+/* --- loft builder: stations along x, ring of points per station --- */
+function loft(stations, ringFn, groupFn, capEnds){
+  const pos = [], idx = [], groups = [];
+  const N = stations.length, M = ringFn(stations[0]).length;
+  stations.forEach(x => ringFn(x).forEach(p => pos.push(x, p[1], p[0])));
+  const faces = {};
+  for(let i=0;i<N-1;i++) for(let j=0;j<M-1;j++){
+    const a = i*M+j, b = (i+1)*M+j, c = (i+1)*M+j+1, d = i*M+j+1;
+    const g = groupFn ? groupFn(stations[i], stations[i+1], j, M) : 0;
+    (faces[g] = faces[g] || []).push(a,b,d, b,c,d);
+  }
+  if(capEnds){
+    [0, N-1].forEach((i, k) => { // fan cap
+      const cx = stations[i]; let sy = 0, sz = 0; for(let j=0;j<M;j++){ sy += pos[(i*M+j)*3+1]; sz += pos[(i*M+j)*3+2]; }
+      const ci = pos.length/3; pos.push(cx, sy/M, sz/M);
+      const g = 0; (faces[g] = faces[g] || []);
+      for(let j=0;j<M-1;j++){ const a = i*M+j, b = i*M+j+1; if(k === 0) faces[g].push(ci, a, b); else faces[g].push(ci, b, a); }
+    });
+  }
+  let start = 0;
+  Object.keys(faces).sort().forEach(g => { idx.push(...faces[g]); groups.push({start, count:faces[g].length, g:+g}); start += faces[g].length; });
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  geo.setIndex(idx); groups.forEach(gr => geo.addGroup(gr.start, gr.count, gr.g));
+  geo.computeVertexNormals();
+  return geo;
+}
+function stationsBetween(a, b, n){ const s = []; for(let i=0;i<=n;i++) s.push(a + (b-a)*i/n); return s; }
+
+/* --- wheel --- */
+function vizWheel(M, side, opts){
+  const g = new THREE.Group();
+  const R = .335, W = .235, rimR = opts.forged ? .25 : .23;
+  // tyre: lathe profile (radius, width) rotated to the z axis
+  const tyrePts = [new THREE.Vector2(rimR+.005,-W/2), new THREE.Vector2(R-.035,-W/2), new THREE.Vector2(R-.008,-W/2+.025), new THREE.Vector2(R,-W/2+.06), new THREE.Vector2(R,W/2-.06), new THREE.Vector2(R-.008,W/2-.025), new THREE.Vector2(R-.035,W/2), new THREE.Vector2(rimR+.005,W/2)];
+  const tyre = new THREE.Mesh(new THREE.LatheGeometry(tyrePts, 48), M.tyre); tyre.rotation.x = Math.PI/2; g.add(tyre);
+  const tread = new THREE.Mesh(new THREE.CylinderGeometry(R+.001, R+.001, W-.12, 48, 1, true), M.tread); tread.rotation.x = Math.PI/2; g.add(tread);
+  const rimMat = opts.forged || opts.winter ? M.rim : M.stockRim;
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(rimR, rimR, W*.85, 40, 1, true), M.hub); barrel.rotation.x = Math.PI/2; g.add(barrel);
+  const lip = new THREE.Mesh(new THREE.TorusGeometry(rimR, .012, 8, 48), rimMat); lip.position.z = W*.42; g.add(lip);
+  const face = new THREE.Mesh(new THREE.RingGeometry(rimR-.035, rimR-.004, 48), rimMat); face.position.z = W*.4; g.add(face);
+  const spokes = opts.forged ? 10 : opts.winter ? 6 : 5;
+  for(let i=0;i<spokes;i++){
+    const a = i/spokes*Math.PI*2;
+    const sh = new THREE.Shape(); const wIn = opts.forged ? .012 : .028, wOut = opts.forged ? .018 : .045;
+    sh.moveTo(.055, -wIn); sh.lineTo(rimR-.03, -wOut); sh.lineTo(rimR-.03, wOut); sh.lineTo(.055, wIn);
+    const sg = new THREE.ExtrudeGeometry(sh, {depth:.03, bevelEnabled:true, bevelThickness:.006, bevelSize:.005, bevelSegments:2});
+    const s = new THREE.Mesh(sg, rimMat); s.rotation.z = a; s.position.z = W*.36 - (opts.forged ? .02 : 0); g.add(s);
+  }
+  const cap = mCyl(.05,.055,.035, rimMat, 24); cap.rotation.x = Math.PI/2; cap.position.z = W*.4; g.add(cap);
+  for(let i=0;i<5;i++){ const a = i/5*Math.PI*2; const n = mCyl(.009,.009,.02,M.chrome,8); n.rotation.x = Math.PI/2; n.position.set(Math.cos(a)*.072, Math.sin(a)*.072, W*.43); g.add(n); }
+  const discR = opts.bbk ? .205 : .165;
+  const disc = mCyl(discR, discR, .028, M.disc, 40); disc.rotation.x = Math.PI/2; disc.position.z = W*.08; g.add(disc);
+  const hat = mCyl(.085,.085,.05, opts.discs ? M.chrome : M.hub, 24); hat.rotation.x = Math.PI/2; hat.position.z = W*.12; g.add(hat);
+  const calMat = opts.bbk ? new THREE.MeshPhysicalMaterial({color:0xd4161c, roughness:.28, clearcoat:1}) : new THREE.MeshStandardMaterial({color:0x2a2d33, roughness:.55, metalness:.4});
+  const cal = new THREE.Mesh(new THREE.TorusGeometry(discR - .035, opts.bbk ? .04 : .03, 10, 16, opts.bbk ? 1.15 : .8), calMat);
+  cal.rotation.z = Math.PI*.55; cal.position.z = W*.14; cal.scale.z = opts.bbk ? 1.6 : 1.3; g.add(cal);
+  g.traverse(n => { if(n.isMesh) n.castShadow = true; });
+  if(side < 0) g.rotation.y = Math.PI;
+  return g;
+}
+
+/* --- car --- */
+function vizBuildCar(){
+  const c = car(), P = VIZ_PROFILES[BODY[c.id]] || VIZ_PROFILES.hatch, M = vizMats(), S = vizShape(P);
+  V.paintMat = M.paint; V.screenMat = M.screen;
+  const root = new THREE.Group(), body = new THREE.Group();
+  const h = S.h, wb = S.wb;
+  let drop = 0; if(vizHas("springs")) drop = .032; if(vizHas("coilovers")) drop = .045;
+  const track = P.track/2 + (vizHas("spacers") ? .03 : 0);
+  body.position.y = -drop; root.add(body);
+
+  // ---- lower body: lofted superellipse sections ----
+  const RING = 36;
+  const st = []; for(let i=0;i<=90;i++){ const u = i/90; st.push(h - (2*h)*(.5 - .5*Math.cos(u*Math.PI))); }
+  const bodyGeo = loft(st, x => {
+    const y0 = S.yBase(x), y1 = S.yTop(x), ring = [];
+    for(let j=0;j<=RING;j++){
+      // param: run up the left side, across the top, down the right side
+      const t = j/RING;
+      let yy, zz;
+      if(t < .4){ const k = t/.4; yy = y0 + (y1 - y0 - .05)*smooth(0,1,k); zz = -S.sectZ(x, yy); }
+      else if(t > .6){ const k = (1 - t)/.4; yy = y0 + (y1 - y0 - .05)*smooth(0,1,k); zz = S.sectZ(x, yy); }
+      else { const k = (t - .4)/.2; const zEdge = S.sectZ(x, y1 - .05); zz = -zEdge + 2*zEdge*k; yy = y1 - .05 + .05*Math.pow(Math.sin(k*Math.PI), .6); }
+      ring.push([zz, yy]);
+    }
+    return ring;
+  }, null, true);
+  const bodyMesh = new THREE.Mesh(bodyGeo, M.paint); bodyMesh.castShadow = true; body.add(bodyMesh);
+  // dark underside / wheel wells
+  const floor = mBox(P.len-.25, .02, P.w-.22, M.black, 0, .25, 0); body.add(floor);
+  [wb,-wb].forEach(xw => { const well = new THREE.Mesh(new THREE.CylinderGeometry(S.archR-.01, S.archR-.01, P.w-.18, 24, 1, true, Math.PI/2, Math.PI), new THREE.MeshStandardMaterial({color:0x07080a, roughness:.9, side:THREE.DoubleSide})); well.rotation.x = Math.PI/2; well.rotation.y = 0; well.position.set(xw, S.archY, 0); well.rotation.z = 0; body.add(well); });
+
+  // ---- greenhouse ----
+  const bx = P.roof ? (P.roofF[0] + P.roofR[0])/2 + (P.doors === 5 ? .12 : -.05) : 0;
+  if(P.roof){
+    const G = 28, x0 = P.scut[0], x1 = P.tailG[0];
+    const gst = stationsBetween(x0, x1, 70);
+    const ring = x => {
+      const yb = S.yTop(x) - .045, yt = Math.max(yb + .01, S.gTop(x));
+      const wB = S.sectZ(x, S.yTop(x) - .05) - .008, wT = wB * .72, pts = [];
+      for(let j=0;j<=G;j++){
+        const t = j/G; let yy, zz;
+        if(t < .38){ const k = t/.38; yy = yb + (yt - yb - .04)*k; zz = -(wB + (wT - wB)*k); }
+        else if(t > .62){ const k = (1 - t)/.38; yy = yb + (yt - yb - .04)*k; zz = (wB + (wT - wB)*k); }
+        else { const k = (t - .38)/.24; zz = -wT + 2*wT*k; yy = yt - .04 + .04*Math.pow(Math.sin(k*Math.PI), .4); }
+        pts.push([zz, yy]);
+      }
+      return pts;
+    };
+    // groups: 0 paint (roof + pillars), 1 front side glass, 2 rear side glass, 3 windscreen, 4 rear screen
+    const groupFn = (xa, xb, j, Mn) => {
+      const xm = (xa + xb)/2, t = j/(Mn-1), side = t < .36 || t > .64;
+      if(xm > P.roofF[0] + .02) return side ? (Math.abs(t - .5) > .47 ? 0 : 3) : 3;                 // windscreen + A-pillar edge
+      if(xm < P.roofR[0] - .02) return side ? (Math.abs(t - .5) > .47 ? 0 : 4) : 4;                  // rear screen + C-pillar edge
+      if(!side) return 0;                                                                           // roof
+      if(Math.abs(xm - bx) < .05) return 0;                                                         // B-pillar
+      if(P.doors === 5 && xm < P.roofR[0] + .28) return 0;                                          // C-pillar block
+      if(t < .06 || t > .94) return 0;                                                              // window line trim
+      return xm > bx ? 1 : 2;
+    };
+    const gGeo = loft(gst, ring, groupFn, false);
+    const gm = new THREE.Mesh(gGeo, [M.paint, M.frontSide, M.rearGlass, M.screen, M.rearGlass]);
+    gm.castShadow = true; body.add(gm);
+    // black window surrounds along the belt
+    [1,-1].forEach(sd => {
+      const pts = []; for(let x = P.scut[0]-.02; x >= P.tailG[0]+.05; x -= .1){ const y = S.yTop(x) - .04; pts.push([x, y, sd*(S.sectZ(x, S.yTop(x) - .05) - .004)]); }
+      body.add(mTube(pts, .012, M.trim));
+    });
+    // roof spoiler
+    if(P.spoiler){
+      const lift = vizHas("wingraise") ? .05 : 0, ext = vizHas("spoilercap") ? .12 : 0;
+      const sw = S.sectZ(P.roofR[0], P.roofR[1]) * .74 * 2 + .02;
+      const sp = new THREE.Shape(); sp.moveTo(0,0); sp.lineTo(-.36-ext,-.03); sp.lineTo(-.36-ext,-.005); sp.lineTo(-.02,.03); sp.closePath();
+      const spg = new THREE.ExtrudeGeometry(sp, {depth:sw, bevelEnabled:true, bevelThickness:.01, bevelSize:.008, bevelSegments:2}); spg.translate(0,0,-sw/2);
+      const spm = new THREE.Mesh(spg, M.paint); spm.position.set(P.roofR[0]+.08, P.roofR[1]+.02+lift, 0); spm.castShadow = true; body.add(spm);
+      if(ext){ const e = new THREE.Mesh(spg.clone(), M.kit); e.scale.set(.35,.6,1.0); e.position.set(P.roofR[0]-.26, P.roofR[1]-.005+lift, 0); body.add(e); }
+      if(lift) [-.4,.4].forEach(z => body.add(mBox(.06,.05,.04,M.kit,P.roofR[0]-.03,P.roofR[1]+.025,z)));
+      if(vizHas("rearwin")) [1,-1].forEach(sd => { const f = mBox(.3,.04,.025,M.kit,(P.roofR[0]+P.tailG[0])/2,(P.roofR[1]+P.tailG[1])/2,sd*(S.sectZ((P.roofR[0]+P.tailG[0])/2,(P.roofR[1]+P.tailG[1])/2)*.72)); f.rotation.z = Math.atan2(P.roofR[1]-P.tailG[1], P.roofR[0]-P.tailG[0]); body.add(f); });
+      if(P.doors) { const wip = mBox(.4,.012,.02,M.trim,P.tailG[0]+.18,P.tailG[1]+.12,0); wip.rotation.z = Math.atan2(P.roofR[1]-P.tailG[1], P.roofR[0]-P.tailG[0]); body.add(wip); }
+    }
+    // shark-fin antenna
+    const fin = new THREE.Mesh(new THREE.ConeGeometry(.04,.07,4), M.paint); fin.scale.set(2.2,1,.6); fin.position.set(P.roofR[0]+.18, P.roofR[1]+.04, 0); body.add(fin);
+    // sun strip
+    if(vizHas("sunstrip")){ const ss = mBox(.16,.012,S.sectZ(P.roofF[0]+.08,P.roofF[1]-.05)*1.4,M.kit,P.roofF[0]+.07,P.roofF[1]-.035,0); ss.rotation.z = -Math.atan2(P.roofF[1]-P.scut[1], P.scut[0]-P.roofF[0]); body.add(ss); }
+    // wipers
+    [-.3,.25].forEach(z => { const w = mBox(.04,.01,.5,M.trim,P.scut[0]-.03,P.scut[1]+.015,z); w.rotation.x = .1; body.add(w); });
+  } else {
+    // roadster: framed windscreen, roll hoops, seats
+    const wsW = S.sectZ(P.scut[0], P.scut[1] - .05) * 1.75;
+    const dx = P.scut[0] - P.roofF[0], dy = P.scut[1] - P.roofF[1], len = Math.hypot(dx, dy), ang = Math.atan2(dy, dx);
+    const cx = (P.scut[0] + P.roofF[0])/2, cy = (P.scut[1] + P.roofF[1])/2;
+    const ws = mBox(len, .008, wsW, M.screen, cx, cy, 0); ws.rotation.z = ang; body.add(ws);
+    const topBar = mBox(.04, .035, wsW + .03, M.trim, P.roofF[0], P.roofF[1], 0); body.add(topBar);
+    [1,-1].forEach(sd => { const post = mBox(len, .035, .035, M.trim, cx, cy, sd*wsW/2); post.rotation.z = ang; body.add(post); });
+    [1,-1].forEach(sd => {
+      const hp = new THREE.Mesh(new THREE.TorusGeometry(.15,.025,10,24,Math.PI), M.trim); hp.position.set(-.66, P.belt, sd*.33); hp.rotation.y = Math.PI/2; body.add(hp);
+      const back = mRound(.12,.5,.42,M.trim,-.5,P.belt+.05,sd*.33); back.rotation.z = .2; body.add(back);
+      body.add(mRound(.1,.16,.26,M.trim,-.53,P.belt+.33,sd*.33));
+    });
+    body.add(mBox(.7,.04,P.w-.5,M.trim,-.15,P.belt-.02,0));
+  }
+
+  // ---- side details: mirrors, door shut lines, handles, arch lips ----
+  const sideZ = (x, y, out) => S.sectZ(x, y) + (out || 0);
+  [1,-1].forEach(sd => {
+    // mirrors
+    const mx = (P.roof ? P.scut[0] : P.scut[0]) - .08, my = S.yTop(mx) + .1;
+    const mz = S.sectZ(mx, S.yTop(mx) - .06);
+    const mirror = mRound(.17,.1,.19, M.paint, mx - .04, my, sd*(mz + .13)); body.add(mirror);
+    body.add(mRound(.02,.08,.15, M.trim, mx - .1, my, sd*(mz + .14)));
+    body.add(mBox(.07,.03,.1,M.trim,mx,my-.05,sd*(mz + .04)));
+    // door shut lines
+    const dF = P.scut[0] + .05, dR = P.doors === 5 ? bx - .02 : (P.roof ? bx - .35 : -.55);
+    const shutLine = pts => body.add(mTube(pts.map(([x,y]) => [x, y, sd*(sideZ(x, y) + .003)]), .004, M.shut));
+    shutLine([[dF,S.yTop(dF)-.03],[dF+.03,.62],[dF,.34]]);
+    shutLine([[dR,S.yTop(dR)-.03],[dR,.62],[dR,.34]]);
+    if(P.doors === 5){ const dR2 = P.roofR[0] + .55; shutLine([[dR2,S.yTop(dR2)-.03],[dR2+.05,.6],[dR2-.05,.38],[-wb+S.archR+.02,.34]]); }
+    shutLine([[dF,.34],[(dF+dR)/2,.33],[dR,.34]]);
+    // handles
+    [dR + .12, P.doors === 5 ? P.roofR[0] + .67 : null].filter(v => v !== null).forEach(hx => { const hy = S.yTop(hx) - .1; body.add(mRound(.13,.03,.03,M.trim,hx,hy,sd*(sideZ(hx,hy)+.008))); });
+    // wheel-arch lips
+    [wb,-wb].forEach(xw => { const lipz = sd*(sideZ(xw, .66) + .004); const arc = new THREE.Mesh(new THREE.TorusGeometry(S.archR+.005, .016, 8, 32, Math.PI), M.paint); arc.position.set(xw, S.archY, lipz); body.add(arc); });
+    // side repeater
+    const rx = wb + S.archR + .1; body.add(mRound(.06,.02,.02,new THREE.MeshStandardMaterial({color:0xffab1f, emissive:0xff8a00, emissiveIntensity:.4}),rx,.66,sd*(sideZ(rx,.66)+.006)));
+  });
+
+  // ---- lights ----
+  const drlC = (DRL_COLOURS.find(x => x.id === (typeof drl !== "undefined" ? drl.c : "white")) || DRL_COLOURS[0]);
+  const drlHex = drlC.hex === "rgb" ? "#ff3b3b" : drlC.hex;
+  const drlMat = new THREE.MeshStandardMaterial({color:drlHex, emissive:drlHex, emissiveIntensity:2});
+  if(drlC.hex === "rgb") V.anim.push(t => drlMat.emissive.setHSL((t*.15)%1, 1, .55).convertSRGBToLinear());
+  const lampOn = vizHas("oemled") || vizHas("aftled");
+  const lensMat = new THREE.MeshPhysicalMaterial({color:vizHas("headtint") ? 0x16181d : 0x0e1116, roughness:.05, metalness:.3, clearcoat:1, transparent:true, opacity:.92});
+  const projMat = new THREE.MeshStandardMaterial({color:0xdfe8ff, emissive:lampOn ? 0xcfe3ff : 0x9aa3b2, emissiveIntensity:lampOn ? 1.2 : .35, roughness:.2, metalness:.6});
+  const smoked = vizHas("smokedtail") || vizHas("tailfilm");
+  const tailMat = vizHas("clearlens") ? new THREE.MeshPhysicalMaterial({color:0xdfe5ee, emissive:0xff2a2a, emissiveIntensity:.35, clearcoat:1})
+    : new THREE.MeshPhysicalMaterial({color:smoked ? 0x1e0406 : 0x8a0b10, emissive:0xff1a1a, emissiveIntensity:smoked ? .3 : .85, clearcoat:1, roughness:.15});
+  [1,-1].forEach(sd => {
+    const hx = h - .1, hy = P.nose - .05, hz = sd*(sideZ(hx, hy) - .22);
+    const lamp = mRound(.2,.11,.42, lensMat, hx, hy, hz); lamp.rotation.y = sd*-.25; body.add(lamp);
+    [0,1].forEach(k => { const pj = mCyl(.032,.032,.04,projMat,16); pj.rotation.z = Math.PI/2; pj.position.set(hx+.07, hy, hz + sd*(k ? .08 : -.06)); body.add(pj); });
+    const d = mRound(.06,.025,.36,drlMat, hx+.05, hy+.05, hz); d.rotation.y = sd*-.25; body.add(d);
+    if(vizHas("halo")) [0,1].forEach(k => { const ring = new THREE.Mesh(new THREE.TorusGeometry(.045,.008,8,24), drlMat); ring.position.set(hx+.09, hy, hz + sd*(k ? .08 : -.06)); ring.rotation.y = Math.PI/2; body.add(ring); });
+    if(vizHas("eyebrows")) { const eb = mBox(.12,.018,.4,M.kit,hx+.02,hy+.075,hz); eb.rotation.y = sd*-.25; body.add(eb); }
+    // tail lamp wrapping round the corner
+    const tx = -h + .06, ty = P.tailTop - .2, tz = sd*(sideZ(tx, ty) - .2);
+    const tl = mRound(.14,.11,.44, tailMat, tx, ty, tz); body.add(tl);
+    const tl2 = mRound(.32,.08,.06, tailMat, tx+.14, ty, sd*(sideZ(tx+.14, ty) - .005)); body.add(tl2);
+    if(vizHas("auxlamps")){ const a = mCyl(.06,.06,.06,projMat,20); a.rotation.z = Math.PI/2; a.position.set(h+.02,.38,sd*.45); body.add(a); }
+  });
+  // ---- front end: grille, intakes, plates ----
+  const fz = sideZ(h-.05, .45);
+  const grilleMat = vizHas("grille") ? M.kit : M.trim;
+  body.add(mRound(.08,.1,.75,grilleMat,h-.01,P.nose-.08,0));
+  body.add(mRound(.1,.15,1.05,M.black,h-.02,.37,0));
+  [1,-1].forEach(sd => body.add(mRound(.08,.12,.22,M.black,h-.06,.36,sd*(fz-.16))));
+  if(vizHas("ic")){ body.add(mBox(.03,.12,.9,new THREE.MeshStandardMaterial({color:0xb9bec6, metalness:.9, roughness:.35}),h+.01,.37,0)); }
+  body.add(mBox(.02,.11,.52,M.plateF,h+.035,.5,0));
+  body.add(mBox(.02,.11,.52,M.plateR,-h-.03,.6,0));
+  body.add(mRound(.08,.08,1.2,M.black,-h+.02,.33,0)); // rear valance shadow
+  // ---- body kit ----
+  if(vizHas("splitter")){
+    const sw = (fz)*2 - .05;
+    const spl = new THREE.Shape(); spl.moveTo(-sw/2,0); spl.lineTo(sw/2,0); spl.lineTo(sw/2-.08,.22); spl.lineTo(-sw/2+.08,.22); spl.closePath();
+    const sg = new THREE.ExtrudeGeometry(spl, {depth:.018, bevelEnabled:false}); const sm = new THREE.Mesh(sg, M.kit); sm.rotation.x = Math.PI/2; sm.rotation.z = -Math.PI/2; sm.position.set(h+.04, .25, 0); body.add(sm);
+    if(P.roof){ [-.48,.48].forEach(z => { const post = mBox(.06,.15,.025,M.kit,-h+.26,P.tailTop+.07,z); body.add(post); });
+      const wing = new THREE.Shape(); wing.moveTo(0,0); wing.quadraticCurveTo(-.12,.05,-.3,.02); wing.lineTo(-.3,.0); wing.quadraticCurveTo(-.12,.025,0,-.012); wing.closePath();
+      const wg = new THREE.ExtrudeGeometry(wing, {depth:P.w-.16, bevelEnabled:false}); wg.translate(0,0,-(P.w-.16)/2);
+      const wm = new THREE.Mesh(wg, M.kit); wm.position.set(-h+.38, P.tailTop+.15, 0); wm.castShadow = true; body.add(wm);
+      [1,-1].forEach(sd => body.add(mBox(.32,.1,.012,M.kit,-h+.23,P.tailTop+.16,sd*(P.w-.16)/2))); }
+  }
+  if(vizHas("canards")) [1,-1].forEach(sd => [0,1].forEach(k => { const cn = mBox(.15,.01,.15,M.kit,h-.04,.38+k*.08,sd*(sideZ(h-.04,.4)+.02)); cn.rotation.z = -.25; body.add(cn); }));
+  if(vizHas("sideskirt")) [1,-1].forEach(sd => { const sk = mBox(P.wb-.9,.045,.06,M.kit,0,.255,sd*(sideZ(0,.3)+.015)); body.add(sk); for(let i=-1;i<=1;i++) body.add(mBox(.012,.06,.07,M.kit,i*.5,.29,sd*(sideZ(0,.3)+.04))); });
+  if(vizHas("rearsplit")) [1,-1].forEach(sd => body.add(mBox(.3,.035,.22,M.kit,-h+.1,.27,sd*(sideZ(-h+.1,.3)-.12))));
+  if(vizHas("diffuser")){ body.add(mBox(.4,.025,P.w-.45,M.kit,-h+.14,.25,0)); for(let i=-3;i<=3;i++) body.add(mBox(.36,.1,.012,M.kit,-h+.14,.29,i*.17)); }
+  if(vizHas("bonnetext")) body.add(mBox(.13,.016,P.w-.6,M.kit,h-.2,S.yTop(h-.2)+.008,0));
+  if(vizHas("undertray")) body.add(mBox(1.0,.012,P.w-.5,new THREE.MeshStandardMaterial({color:0xc0c4ca, metalness:.95, roughness:.3}),h-.7,.21,0));
+  // ---- exhaust tips ----
+  let tips = [[-.5,.042]];
+  if(vizHas("catback") || vizHas("gpfback")) tips = [[-.52,.052],[-.38,.052]];
+  if(vizHas("valved")) tips = [[-.56,.05],[-.43,.05],[.43,.05],[.56,.05]];
+  if(vizHas("diffuser") && !vizHas("valved")) tips = tips.map(t => [t[0]*.35, t[1]]);
+  tips.forEach(([z,r]) => { const tp = mCyl(r,r*.95,.16,M.chrome,24); tp.rotation.z = Math.PI/2; tp.position.set(-h+.02,.29,z); body.add(tp);
+    const inner = mCyl(r*.8,r*.8,.01,new THREE.MeshBasicMaterial({color:0x050505}),20); inner.rotation.z = Math.PI/2; inner.position.set(-h-.06,.29,z); body.add(inner); });
+  // ---- wheels ----
+  const wopts = {forged:vizHas("forged"), winter:vizHas("winter") && !vizHas("forged"), bbk:vizHas("bbk"), discs:vizHas("discs")};
+  V.wheels = [];
+  [[wb,1],[wb,-1],[-wb,1],[-wb,-1]].forEach(([x,sd]) => { const w = vizWheel(M, sd, wopts); w.position.set(x, .335, sd*(track - .03)); root.add(w); V.wheels.push(w); });
+  if(vizState.xray) vizEngine(root, P, M, h, wb, track, drop);
+  body.traverse(n => { if(n.isMesh && !n.material.transparent) n.castShadow = true; });
+  return root;
+}
+function vizEngine(root, P, M, h, wb, track, drop){
+  const g = new THREE.Group(); g.position.y = -drop; root.add(g);
+  const pick = (ids, bad) => (Array.isArray(ids) ? ids : [ids]).some(vizHas) ? (bad ? M.bad : M.hi) : M.stock;
+  const ex = P.eng === "mid" ? -wb+.55 : wb-.35;
+  const dir = P.eng === "mid" ? -1 : 1;
+  g.add(mBox(.62,.44,.62,pick(["stage1","stage2","box","e85","mounts"]),ex,.62,0));
+  g.add(mBox(.18,.08,.14,pick(["stage1","stage2","box","tcu"]),ex-.1*dir,.92,.48));
+  const turboR = vizHas("hybrid") ? .12 : .085;
+  const tb = new THREE.Mesh(new THREE.TorusGeometry(turboR,.045,10,24), pick(["hybrid","turboinlet"])); tb.position.set(ex,.62,-.42); g.add(tb);
+  const icX = P.eng === "mid" ? -h+.3 : h-.14;
+  g.add(mBox(.05, vizHas("ic") ? .26 : .18, vizHas("ic") ? 1.1 : .7, pick("ic"), icX, .4, 0));
+  g.add(mTube([[ex,.62,-.42],[icX,.5,-.5],[icX,.42,-.3]], .035, vizHas("chargepipes") ? M.blueSil : pick("ic")));
+  g.add(mTube([[icX,.42,.3],[icX,.55,.45],[ex,.75,.3]], .035, vizHas("chargepipes") ? M.blueSil : pick("ic")));
+  const filt = mCyl(.07,.09,.16,pick(["intake","turboinlet"]),20); filt.rotation.x = Math.PI/2; filt.position.set(ex+.25*dir,.82,-.35); g.add(filt);
+  g.add(mTube([[ex,.62,-.42],[ex-.15*dir,.4,-.35],[ex-.45*dir,.22,-.25]], .04, pick("downpipe")));
+  const catX = P.eng === "mid" ? -h+.7 : 0;
+  const cat = mCyl(.09,.09,.34, pick(["decat","gpfdel"], true),20); cat.rotation.z = Math.PI/2; cat.position.set(catX,.2,-.25); g.add(cat);
+  g.add(mTube([[ex-.45*dir,.22,-.25],[catX,.2,-.25],[-h+.4,.24,-.4],[-h+.05,.29,-.5]], .033, pick(["catback","valved","gpfback"])));
+  if(vizHas("oilcool")) g.add(mBox(.04,.12,.3,M.hi,icX-.02,.6,.35));
+  if(vizHas("fuel")) g.add(mCyl(.04,.04,.12,M.hi,16).translateX(ex-.25*dir).translateY(.95).translateZ(-.15));
+  const gb = mCyl(.13,.13,.22, pick(["clutch","tcu","lsd"]),24); gb.rotation.x = Math.PI/2; gb.position.set(ex-.38*dir,.5,.15); g.add(gb);
+  if(vizHas("strutbar")) g.add(mBox(.05,.04,P.w-.5,M.hi,wb+.05,.98,0));
+  const springMat = vizHas("coilovers") ? M.hi : vizHas("springs") ? new THREE.MeshStandardMaterial({color:0xd4161c, emissive:0x550000}) : M.stock;
+  [[wb,1],[wb,-1],[-wb,1],[-wb,-1]].forEach(([x,sd]) => {
+    const pts = []; const n = vizHas("coilovers") ? 6 : 5;
+    for(let i=0;i<=n*16;i++){ const a = i/16*Math.PI*2; pts.push([x + Math.cos(a)*.06, .45 + i/(n*16)*.32 - (vizHas("springs") || vizHas("coilovers") ? .03 : 0), sd*(track-.28) + Math.sin(a)*.06]); }
+    g.add(mTube(pts, .011, springMat));
+  });
+  if(vizHas("arb")) [wb,-wb].forEach(x => g.add(mTube([[x-.1,.32,track-.3],[x-.25,.3,0],[x-.1,.32,-(track-.3)]], .018, M.hi)));
+  if(vizHas("bushes")) [wb,-wb].forEach(x => [1,-1].forEach(sd => { const b = mCyl(.035,.035,.05,M.hi,12); b.rotation.x = Math.PI/2; b.position.set(x-.2,.3,sd*(track-.45)); g.add(b); }));
+}
+function vizRebuild(){
+  if(!V.ok){ if(typeof photoLoad === "function" && vizState.mode === "photo") photoLoad(photoRender); return; }
+  V.anim = [];
+  if(V.car){ V.scene.remove(V.car); vizDispose(V.car); }
+  V.car = vizBuildCar(); vizLin(V.car); V.scene.add(V.car); V.dirty = true;
+  vizLegend();
+  const c = car();
+  $("#vizTitle").textContent = `${c.name} · ${c.yearLabel}`;
+  $$("#vizPaints .sw").forEach(b => b.setAttribute("aria-checked", b.dataset.c === vizPaintHex()));
+  $("#vizPaintCustom").value = vizPaintHex();
+  $("#vizFinish").value = vizState.finish; $("#vizRim").value = vizState.rim;
+  $("#vizXray").setAttribute("aria-pressed", vizState.xray); $("#vizStock").setAttribute("aria-pressed", vizState.stock); $("#vizSpin").setAttribute("aria-pressed", vizState.spin);
+  let drop = 0; if(vizHas("springs")) drop = 32; if(vizHas("coilovers")) drop = 45;
+  $("#vizStance").textContent = `Ride height ${drop ? "−"+drop+"mm" : "standard"} · track ${vizHas("spacers") ? "+30mm each side" : "standard"}`;
+  if(typeof photoRender === "function" && vizState.mode === "photo") photoLoad(photoRender);
+}
+function vizLegend(){
+  const shown = {}, hidden = [];
+  state.build.forEach(id => { const g = VIZ_OF[id]; if(g) (shown[g] = shown[g] || []).push(id); else hidden.push(id); });
+  const keys = Object.keys(VIZ_GROUPS).filter(g => shown[g]);
+  $("#vizLegend").innerHTML = keys.length ? keys.map(g => `<div class="vleg"><button type="button" class="vgroup" data-vg="${esc(g)}">${esc(g)} ↻</button>${shown[g].map(id => `<span class="vchip ${byId[id].legal}">${esc(byId[id].name)}</span>`).join("")}</div>`).join("")
+    + (hidden.length ? `<p class="note">Not shown in 3D: ${hidden.map(id => esc(byId[id].name)).join(", ")}</p>` : "")
+    : `<div class="empty">Add mods in the build planner or load a preset. Body kits, suspension, wheels, brakes, lights, tint, exhaust and engine parts appear on the model.</div>`;
+}
+function vizSetView(name){ const v = VIEWS[name]; if(!v || !V.ok) return; V.tYaw = v.yaw; V.tPitch = v.pitch; V.tDist = v.dist; vizState.spin = false; $("#vizSpin").setAttribute("aria-pressed", false); }
+function vizLoop(){
+  if(!V.ok || V.looping) return;
+  V.looping = true;
+  const step = now => {
+    if(!V.visible || document.hidden || vizState.mode === "photo"){ V.looping = false; return; }
+    const dt = Math.min(.05, (now - V.last)/1000); V.last = now;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let moving = false;
+    if(vizState.spin && !V.dragging && !reduce){ V.yaw += dt*.32; moving = true; }
+    if(V.tYaw !== null){
+      let dy = ((V.tYaw - V.yaw + Math.PI*3) % (Math.PI*2)) - Math.PI;
+      V.yaw += dy*Math.min(1, dt*6); V.pitch += (V.tPitch - V.pitch)*Math.min(1, dt*6); V.dist += (V.tDist - V.dist)*Math.min(1, dt*6);
+      if(Math.abs(dy) < .002 && Math.abs(V.tPitch - V.pitch) < .002) V.tYaw = null;
+      moving = true;
+    }
+    const t = now/1000;
+    if(vizState.finish === "chameleon" && V.paintMat){ V.paintMat.color.setHSL((.72 + Math.sin(V.yaw*1.3 + t*.4)*.16 + 1)%1, .75, .45).convertSRGBToLinear(); moving = true; }
+    if(vizHas("chameleon") && V.screenMat){ V.screenMat.color.setHSL((.55 + Math.sin(V.yaw*2 + t*.3)*.2 + 1)%1, .8, .4).convertSRGBToLinear(); moving = true; }
+    if(V.anim.length){ V.anim.forEach(f => f(t)); moving = true; }
+    if(moving || V.dirty){
+      const y = V.yaw;
+      V.camera.position.set(Math.cos(y)*Math.cos(V.pitch)*V.dist, .55 + Math.sin(V.pitch)*V.dist, Math.sin(y)*Math.cos(V.pitch)*V.dist);
+      V.camera.lookAt(0, .58, 0);
+      V.renderer.render(V.scene, V.camera); V.dirty = false;
+      const deg = Math.round(((V.yaw % (Math.PI*2)) + Math.PI*2) % (Math.PI*2) * 180/Math.PI);
+      const sl = $("#vizAngle"); if(sl && document.activeElement !== sl) sl.value = deg;
+      $("#vizAngleV").textContent = deg + "°";
+    }
+    requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+function vizBindControls(){
+  const cv = V.renderer.domElement;
+  let px = 0, py = 0;
+  cv.addEventListener("pointerdown", e => { V.dragging = true; px = e.clientX; py = e.clientY; V.tYaw = null; try{ cv.setPointerCapture(e.pointerId); }catch(_){} });
+  cv.addEventListener("pointermove", e => {
+    if(!V.dragging) return;
+    V.yaw += (e.clientX - px) * .0085;
+    if(e.pointerType !== "touch") V.pitch = Math.max(-.06, Math.min(1.3, V.pitch + (e.clientY - py) * .006));
+    px = e.clientX; py = e.clientY; V.dirty = true;
+  });
+  const end = () => { V.dragging = false; };
+  cv.addEventListener("pointerup", end); cv.addEventListener("pointercancel", end);
+  cv.addEventListener("wheel", e => { e.preventDefault(); V.dist = Math.max(4.2, Math.min(12, V.dist + e.deltaY*.005)); V.tDist = null; V.dirty = true; }, {passive:false});
+  cv.tabIndex = 0;
+  cv.addEventListener("keydown", e => {
+    const k = {ArrowLeft:-.15, ArrowRight:.15}[e.key];
+    if(k){ e.preventDefault(); V.yaw += k; V.dirty = true; }
+    if(e.key === "ArrowUp"){ e.preventDefault(); V.pitch = Math.min(1.3, V.pitch+.08); V.dirty = true; }
+    if(e.key === "ArrowDown"){ e.preventDefault(); V.pitch = Math.max(-.06, V.pitch-.08); V.dirty = true; }
+  });
+  $("#vizAngle").addEventListener("input", e => { V.yaw = +e.target.value * Math.PI/180; V.tYaw = null; vizState.spin = false; $("#vizSpin").setAttribute("aria-pressed", false); V.dirty = true; });
+  $("#vizZoomIn").addEventListener("click", () => { V.dist = Math.max(4.2, V.dist - .8); V.tDist = null; V.dirty = true; });
+  $("#vizZoomOut").addEventListener("click", () => { V.dist = Math.min(12, V.dist + .8); V.tDist = null; V.dirty = true; });
+  $$("#vizViews [data-view]").forEach(b => b.addEventListener("click", () => vizSetView(b.dataset.view)));
+  $("#vizSpin").addEventListener("click", () => { vizState.spin = !vizState.spin; $("#vizSpin").setAttribute("aria-pressed", vizState.spin); vizSave(); });
+  $("#vizXray").addEventListener("click", () => { vizState.xray = !vizState.xray; vizSave(); vizRebuild(); });
+  $("#vizStock").addEventListener("click", () => { vizState.stock = !vizState.stock; vizRebuild(); });
+}
+function vizBindPanel(){
+  $("#vizPaints").addEventListener("click", e => { const b = e.target.closest("[data-c]"); if(!b) return; vizState.paint[state.car] = b.dataset.c; vizSave(); vizRebuild(); });
+  $("#vizPaintCustom").addEventListener("input", e => { vizState.paint[state.car] = e.target.value; vizSave(); vizRebuild(); });
+  $("#vizFinish").addEventListener("change", e => { vizState.finish = e.target.value; vizSave(); vizRebuild(); });
+  $("#vizRim").addEventListener("change", e => { vizState.rim = e.target.value; vizSave(); vizRebuild(); });
+  $("#vizLegend").addEventListener("click", e => { const b = e.target.closest("[data-vg]"); if(!b) return; const g = b.dataset.vg; if(vizState.mode === "photo") vizSetMode("3d"); if(g === "Engine (x-ray)" && !vizState.xray){ vizState.xray = true; vizRebuild(); } vizSetView(VIZ_VIEW[g] || "front34"); });
+}
+function vizControlsHTML(){
+  $("#vizPaints").innerHTML = PAINTS.map(p => `<button type="button" class="sw" role="radio" data-c="${p.c}" aria-checked="false" style="--c:${p.c}"><i></i>${esc(p.n)}</button>`).join("");
+  $("#vizFinish").innerHTML = Object.entries(FINISHES).map(([k,f]) => `<option value="${k}">${esc(f.n)}</option>`).join("");
+  $("#vizRim").innerHTML = Object.entries(RIMS).map(([k,r]) => `<option value="${k}">${esc(r.n)}</option>`).join("");
+}
+
+/* ---------- "On my photo": mods drawn onto the user's own side-on photo ---------- */
+const PH = {img:null, imgId:null, step:null, recol:null, recolKey:"", split:1, tol:34};
+function photoCal(){ const all = store.get("cr_photocal", {}); return all[state.car] || null; }
+function photoSetCal(c){ const all = Object.assign({}, store.get("cr_photocal", {})); if(c) all[state.car] = c; else delete all[state.car]; store.set("cr_photocal", all); }
+function hex2rgb(h){ const n = parseInt(h.slice(1),16); return [n>>16 & 255, n>>8 & 255, n & 255]; }
+function rgb2hex(r,g,b){ return "#" + [r,g,b].map(v => clamp(Math.round(v),0,255).toString(16).padStart(2,"0")).join(""); }
+function ycc(r,g,b){ return [.299*r+.587*g+.114*b, -.1687*r-.3313*g+.5*b, .5*r-.4187*g-.0813*b]; }
+/* car frame (metres, x = +front, y = height above ground) → photo pixels */
+function photoXf(cal){
+  const P = VIZ_PROFILES[BODY[state.car]] || VIZ_PROFILES.hatch;
+  const fx = cal.f[0], fy = cal.f[1], rx = cal.r[0], ry = cal.r[1];
+  const dpx = Math.hypot(fx-rx, fy-ry), ppm = dpx / P.wb;
+  const ux = (fx-rx)/dpx, uy = (fy-ry)/dpx;
+  const vx = ux >= 0 ? uy : -uy, vy = ux >= 0 ? -ux : ux; // "up" on screen
+  const mx = (fx+rx)/2, my = (fy+ry)/2;
+  const R = .335;
+  const toPx = (xm, ym) => [mx + ux*xm*ppm + vx*(ym-R)*ppm, my + uy*xm*ppm + vy*(ym-R)*ppm];
+  return {P, ppm, ux, uy, vx, vy, mx, my, R, toPx, wb:P.wb/2};
+}
+function photoAutoColour(cal){
+  const X = photoXf(cal), cv = document.createElement("canvas"); cv.width = PH.img.width; cv.height = PH.img.height;
+  const g = cv.getContext("2d"); g.drawImage(PH.img, 0, 0);
+  const d = g.getImageData(0,0,cv.width,cv.height).data, rs = [], gs = [], bs = [];
+  for(let xm = -X.wb + .45; xm <= X.wb - .45; xm += .05) for(let ym = .5; ym <= .82; ym += .03){
+    const [px,py] = X.toPx(xm, ym).map(Math.round); if(px < 0 || py < 0 || px >= cv.width || py >= cv.height) continue;
+    const i = (py*cv.width + px)*4; rs.push(d[i]); gs.push(d[i+1]); bs.push(d[i+2]);
+  }
+  if(!rs.length) return null;
+  const med = a => a.sort((p,q) => p-q)[a.length >> 1];
+  return [med(rs), med(gs), med(bs)];
+}
+function photoLoad(cb){
+  const src = state.photos[state.car];
+  if(!src){ PH.img = null; PH.imgId = null; cb && cb(); return; }
+  if(PH.img && PH.imgId === state.car + src.length){ cb && cb(); return; }
+  const im = new Image(); im.onload = () => { PH.img = im; PH.imgId = state.car + src.length; PH.recolKey = ""; cb && cb(); }; im.src = src;
+}
+function photoRecoloured(cal, X, target){
+  const key = [state.car, PH.imgId, cal.src.join(","), target, PH.tol, cal.f.join(","), cal.r.join(",")].join("|");
+  if(PH.recolKey === key && PH.recol) return PH.recol;
+  const W = PH.img.width, H = PH.img.height, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+  const g = cv.getContext("2d"); g.drawImage(PH.img, 0, 0);
+  const id = g.getImageData(0,0,W,H), d = id.data;
+  const [sr,sg,sb] = cal.src, [tr,tg,tb] = hex2rgb(target);
+  const sY = ycc(sr,sg,sb), sLum = Math.max(8, sY[0]);
+  // only recolour inside the car's expected outline (from the body-style profile), and skip the wheels
+  const S = vizShape(X.P), mk = document.createElement("canvas"); mk.width = W; mk.height = H;
+  const mg = mk.getContext("2d"), out = [], hh = X.P.len/2 + .06;
+  for(let xm = hh; xm >= -hh; xm -= .04){ const xc = clamp(xm, -X.P.len/2, X.P.len/2);
+    const inCab = X.P.roof && xc <= X.P.scut[0] && xc >= X.P.tailG[0];
+    out.push(X.toPx(xm, (inCab ? Math.max(S.gTop(xc), S.yTop(xc)) : S.yTop(xc)) + .05)); }
+  for(let xm = -hh; xm <= hh; xm += .04) out.push(X.toPx(xm, .17));
+  mg.beginPath(); out.forEach(([a,b],i) => i ? mg.lineTo(a,b) : mg.moveTo(a,b)); mg.closePath(); mg.fillStyle = "#fff"; mg.fill();
+  const mask = mg.getImageData(0,0,W,H).data;
+  const corners = [[X.P.len/2+.15,.05],[X.P.len/2+.15,1.6],[-X.P.len/2-.15,.05],[-X.P.len/2-.15,1.6]].map(([a,b]) => X.toPx(a,b));
+  const x0 = Math.max(0, Math.floor(Math.min(...corners.map(p => p[0])))), x1 = Math.min(W, Math.ceil(Math.max(...corners.map(p => p[0]))));
+  const y0 = Math.max(0, Math.floor(Math.min(...corners.map(p => p[1])))), y1 = Math.min(H, Math.ceil(Math.max(...corners.map(p => p[1]))));
+  const wR = X.R*X.ppm*1.04, wf = X.toPx(X.wb, X.R), wr = X.toPx(-X.wb, X.R);
+  const tol = PH.tol;
+  for(let y=y0;y<y1;y++) for(let x=x0;x<x1;x++){
+    if(Math.hypot(x-wf[0], y-wf[1]) < wR || Math.hypot(x-wr[0], y-wr[1]) < wR) continue;
+    const i = (y*W + x)*4; if(!mask[i+3]) continue;
+    const r = d[i], gg = d[i+1], b = d[i+2];
+    const p = ycc(r,gg,b);
+    const dist = Math.sqrt(2.2*((p[1]-sY[1])**2 + (p[2]-sY[2])**2) + .25*(p[0]-sY[0])**2);
+    if(dist > tol) continue;
+    const w = dist < tol*.6 ? 1 : 1 - (dist - tol*.6)/(tol*.4);
+    const f = p[0] / sLum; // keep the photo's light and shade
+    d[i]   = r  + (clamp(tr*f,0,255) - r )*w;
+    d[i+1] = gg + (clamp(tg*f,0,255) - gg)*w;
+    d[i+2] = b  + (clamp(tb*f,0,255) - b )*w;
+  }
+  g.putImageData(id,0,0);
+  PH.recol = cv; PH.recolKey = key; return cv;
+}
+function photoDrawWheel(g, X, cx, cy, rimHex, forged, bbk){
+  const R = X.ppm, rim = .25*R;
+  g.save(); g.translate(cx, cy);
+  g.fillStyle = "#1a1b1f"; g.beginPath(); g.arc(0,0,rim,0,Math.PI*2); g.fill();
+  if(bbk){ g.fillStyle = "#d4161c"; g.beginPath(); g.ellipse(-.03*R, -.13*R, .055*R, .095*R, -.3, 0, Math.PI*2); g.fill(); }
+  const grad = g.createRadialGradient(-rim*.3,-rim*.3,rim*.1,0,0,rim);
+  grad.addColorStop(0, "rgba(255,255,255,.35)"); grad.addColorStop(1, "rgba(255,255,255,0)");
+  g.strokeStyle = rimHex; g.lineCap = "round";
+  const n = forged ? 10 : 6;
+  for(let i=0;i<n;i++){ const a = i/n*Math.PI*2; g.lineWidth = (forged ? .022 : .045)*R; g.beginPath(); g.moveTo(Math.cos(a)*.05*R, Math.sin(a)*.05*R); g.lineTo(Math.cos(a)*(rim-.012*R), Math.sin(a)*(rim-.012*R)); g.stroke(); }
+  g.lineWidth = .02*R; g.beginPath(); g.arc(0,0,rim-.008*R,0,Math.PI*2); g.stroke();
+  g.fillStyle = rimHex; g.beginPath(); g.arc(0,0,.05*R,0,Math.PI*2); g.fill();
+  g.fillStyle = grad; g.beginPath(); g.arc(0,0,rim,0,Math.PI*2); g.fill();
+  g.restore();
+}
+function photoKit(g, X){
+  const P = X.P, h = P.len/2, kit = "#0c0c0e", hi = "rgba(255,255,255,.22)";
+  g.save();
+  // car-frame transform: x metres along wheel line, y metres up
+  const s = X.ppm;
+  g.setTransform(X.ux*s, X.uy*s, X.vx*s, X.vy*s, X.mx - X.vx*X.R*s, X.my - X.vy*X.R*s);
+  const poly = (pts, fill) => { g.beginPath(); pts.forEach(([x,y],i) => i ? g.lineTo(x,y) : g.moveTo(x,y)); g.closePath(); g.fillStyle = fill; g.fill(); };
+  if(vizHas("splitter")){ poly([[h-.25,.27],[h+.06,.24],[h+.08,.215],[h-.25,.225]], kit); poly([[h-.25,.27],[h+.06,.24],[h+.06,.235],[h-.25,.262]], hi);
+    if(P.roof){ poly([[-h+.22,P.tailTop-.02],[-h+.26,P.tailTop+.14],[-h+.3,P.tailTop+.14],[-h+.27,P.tailTop-.02]], kit);
+      poly([[-h+.08,P.tailTop+.13],[-h+.48,P.tailTop+.2],[-h+.48,P.tailTop+.17],[-h+.08,P.tailTop+.15]], kit); } }
+  if(vizHas("sideskirt")) poly([[-X.wb+.44,.31],[X.wb-.44,.31],[X.wb-.44,.255],[-X.wb+.44,.255]], kit);
+  if(vizHas("canards")) [0,1].forEach(k => poly([[h-.12,.4+k*.08],[h+.02,.42+k*.08],[h+.02,.41+k*.08],[h-.12,.39+k*.08]], kit));
+  if(vizHas("rearsplit")) poly([[-h-.02,.27],[-h+.28,.27],[-h+.28,.24],[-h+.02,.235]], kit);
+  if(vizHas("diffuser")) poly([[-h+.35,.25],[-h-.03,.28],[-h-.03,.22],[-h+.35,.22]], kit);
+  if(vizHas("bonnetext")) poly([[h-.35,P.nose+.08],[h-.05,P.nose+.06],[h-.05,P.nose+.045],[h-.35,P.nose+.07]], kit);
+  if(P.spoiler && (vizHas("spoilercap") || vizHas("wingraise"))){
+    const rx = P.roofR[0], ry = P.roofR[1], lift = vizHas("wingraise") ? .05 : 0;
+    poly([[rx+.05,ry+.01+lift],[rx-.38,ry-.02+lift],[rx-.38,ry-.045+lift],[rx+.05,ry-.01+lift]], vizHas("spoilercap") ? kit : "rgba(0,0,0,.35)");
+  }
+  if(vizHas("catback") || vizHas("valved") || vizHas("gpfback")){ g.fillStyle = "#c9ccd1"; g.beginPath(); g.ellipse(-h-.02,.29,.03,.055,0,0,Math.PI*2); g.fill(); g.fillStyle = "#111"; g.beginPath(); g.ellipse(-h-.02,.29,.018,.04,0,0,Math.PI*2); g.fill(); }
+  g.restore();
+}
+function photoRender(){
+  const cv = $("#photoCanvas"); if(!cv) return;
+  const msg = $("#photoMsg"), cal = photoCal();
+  const g = cv.getContext("2d");
+  if(!PH.img){ cv.hidden = true; $("#photoEmpty").hidden = false; msg.textContent = "Add a side-on photo of your car to start."; photoButtons(); return; }
+  cv.hidden = false; $("#photoEmpty").hidden = true;
+  const W = PH.img.width, H = PH.img.height; cv.width = W; cv.height = H;
+  g.setTransform(1,0,0,1,0,0); g.clearRect(0,0,W,H);
+  if(!cal || PH.step){
+    g.drawImage(PH.img, 0, 0);
+    const pts = PH.step ? PH.tmp || [] : cal ? [cal.f, cal.r] : [];
+    pts.forEach((p,i) => { g.strokeStyle = "#ffae2b"; g.lineWidth = Math.max(3, W/300); g.beginPath(); g.arc(p[0],p[1],Math.max(14,W/60),0,Math.PI*2); g.stroke();
+      g.fillStyle = "#ffae2b"; g.font = `700 ${Math.max(16,W/45)}px sans-serif`; g.fillText(i ? "Rear" : "Front", p[0]+Math.max(18,W/50), p[1]-Math.max(18,W/50)); });
+    msg.textContent = PH.step === "front" ? "Tap the centre of the FRONT wheel." : PH.step === "rear" ? "Now tap the centre of the REAR wheel." : PH.step === "paint" ? "Tap a clean patch of paint (a door panel is ideal)." : "Tap “Set wheels” and mark both wheel centres so mods can be drawn to scale.";
+    photoButtons(); return;
+  }
+  const X = photoXf(cal);
+  const target = vizPaintHex(), srcHex = rgb2hex(...cal.src);
+  const recolour = !vizState.stock && target.toLowerCase() !== srcHex.toLowerCase() && !cal.keepPaint;
+  const base = recolour ? photoRecoloured(cal, X, target) : PH.img;
+  let drop = 0; if(vizHas("springs")) drop = .032; if(vizHas("coilovers")) drop = .045;
+  const dpx = drop * X.ppm;
+  g.drawImage(base, 0, 0);
+  if(dpx > 0){
+    // move the body down, keep the road and the wheels where they are
+    g.drawImage(base, -X.vx*dpx, -X.vy*dpx);
+    const groundY = Math.max(X.toPx(X.wb, 0)[1], X.toPx(-X.wb, 0)[1]) - X.R*X.ppm*.18;
+    g.drawImage(base, 0, groundY, W, H-groundY, 0, groundY, W, H-groundY);
+    [X.toPx(X.wb, X.R), X.toPx(-X.wb, X.R)].forEach(([cx,cy]) => { g.save(); g.beginPath(); g.arc(cx, cy, X.R*X.ppm*.99, 0, Math.PI*2); g.clip(); g.drawImage(base, 0, 0); g.restore(); });
+  }
+  if(vizHas("forged") || vizHas("winter") || vizHas("bbk")){
+    const rimHex = vizHas("forged") || vizHas("winter") ? (RIMS[vizState.rim] || RIMS.gunmetal).c : "#c9ccd1";
+    [X.toPx(X.wb, X.R), X.toPx(-X.wb, X.R)].forEach(([cx,cy]) => photoDrawWheel(g, X, cx, cy, rimHex, vizHas("forged"), vizHas("bbk")));
+  }
+  if(!vizState.stock) photoKit(g, X);
+  if(PH.split < 1){
+    const sx = W*PH.split; g.save(); g.beginPath(); g.rect(0,0,sx,H); g.clip(); g.drawImage(PH.img,0,0); g.restore();
+    g.fillStyle = "#ffae2b"; g.fillRect(sx-2,0,4,H);
+    g.font = `700 ${Math.max(14,W/50)}px sans-serif`; g.fillStyle = "#ffae2b"; g.fillText("STOCK", 12, Math.max(24,W/35)); g.fillText("YOUR BUILD", sx+12, Math.max(24,W/35));
+  }
+  msg.textContent = `Scaled from your wheelbase (${(X.P.wb).toFixed(2)}m for this body style). ${recolour ? "Paint recoloured to your choice." : "Paint shown as photographed."} ${drop ? `Lowered ${Math.round(drop*1000)}mm.` : ""}`;
+  photoButtons();
+}
+function photoButtons(){
+  const cal = photoCal();
+  $("#photoCal").disabled = !PH.img; $("#photoPick").disabled = !cal; $("#photoUseColour").disabled = !cal; $("#photoReset").disabled = !cal;
+  $("#photoSplitRow").hidden = !cal; $("#photoTolRow").hidden = !cal;
+  const sw = $("#photoSwatch"); if(cal){ sw.hidden = false; sw.style.background = rgb2hex(...cal.src); sw.title = "Colour detected in your photo: " + rgb2hex(...cal.src); } else sw.hidden = true;
+}
+function photoCanvasPoint(e){ const cv = $("#photoCanvas"), r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height]; }
+function photoSample(p){
+  const cv = document.createElement("canvas"); cv.width = PH.img.width; cv.height = PH.img.height; const g = cv.getContext("2d"); g.drawImage(PH.img,0,0);
+  const x = clamp(Math.round(p[0])-3, 0, cv.width-7), y = clamp(Math.round(p[1])-3, 0, cv.height-7);
+  const d = g.getImageData(x, y, 7, 7).data; let r=0,gg=0,b=0; for(let i=0;i<d.length;i+=4){ r+=d[i]; gg+=d[i+1]; b+=d[i+2]; } const n = d.length/4;
+  return [Math.round(r/n), Math.round(gg/n), Math.round(b/n)];
+}
+function readPhotoFile(file, id, done){
+  if(!file || !/^image\//.test(file.type)){ toast("That file isn't an image"); return; }
+  const rd = new FileReader();
+  rd.onload = () => { const im = new Image(); im.onload = () => {
+      const scale = Math.min(1, 1600/im.width), cv = document.createElement("canvas");
+      cv.width = Math.round(im.width*scale); cv.height = Math.round(im.height*scale);
+      cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
+      state.photos[id] = cv.toDataURL("image/jpeg", 0.85); persistPhoto(id); done && done(); };
+    im.onerror = () => toast("Couldn't read that image. Try a JPG or PNG."); im.src = rd.result; };
+  rd.onerror = () => toast("Couldn't read that file. Try another image.");
+  rd.readAsDataURL(file);
+}
+function vizSetMode(m){
+  vizState.mode = m; vizSave();
+  $$("#vizMode button").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === m));
+  $("#viz3d").hidden = m !== "3d"; $("#vizPhoto").hidden = m !== "photo";
+  if(m === "3d"){ V.dirty = true; vizResize(); vizLoop(); } else photoLoad(photoRender);
+}
+function initPhoto(){
+  $$("#vizMode button").forEach(b => b.addEventListener("click", () => vizSetMode(b.dataset.mode)));
+  $("#photoIn2").addEventListener("change", e => { const f = e.target.files && e.target.files[0]; const id = state.car; e.target.value = "";
+    readPhotoFile(f, id, () => { photoSetCal(null); PH.recolKey = ""; photoLoad(() => { PH.step = "front"; PH.tmp = []; photoRender(); }); if(typeof renderCar === "function") renderCar(); toast("Photo added. Mark the wheels next."); }); });
+  $("#photoCal").addEventListener("click", () => { PH.step = "front"; PH.tmp = []; photoRender(); });
+  $("#photoPick").addEventListener("click", () => { PH.step = "paint"; photoRender(); });
+  $("#photoReset").addEventListener("click", () => { photoSetCal(null); PH.recolKey = ""; PH.step = null; photoRender(); });
+  $("#photoUseColour").addEventListener("click", () => { const cal = photoCal(); if(!cal) return; vizState.paint[state.car] = rgb2hex(...cal.src); vizSave(); vizRebuild(); toast("3D paint set to your car's colour"); });
+  $("#photoSplit").addEventListener("input", e => { PH.split = +e.target.value/100; photoRender(); });
+  $("#photoTol").addEventListener("input", e => { PH.tol = +e.target.value; photoRender(); });
+  $("#photoCanvas").addEventListener("click", e => {
+    if(!PH.img) return; const p = photoCanvasPoint(e);
+    if(PH.step === "front"){ PH.tmp = [p]; PH.step = "rear"; photoRender(); return; }
+    if(PH.step === "rear"){
+      PH.tmp.push(p);
+      const cal = {f:PH.tmp[0], r:PH.tmp[1], src:[128,128,128]};
+      if(Math.hypot(cal.f[0]-cal.r[0], cal.f[1]-cal.r[1]) < PH.img.width*.12){ toast("Those points are too close together. Tap the centre of each wheel."); PH.step = "front"; PH.tmp = []; photoRender(); return; }
+      PH.step = null; cal.src = photoAutoColour(cal) || [128,128,128]; photoSetCal(cal); PH.recolKey = ""; photoRender();
+      toast("Wheels set. Paint colour detected from your photo."); return;
+    }
+    if(PH.step === "paint"){ const cal = photoCal(); if(!cal) return; cal.src = photoSample(p); photoSetCal(cal); PH.step = null; PH.recolKey = ""; photoRender(); toast("Paint colour picked"); }
+  });
+}
+
 /* ---------- init & events ---------- */
 function init(){
   $("#modcountpill").textContent = `${MODS.length} modifications`;
@@ -2138,7 +3051,7 @@ function init(){
         const scale = Math.min(1, 1200/im.width), cv = document.createElement("canvas");
         cv.width = Math.round(im.width*scale); cv.height = Math.round(im.height*scale);
         cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
-        state.photos[id] = cv.toDataURL("image/jpeg", 0.82); savePhotos();
+        state.photos[id] = cv.toDataURL("image/jpeg", 0.82); savePhotos(); if(id === state.car && typeof photoSetCal === "function"){ photoSetCal(null); PH.recolKey = ""; }
         if(state.car === id) renderCar(); toast("Photo added");
       };
       im.onerror = () => toast("Couldn't read that image. Try a JPG or PNG.");
@@ -2184,6 +3097,11 @@ function init(){
   $("#basePrem").addEventListener("input", () => { store.set("cr_prem", +$("#basePrem").value || 0); renderInsurance(); renderGuideIns(); });
   renderInsurance();
   initGuides();
+  vizControlsHTML();
+  vizState = Object.assign(vizState, store.get("cr_viz", {})); vizState.stock = false;
+  vizBindPanel(); initPhoto();
+  try{ initViz(); }catch(err){ const fb = $("#vizFallback"); if(fb) fb.hidden = false; }
+  vizSetMode(vizState.mode === "photo" ? "photo" : "3d");
   $("#clearbuild").addEventListener("click", () => { state.build = []; renderMods(); renderBuild(); toast("Build cleared"); });
   ["glass","film","pane"].forEach(id => $("#"+id).addEventListener("input", updateTint));
   ["lezfuel","lezyear","lezmonth"].forEach(id => $("#"+id).addEventListener("change", updateLez));
