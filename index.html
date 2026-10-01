@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Hot hatch and sports car tuning guide for Glasgow and Scotland: model-year specs, remap stages, rated mods, DRL and headlight lab, insurance estimator, screened garages and UK legal checks.">
+<meta name="description" content="Hot hatch and sports car tuning guide for Glasgow and Scotland: 21 cars, quick guides, remap stages, rated mods, lighting lab, insurance estimator, screened garages and parts brands.">
 <meta name="theme-color" content="#0e1116">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <title>Clydeside Redline</title>
@@ -80,7 +80,7 @@ section{padding-block:clamp(48px,7vw,88px);border-bottom:1px solid var(--line)}
 .sec-head{display:grid;gap:12px;margin-bottom:28px}
 
 /* garage */
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:99px;padding:3px;background:var(--panel);gap:2px}
+.seg{display:inline-flex;flex-wrap:wrap;max-width:100%;border:1px solid var(--line);border-radius:18px;padding:3px;background:var(--panel);gap:2px}
 .seg button{all:unset;cursor:pointer;font:600 .8rem/1 var(--body);letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:99px;color:var(--muted)}
 .seg button[aria-pressed="true"]{background:var(--sodium);color:var(--asphalt)}
 .seg button:focus-visible{outline:2px solid var(--sodium)}
@@ -327,8 +327,46 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 .insrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.9rem}
 .insrow small{grid-column:1/-1;color:var(--muted);font-size:.78rem}
 .insrow b{font-family:var(--mono);font-weight:500;color:var(--sodium);white-space:nowrap}
-.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(140%);background:var(--sodium);color:var(--asphalt);font:700 .85rem/1 var(--body);padding:12px 16px;border-radius:99px;transition:transform .25s;z-index:30;white-space:nowrap}
-.toast.show{transform:translateX(-50%) translateY(0)}
+
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.navsel{margin-left:auto;flex:none;position:relative}
+.navsel select{width:auto;font:600 .78rem/1 var(--body);letter-spacing:.06em;text-transform:uppercase;padding:8px 10px;border-radius:99px;background:var(--panel);border:1px solid var(--sodium);color:var(--sodium);cursor:pointer}
+.navsel + .navcount{margin-left:0}
+.guides{display:grid;gap:10px}
+.gd{border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+.gd[open]{border-color:var(--sodium);box-shadow:0 0 0 1px var(--sodium-dim)}
+.gd summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 14px;align-items:center;padding:16px 18px}
+.gd summary::-webkit-details-marker{display:none}
+.gd summary::after{content:"";grid-column:3;grid-row:1/3;width:12px;height:12px;border-right:2px solid var(--sodium);border-bottom:2px solid var(--sodium);transform:rotate(45deg);transition:transform .2s;margin-top:-6px}
+.gd[open] summary::after{transform:rotate(-135deg);margin-top:6px}
+.gd summary:focus-visible{outline:2px solid var(--sodium);outline-offset:-2px}
+.gd-k{grid-row:1/3;font:500 .66rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--asphalt);background:var(--sodium);padding:6px 8px;border-radius:6px}
+.gd-t{font:800 1.5rem/1 var(--display);text-transform:uppercase}
+.gd-s{grid-column:2;font-size:.85rem;color:var(--muted)}
+.gd-body{padding:4px 18px 20px;border-top:1px solid var(--line)}
+.gd-body > .two{margin-top:16px}
+.olist{margin:8px 0 0;padding-left:1.3em;display:grid;gap:6px;font-size:.92rem;color:#d3d1c9}
+.drlmini,.tailstage,.screenstage{border:1px solid var(--line);border-radius:12px;background:var(--asphalt);padding:8px}
+.drlmini svg,.tailstage svg,.screenstage svg{display:block;width:100%;height:auto}
+.tl-base{fill:#3a0e10;stroke:var(--line)}
+.tl-red{fill:#ff3b3b;opacity:.55;transition:opacity .2s,filter .2s}
+.tl-ind{fill:#ffab1f;opacity:.3;transition:opacity .2s}
+.tailstage[data-state=brake] .tl-red{opacity:1;filter:drop-shadow(0 0 8px #ff3b3b)}
+.tailstage[data-state=ind] .tl-ind{animation:blink .7s steps(1) infinite}
+@keyframes blink{50%{opacity:1;filter:drop-shadow(0 0 8px #ffab1f)}}
+.tailstage[data-lens=clear] .tl-base{fill:#c9d2de;opacity:.55}
+.tailstage[data-lens=clearwhite] .tl-base{fill:#c9d2de;opacity:.55}
+.tailstage[data-lens=clearwhite] .tl-ind{fill:#f4f6ff}
+.insbig{display:grid;gap:4px;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}
+.insbig b{font:900 2.6rem/1 var(--display);color:var(--sodium);font-variant-numeric:tabular-nums}
+.insbig span{font-size:.9rem;color:#d3d1c9}
+.inslist{max-height:360px;overflow:auto;margin-top:8px;border:1px solid var(--line);border-radius:10px}
+.inslist div{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:.86rem}
+.inslist div:last-child{border-bottom:0}
+.inslist b{font:500 .82rem var(--mono);color:var(--sodium);white-space:nowrap}
+.inslist b.z{color:var(--muted)} .inslist b.x{color:var(--bad)}
+.toast{visibility:hidden;position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(140%);background:var(--sodium);color:var(--asphalt);font:700 .85rem/1 var(--body);padding:12px 16px;border-radius:99px;transition:transform .25s;z-index:30;white-space:nowrap}
+.toast.show{visibility:visible;transform:translateX(-50%) translateY(0)}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
@@ -337,6 +375,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
   <div class="wrap">
     <a class="brand" href="#top">Clydeside <span>Redline</span></a>
     <a class="tab" href="#garage">Garage</a>
+    <a class="tab" href="#guides">Guides</a>
     <a class="tab" href="#mods">Mod list</a>
     <a class="tab" href="#remaps">Remaps</a>
     <a class="tab" href="#lighting">Lighting</a>
@@ -346,6 +385,8 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
     <a class="tab" href="#scotland">Scotland &amp; the law</a>
     <a class="tab" href="#garages">Garages</a>
     <a class="tab" href="#sources">Sources</a>
+    <label class="navsel" for="navGuide"><span class="sr">Quick guides</span>
+      <select id="navGuide"><option value="">Quick guides ▾</option><option value="g-drl">DRL colour change</option><option value="g-tail">Smoked &amp; clear tail lights</option><option value="g-ins">Insurance per mod</option><option value="g-screen">Chameleon tint &amp; sun strip</option></select></label>
     <a class="navcount" href="#build" id="navcount">Build · 0</a>
   </div>
 </nav>
@@ -358,8 +399,8 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
       <h1>Clydeside <em>Redline</em></h1>
       <p class="lede">Pick your car, see what it makes stock and what owners and tuners typically get from it, then plan a build that stays road legal, insurable and MOT-proof on Scottish roads. Every modification is rated for difficulty, cost and legality.</p>
       <div class="hero-meta">
-        <span class="pill">15 cars · 30 model-year variants</span>
-        <span class="pill" id="modcountpill">78 modifications</span>
+        <span class="pill" id="carcountpill">21 cars</span>
+        <span class="pill" id="modcountpill">82 modifications</span>
         <span class="pill">UK law · checked Sept 2026</span>
         <span class="pill">Glasgow LEZ aware</span>
       </div>
@@ -389,7 +430,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
       <h2>Choose your car</h2>
       <p class="lede">Manufacturer UK figures for the current or last-sold spec. Stage figures are typical ranges reported by owners' forums and UK tuners on 99 RON super unleaded; your car, fuel and tuner will differ.</p>
     </div>
-    <div class="seg" role="group" aria-label="Filter cars">
+    <div class="seg" role="group" aria-label="Filter cars" id="carfilter">
       <button type="button" data-cls="all" aria-pressed="true">All</button>
       <button type="button" data-cls="hatch" aria-pressed="false">Hot hatch</button>
       <button type="button" data-cls="sports" aria-pressed="false">Sports car</button>
@@ -409,11 +450,171 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
   </div>
 </section>
 
+
+<!-- GUIDES -->
+<section id="guides">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">02 · Quick guides</p>
+      <h2>Quick guides</h2>
+      <p class="lede">Open a menu for the guide, a recommendation and the legal line on each topic. Every menu also has its own drop-down to pick the exact option you're looking at.</p>
+    </div>
+    <div class="guides">
+
+      <details class="gd" id="g-drl">
+        <summary><span class="gd-k">Lighting</span><span class="gd-t">DRL colour change</span><span class="gd-s">Guide, legal check and what to buy</span></summary>
+        <div class="gd-body">
+          <div class="two">
+            <div>
+              <label class="f" for="gdrlSel">Colour you're considering
+                <select id="gdrlSel"></select></label>
+              <div class="drlmini" style="margin-top:12px"><svg viewBox="0 0 300 70" aria-hidden="true"><rect x="10" y="22" width="280" height="40" rx="18" fill="var(--panel-2)" stroke="var(--line)"/><path id="gdrlL" d="M30 36 Q60 30 110 31" stroke-width="5" stroke-linecap="round" fill="none" filter="url(#glow)"/><path id="gdrlR" d="M270 36 Q240 30 190 31" stroke-width="5" stroke-linecap="round" fill="none" filter="url(#glow)"/></svg></div>
+              <div class="lezout" id="gdrlOut" style="margin-top:10px"></div>
+            </div>
+            <div>
+              <p class="eyebrow">How to change DRLs properly</p>
+              <ol class="olist">
+                <li>Check what you have: factory LED DRLs can often be recoded; bulb-type DRLs can take approved white LED replacements only where the lamp is approved for them.</li>
+                <li>Buy RL-marked parts: look for the E-mark circle and the letters RL on the lens.</li>
+                <li>Wire them to come on with the engine and dim or switch off with the headlamps.</li>
+                <li>Keep them a matched pair, same colour and brightness.</li>
+                <li>Declare the change to your insurer.</li>
+              </ol>
+              <p class="eyebrow" style="margin-top:14px">Recommendations</p>
+              <ul class="watch">
+                <li><b>Modern look:</b> code the factory DRLs or fit facelift LED units for your model.</li>
+                <li><b>Indicator effect:</b> approved switchback units (white DRL, amber when indicating).</li>
+                <li><b>Colour for shows:</b> a separate RGB kit on its own switch, off on public roads.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="gd" id="g-tail">
+        <summary><span class="gd-k">Lighting</span><span class="gd-t">Smoked &amp; clear tail lights</span><span class="gd-s">Which options pass, and what to avoid</span></summary>
+        <div class="gd-body">
+          <div class="two">
+            <div>
+              <label class="f" for="gtailSel">Tail light option
+                <select id="gtailSel"></select></label>
+              <div class="tailstage" style="margin-top:12px">
+                <svg viewBox="0 0 400 170" id="tailsvg" role="img" aria-label="Rear view of a car showing the selected tail light option">
+                  <path d="M40 140 L52 70 Q60 46 92 42 L308 42 Q340 46 348 70 L360 140 Q360 156 344 158 L56 158 Q40 156 40 140 Z" fill="var(--panel-2)" stroke="var(--line)" stroke-width="2"/>
+                  <path d="M110 52 L290 52 L300 78 L100 78 Z" fill="var(--led)" opacity=".14"/>
+                  <rect x="160" y="118" width="80" height="18" rx="2" fill="#f2cf4a" opacity=".85"/>
+                  <g id="tailL"><rect x="54" y="84" width="76" height="30" rx="8" class="tl-base"/><rect x="60" y="90" width="40" height="18" rx="5" class="tl-red"/><rect x="104" y="90" width="20" height="18" rx="4" class="tl-ind"/></g>
+                  <g id="tailR"><rect x="270" y="84" width="76" height="30" rx="8" class="tl-base"/><rect x="300" y="90" width="40" height="18" rx="5" class="tl-red"/><rect x="276" y="90" width="20" height="18" rx="4" class="tl-ind"/></g>
+                  <rect x="54" y="84" width="76" height="30" rx="8" id="tintL" fill="#000" opacity="0"/>
+                  <rect x="270" y="84" width="76" height="30" rx="8" id="tintR" fill="#000" opacity="0"/>
+                </svg>
+              </div>
+              <div class="seg" role="group" aria-label="Lamp state" id="tailmode" style="margin-top:10px">
+                <button type="button" data-t="tail" aria-pressed="true">Tail lights</button>
+                <button type="button" data-t="brake" aria-pressed="false">Brake</button>
+                <button type="button" data-t="ind" aria-pressed="false">Indicating</button>
+              </div>
+              <div class="lezout" id="gtailOut" style="margin-top:10px"></div>
+            </div>
+            <div>
+              <p class="eyebrow">Guide</p>
+              <ol class="olist">
+                <li>Rear lamps must show red (tail, brake, fog), amber (indicators) and white (reversing), and be clearly visible.</li>
+                <li>Buy complete E-marked units for your exact model rather than tinting the originals.</li>
+                <li>LED units may need coding or load resistors so the car doesn't report a bulb failure or hyper-flash.</li>
+                <li>Check in daylight with someone behind the car: brake lights and indicators must stand out clearly.</li>
+                <li>Declare to your insurer (lights load about +0.8%).</li>
+              </ol>
+              <p class="eyebrow" style="margin-top:14px">Recommendation</p>
+              <p style="color:#d3d1c9;font-size:.93rem">For a smoked look, factory "black" or facelift units for your model are the safest choice. Light smoke film is a grey area and dark film or spray is the option most likely to fail an MOT or attract the police.</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="gd" id="g-ins">
+        <summary><span class="gd-k">Money</span><span class="gd-t">Insurance increase per mod</span><span class="gd-s">Pick any modification to see its typical loading</span></summary>
+        <div class="gd-body">
+          <div class="two">
+            <div>
+              <label class="f" for="ginsSel">Modification
+                <select id="ginsSel"></select></label>
+              <div class="insbig" id="ginsOut" style="margin-top:12px"></div>
+              <p class="note" style="margin-top:8px">Uses your premium from the <a href="#insurance">insurance section</a> (<span id="ginsBase" class="num">£900</span>). Loadings: cinch, July 2025, one mod changed per quote.</p>
+            </div>
+            <div>
+              <p class="eyebrow">Every modification, highest first</p>
+              <div class="inslist" id="ginsList"></div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="gd" id="g-screen">
+        <summary><span class="gd-k">Glass</span><span class="gd-t">Chameleon tint &amp; sun strip</span><span class="gd-s">Front windscreen: check before you fit</span></summary>
+        <div class="gd-body">
+          <div class="two">
+            <div>
+              <div class="screenstage">
+                <svg viewBox="0 0 400 210" role="img" aria-label="Windscreen with chameleon film, sun strip and wiper swept area">
+                  <defs>
+                    <linearGradient id="chamg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a5cff"/><stop offset=".5" stop-color="#2fd3c6"/><stop offset="1" stop-color="#ff7ad9"/></linearGradient>
+                    <clipPath id="wsclip"><path d="M40 190 L70 30 Q76 18 92 18 L308 18 Q324 18 330 30 L360 190 Z"/></clipPath>
+                  </defs>
+                  <path d="M40 190 L70 30 Q76 18 92 18 L308 18 Q324 18 330 30 L360 190 Z" fill="var(--asphalt)" stroke="var(--muted)" stroke-width="2"/>
+                  <g clip-path="url(#wsclip)">
+                    <rect x="0" y="0" width="400" height="210" fill="url(#chamg)" id="chamfill" opacity=".25"/>
+                    <path d="M110 190 A120 120 0 0 1 300 72 L330 190 Z" fill="var(--led)" opacity=".08"/>
+                    <path d="M70 190 A150 150 0 0 1 250 56" fill="none" stroke="var(--led)" stroke-dasharray="4 6" opacity=".7"/>
+                    <path d="M200 190 A150 150 0 0 1 345 70" fill="none" stroke="var(--led)" stroke-dasharray="4 6" opacity=".7"/>
+                    <rect x="241" y="56" width="58" height="134" fill="none" stroke="var(--sodium)" stroke-dasharray="3 4"/>
+                    <rect x="0" y="0" width="400" height="30" fill="var(--asphalt)" id="stripRect"/>
+                    <line x1="0" y1="56" x2="400" y2="56" stroke="var(--led)" stroke-width="1" opacity=".6"/>
+                  </g>
+                  <text x="270" y="120" text-anchor="middle" fill="var(--sodium)" style="font:500 10px var(--mono)">ZONE A</text>
+                  <text x="270" y="132" text-anchor="middle" fill="var(--sodium)" style="font:500 10px var(--mono)">290mm</text>
+                  <text x="60" y="70" fill="var(--led)" style="font:500 10px var(--mono)">top of wiper sweep</text>
+                  <text x="200" y="14" text-anchor="middle" fill="var(--muted)" style="font:500 10px var(--mono)" id="stripLab">sun strip</text>
+                </svg>
+              </div>
+              <div class="ctl"><label for="wsGlass">Windscreen glass VLT <span id="wsGlassV" class="num">83%</span></label><input type="range" id="wsGlass" min="70" max="92" value="83"></div>
+              <div class="ctl"><label for="wsFilm">Chameleon film VLT (0 = no film) <span id="wsFilmV" class="num">90%</span></label><input type="range" id="wsFilm" min="0" max="98" value="90"></div>
+              <div class="ctl"><label for="wsStrip">Sun strip depth into the wiper sweep <span id="wsStripV" class="num">0mm</span></label><input type="range" id="wsStrip" min="0" max="80" value="0"></div>
+              <div class="ctl"><label for="wsZone">Where the strip intrudes</label>
+                <select id="wsZone"><option value="a">In front of the driver (Zone A)</option><option value="b">Elsewhere in the sweep (Zone B)</option></select></div>
+              <div class="flags" id="wsOut" style="margin-top:12px"></div>
+            </div>
+            <div>
+              <p class="eyebrow">Chameleon tint guide</p>
+              <ol class="olist">
+                <li>The 75% windscreen minimum applies to glass and film together. Factory windscreens are typically about 80–85%, so there's little room.</li>
+                <li>Ask the installer to measure with a VLT meter after fitting and write the reading on your receipt.</li>
+                <li>Film suits flatter screens best; on curved screens installers often hide edges under a sun strip.</li>
+                <li>Expect to declare it: tinted windows load premiums by about +12% in the cinch study.</li>
+              </ol>
+              <p class="eyebrow" style="margin-top:14px">Sun strip guide</p>
+              <ol class="olist">
+                <li>DVSA guidance: stickers or strips must not intrude more than 10mm into Zone A (290mm wide, centred on the steering wheel) or 40mm into the rest of the swept area.</li>
+                <li>Many fitters and police work to "no more than 10mm into the sweep" across the whole screen. Aim for that.</li>
+                <li>Avoid mirrored or reflective finishes.</li>
+                <li>Measure from the top of the wiper sweep with the wipers parked at their highest point.</li>
+              </ol>
+              <p class="eyebrow" style="margin-top:14px">Recommendation</p>
+              <p style="color:#d3d1c9;font-size:.93rem">If you want the chameleon look, choose the lightest film the installer offers, get it metered, and keep the sun strip above the wiper sweep. Glasgow installers advertise chameleon windscreen fitting; check their reviews and ask for the meter reading.</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
 <!-- MODS -->
 <section id="mods">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">02 · Modification list</p>
+      <p class="eyebrow">03 · Modification list</p>
       <h2>The full mod list</h2>
       <p class="lede">Built from owners' forums, UK tuner guidance, the DVSA MOT manual and GOV.UK rules. Tap a part of the air path to filter, open any card for the detail, and add mods to your build.</p>
     </div>
@@ -466,7 +667,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="remaps">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">03 · Remap options</p>
+      <p class="eyebrow">04 · Remap options</p>
       <h2>Remapping, explained</h2>
       <p class="lede">A remap rewrites the engine computer's targets for boost, fuel and ignition. How it's done, who writes the file and what features go in it matter as much as the headline number.</p>
     </div>
@@ -511,7 +712,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="lighting">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">04 · Lighting lab</p>
+      <p class="eyebrow">05 · Lighting lab</p>
       <h2>DRLs &amp; headlights</h2>
       <p class="lede">Preview a DRL colour on your car, see whether it's road legal, then compare headlight upgrades by cost, legality and insurance impact.</p>
     </div>
@@ -605,7 +806,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="build">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">05 · Build planner</p>
+      <p class="eyebrow">06 · Build planner</p>
       <h2>Plan the build</h2>
       <p class="lede">Your build is checked as you go: cost, estimated power for the selected car, the hardest job on the list, what to tell your insurer, and anything that will fail an MOT or break the law. It's saved in this browser.</p>
     </div>
@@ -647,7 +848,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="insurance">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">06 · Insurance cost</p>
+      <p class="eyebrow">07 · Insurance cost</p>
       <h2>What your build adds to the premium</h2>
       <p class="lede">An estimate built from a 2025 study that compared UK quotes with one modification changed at a time. Insurers load by type of mod, so three suspension parts count once. Real quotes vary widely with age, postcode, claims history and the insurer. Stacking several loadings can overstate the total: modified-car specialists often quote a whole build for less than the sum of its parts.</p>
     </div>
@@ -680,7 +881,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="guide">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">07 · How to choose</p>
+      <p class="eyebrow">08 · How to choose</p>
       <h2>Choosing mods in the right order</h2>
       <p class="lede">The most common regret on owners' forums is buying power first. This is the order experienced owners and UK tuners recommend.</p>
     </div>
@@ -747,7 +948,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="scotland">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">08 · Scotland &amp; the law</p>
+      <p class="eyebrow">09 · Scotland &amp; the law</p>
       <h2>Glasgow rules of the road</h2>
       <p class="lede">What actually gets modified cars stopped, failed or uninsured in Scotland, plus where to measure and use the power legally.</p>
     </div>
@@ -797,7 +998,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="garages">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">09 · Garages near Glasgow</p>
+      <p class="eyebrow">10 · Garages near Glasgow</p>
       <h2>Garages, screened</h2>
       <p class="lede">Trustpilot scores checked on 30 September 2026, plus our own screen: any business that advertises emissions deletes (DPF, GPF, EGR, AdBlue or catalyst removal) is flagged, because that work is illegal on the road and a sign of how the business operates.</p>
     </div>
@@ -805,7 +1006,8 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
       <button type="button" data-g="all" aria-pressed="true">All</button>
       <button type="button" data-g="tune" aria-pressed="false">Remap &amp; dyno</button>
       <button type="button" data-g="tyre" aria-pressed="false">Tyres, alignment, MOT</button>
-      <button type="button" data-g="parts" aria-pressed="false">Parts</button>
+      <button type="button" data-g="parts" aria-pressed="false">Parts shops</button>
+      <button type="button" data-g="brand" aria-pressed="false">Brands &amp; websites</button>
     </div>
     <div class="chips" role="group" aria-label="Screen result" id="gscreen" style="margin-top:12px">
       <button type="button" class="chip ok" data-s="pass" aria-pressed="true">Passes screen</button>
@@ -845,7 +1047,7 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
 <section id="sources" class="sources">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">10 · Sources</p>
+      <p class="eyebrow">11 · Sources</p>
       <h2>Where this comes from</h2>
       <p class="lede">Legal points are from government, regulator and circuit sources, checked on 30 September 2026. Power figures are manufacturer data plus owner and tuner consensus; treat them as a guide.</p>
     </div>
@@ -866,6 +1068,9 @@ footer{padding-block:32px 48px;color:var(--muted);font-size:.85rem}
       <li>Trustpilot profiles checked 30 Sept 2026: <a href="https://www.trustpilot.com/review/www.atseuromaster.co.uk" target="_blank" rel="noopener">ATS Euromaster</a>, <a href="https://www.trustpilot.com/review/www.kwik-fit.com" target="_blank" rel="noopener">Kwik Fit</a>, <a href="https://www.trustpilot.com/review/www.national.co.uk" target="_blank" rel="noopener">National Tyres</a>, <a href="https://www.trustpilot.com/review/www.halfords.com" target="_blank" rel="noopener">Halfords</a>, <a href="https://www.trustpilot.com/review/quantumtuning.co.uk" target="_blank" rel="noopener">Quantum Tuning</a>, <a href="https://www.trustpilot.com/review/tuneitscotland.co.uk" target="_blank" rel="noopener">Tune-it Scotland</a>, <a href="https://www.trustpilot.com/review/caraholicsremap.co.uk" target="_blank" rel="noopener">Car'aholics Remapping</a>, <a href="https://www.trustpilot.com/review/awesomegti.com" target="_blank" rel="noopener">Awesome GTI</a>, <a href="https://www.trustpilot.com/review/www.merlinmotorsport.co.uk" target="_blank" rel="noopener">Merlin Motorsport</a></li>
       <li><a href="https://www.cinch.co.uk/news/most-expensive-car-mods-to-insure" target="_blank" rel="noopener">cinch: most expensive car modifications to insure (July 2025)</a> · <a href="https://insurance-edge.net/2025/07/28/which-car-mods-bump-up-your-insurance-costs/" target="_blank" rel="noopener">Insurance Edge summary</a></li>
       <li><a href="https://www.gov.uk/government/publications/aftermarket-hid-headlamps/aftermarket-hid-headlamps" target="_blank" rel="noopener">GOV.UK: Aftermarket HID headlamps</a> · <a href="https://help.halfords.com/wss/motoring-products/bulbs-blades-batteries/car-bulbs-law" target="_blank" rel="noopener">Halfords: car bulbs and the law</a> · <a href="https://agri-lighting.co.uk/vehicle-lighting/daytime-running-lights-uk-law/" target="_blank" rel="noopener">DRL rules for UK vehicles</a> · <a href="https://carbonwurks.com/are-yellow-drls-legal-in-the-uk/" target="_blank" rel="noopener">Carbonwurks: DRL colours</a></li>
+      <li>Windscreen and lights: <a href="https://www.gov.uk/government/publications/stickers-or-other-items-in-front-and-rear-windscreens/view-to-the-front-and-windscreen-obscuration" target="_blank" rel="noopener">GOV.UK: view to the front and windscreen obscuration</a> · <a href="https://www.utopiatintsnortheast.co.uk/blog/is-chameleon-windscreen-tinting-legal-in-the-uk" target="_blank" rel="noopener">Utopia Tints: chameleon windscreen legality</a> · <a href="https://www.polyward.co.uk/sunstrip-mot-rules-in-the-uk/" target="_blank" rel="noopener">PolyWard: sun strip MOT rules</a> · <a href="https://smokedbyewe.com/are-smoked-rear-lights-legal-uk/" target="_blank" rel="noopener">Smoked rear lights and UK law</a></li>
+      <li>Brands: <a href="https://maxtondesign.com/pages/o-nas" target="_blank" rel="noopener">Maxton Design</a> (<a href="https://www.trustpilot.com/review/maxtondesign.co.uk" target="_blank" rel="noopener">Trustpilot</a>) · <a href="https://www.millteksport.com/" target="_blank" rel="noopener">Milltek Sport</a> (<a href="https://www.trustpilot.com/review/millteksport.com" target="_blank" rel="noopener">Trustpilot</a>, <a href="https://find-and-update.company-information.service.gov.uk/company/01722682" target="_blank" rel="noopener">Companies House</a>) · <a href="https://www.scorpion-exhausts.com/contact-us" target="_blank" rel="noopener">Scorpion Exhausts</a> (<a href="https://www.trustpilot.com/review/scorpion-exhausts.com" target="_blank" rel="noopener">Trustpilot</a>, <a href="https://www.reviews.co.uk/company-reviews/store/scorpionexhausts" target="_blank" rel="noopener">Reviews.co.uk</a>)</li>
+      <li>New cars: <a href="https://www.parkers.co.uk/volkswagen/polo/gti/review/" target="_blank" rel="noopener">Parkers: Polo GTI</a> · <a href="https://www.hyundai.news/uk/articles/press-releases/hyundai-announces-all-new-i20-n-prices-and-specifications.html" target="_blank" rel="noopener">Hyundai UK: i20 N</a> · <a href="https://www.dicklovett.co.uk/bmw/news/bmw-f40-m135i-vs-f70-m135-has-bmw-perfected-the-formula" target="_blank" rel="noopener">F40 M135i vs F70 M135</a> · <a href="https://117speed.co.uk/product/m140i-gen1/" target="_blank" rel="noopener">M140i stage figures</a> · <a href="https://www.autoexpress.co.uk/mercedes/class/class-a35-amg" target="_blank" rel="noopener">Auto Express: AMG A 35</a> · <a href="https://wayside-performance.co.uk/pages/mk3-focus-rs-tuning-guide-stage-1-stage-2-wayside-performance" target="_blank" rel="noopener">Mk3 Focus RS tuning guide</a> · <a href="https://www.autocar.co.uk/car-news/new-cars/ford-focus-rs-engine-problem-free-repairs-offered-prevent-white-smoke" target="_blank" rel="noopener">Autocar: Focus RS head gasket fix</a></li>
       <li>Laird Performance: <a href="https://www.laird-performance.co.uk/about-us-1-w.asp" target="_blank" rel="noopener">about</a>, <a href="https://laird-performance.co.uk/fiesta-st-mk8-tuning-91-c.asp" target="_blank" rel="noopener">Fiesta ST Mk8 tuning</a>, <a href="https://www.laird-performance.co.uk/visuals--splitters-139-c.asp" target="_blank" rel="noopener">Fiesta visuals &amp; splitters</a>, <a href="https://www.laird-performance.co.uk/visuals-167-c.asp" target="_blank" rel="noopener">Focus ST Mk4 visuals</a>, <a href="https://www.laird-performance.co.uk/laird-performance-stage-1-up-to-355bhp---549nm-workshop-upload-11088-p.asp" target="_blank" rel="noopener">Focus ST stage 1</a>, <a href="https://www.theimi.org.uk/member-register/business/129066" target="_blank" rel="noopener">IMI register</a></li>
       <li>Business websites for services offered: <a href="https://www.psiperformance.co.uk/" target="_blank" rel="noopener">PSI Performance</a>, <a href="https://glasgow.quantumtuning.co.uk/" target="_blank" rel="noopener">Quantum Glasgow</a>, <a href="https://tuneitscotland.co.uk/" target="_blank" rel="noopener">Tune-it Scotland</a></li>
       <li>Manufacturer UK press and brochure data for each model; owners' manuals for fuel grade, oil specification and track-use warranty wording.</li>
@@ -899,7 +1104,13 @@ const CARS = [
  {id:"cayman",name:"Porsche 718 Cayman GTS 4.0",gen:"982",cls:"sports",years:"2020–2025",engine:"4.0 naturally aspirated flat-six",layout:"Mid-engine, RWD, mechanical LSD",box:"6MT or 7-speed PDK",ps:400,psNote:"PDK 430Nm",nm:420,z62:4.5,kg:1405,s1:[410,420],s2:[420,440],ceiling:"Naturally aspirated: small gains from software. Spend on chassis, brakes and tyres.",watch:["Remaps give little on NA engines; value is in response and sound","Porsche warranty and Approved cover can be affected by engine software","Keep original parts for resale","Track: brake fluid and pads first"],status:"Used market"},
  {id:"a110",name:"Alpine A110 S",gen:"AS1",cls:"sports",years:"2019–2026",engine:"1.8 turbo four-cylinder",layout:"Mid-engine, RWD",box:"7-speed dual-clutch",ps:300,psNote:"Standard A110 252PS",nm:340,z62:4.2,kg:1109,s1:[320,335],s2:[335,350],ceiling:"The dual-clutch torque rating limits large gains.",watch:["DCT torque rating limits torque increases","Very light car: tyres and alignment transform it","Aluminium body: repairs need specialists","Production ending 2026"],status:"On sale, ending"},
  {id:"mx5",name:"Mazda MX-5 2.0",gen:"ND",cls:"sports",years:"2015–",engine:"2.0 Skyactiv-G four-cylinder, naturally aspirated",layout:"Front-engine RWD, LSD on most 2.0s",box:"6-speed manual",ps:184,psNote:"From 2018 update",nm:205,z62:6.5,kg:1070,s1:[188,198],s2:[195,210],ceiling:"Naturally aspirated: supercharger or turbo kits from UK specialists are the route to real power.",watch:["Soft factory damping: dampers and alignment are the biggest wins","Remap gains are small","Forced induction kits need clutch and cooling work","Roof seals and drains: check on Scottish cars"],status:"On sale"},
- {id:"gr86",name:"Toyota GR86",gen:"ZN8",cls:"sports",years:"2022–2024",engine:"2.4 flat-four, naturally aspirated (FA24)",layout:"Front-engine RWD, Torsen LSD",box:"6-speed manual",ps:234,psNote:"Limited UK allocation",nm:250,z62:6.3,kg:1275,s1:[240,250],s2:[245,260],ceiling:"Naturally aspirated; software smooths the mid-range torque dip rather than adding much peak power.",watch:["Oil temperature on track: an oil cooler is a common first mod","Remaps mainly fix the mid-range torque dip","Limited UK numbers: keep receipts, values are strong","Summer tyres from factory: plan a winter set"],status:"Used market"}
+ {id:"gr86",name:"Toyota GR86",gen:"ZN8",cls:"sports",years:"2022–2024",engine:"2.4 flat-four, naturally aspirated (FA24)",layout:"Front-engine RWD, Torsen LSD",box:"6-speed manual",ps:234,psNote:"Limited UK allocation",nm:250,z62:6.3,kg:1275,s1:[240,250],s2:[245,260],ceiling:"Naturally aspirated; software smooths the mid-range torque dip rather than adding much peak power.",watch:["Oil temperature on track: an oil cooler is a common first mod","Remaps mainly fix the mid-range torque dip","Limited UK numbers: keep receipts, values are strong","Summer tyres from factory: plan a winter set"],status:"Used market"},
+ {id:"pologti",name:"VW Polo GTI",gen:"AW (Mk6)",cls:"hatch",years:"2018–",engine:"2.0 TSI four-cylinder (EA888)",layout:"FWD, XDS electronic diff",box:"7-speed DSG",ps:207,psNote:"Facelift from 2022",nm:320,z62:6.5,kg:1355,s1:[245,260],s2:[265,290],ceiling:"DSG torque limits and the standard turbo cap gains; most owners stop at stage 2.",watch:["DSG needs gearbox software with an engine map","Petrol particulate filter (GPF) on later cars: keep it","EA888 water pump and thermostat housing leaks are a known VAG issue","Narrow front tyres: grip limits usable power on wet roads"],status:"On sale"},
+ {id:"i20n",name:"Hyundai i20 N",gen:"BC3",cls:"hatch",years:"2021–2024",engine:"1.6 T-GDi four-cylinder",layout:"FWD, mechanical LSD (N Corner Carving Differential) standard",box:"6-speed manual",ps:204,psNote:"UK spec",nm:275,z62:6.2,kg:1190,s1:[225,240],s2:[245,265],ceiling:"Small turbo: big gains need a hybrid turbo.",watch:["Clutch is the first weak point at stage 2","Heat soak in traffic: an intercooler is a popular first hardware mod","No longer sold new in the UK","GPF fitted from the factory: keep it"],status:"Used market"},
+ {id:"focusrs",name:"Ford Focus RS",gen:"Mk2 / Mk3",cls:"hatch",years:"2009–2018",engine:"2.3 EcoBoost four-cylinder",layout:"AWD with twin-clutch rear drive unit (Drift Mode)",box:"6-speed manual",ps:350,psNote:"470Nm on overboost",nm:470,z62:4.7,kg:1547,s1:[375,385],s2:[425,440],ceiling:"UK Ford specialists quote 420–435bhp at stage 2 with intake, intercooler and turbo-back with sports cat; more needs turbo and fuel upgrades.",watch:["2016–17 cars: head gasket coolant leak (white smoke on cold start). Ford offered free inspection and repair: check it's been done","Rear drive unit gets hot on track: fluid changes matter","Clutch slip at stage 2","High theft risk: fit a tracker and immobiliser"],status:"Used market"},
+ {id:"m135i",name:"BMW M135i",gen:"F20 / F40 / F70",cls:"hatch",years:"2012–",engine:"2.0 turbo four-cylinder (B48)",layout:"AWD (xDrive)",box:"7-speed dual-clutch",ps:300,psNote:"F70 sold as 'M135 xDrive'",nm:400,z62:4.9,kg:1580,s1:[340,360],s2:[360,390],ceiling:"F70 tuning is newer and less proven; the F20 straight-six has the most headroom.",watch:["Tuning support differs a lot between the three generations","B48 cars from 2018 have an OPF: keep it","F40/F70 are front-biased AWD: front tyres and brakes work hard","F20 is rear-wheel drive: traction on wet roads"],status:"On sale"},
+ {id:"m140i",name:"BMW M140i",gen:"F20/F21 LCI",cls:"hatch",years:"2016–2019",engine:"3.0 turbo straight-six (B58)",layout:"RWD",box:"6MT or 8-speed auto",ps:340,psNote:"Shadow Edition from 2018",nm:500,z62:4.6,kg:1475,s1:[410,430],s2:[440,460],ceiling:"UK B58 tuners quote around 480bhp with stage 2 plus an uprated fuel pump; beyond that needs a hybrid turbo.",watch:["Manual clutch slips at stage 1 torque","ZF 8-speed auto copes well with TCU software","Mid-2018-on cars have an OPF: keep it, even though some tuners offer deletes","600Nm through the rear wheels on wet Scottish roads: tyres and an LSD matter"],status:"Used market"},
+ {id:"a35",name:"Mercedes-AMG A 35",gen:"W177",cls:"hatch",years:"2019–",engine:"2.0 turbo four-cylinder (M260)",layout:"AWD (4MATIC)",box:"7-speed dual-clutch",ps:306,psNote:"UK spec",nm:400,z62:4.7,kg:1555,s1:[360,380],s2:[385,410],ceiling:"Dual-clutch torque limits and the standard turbo cap gains around stage 2.",watch:["DCT software needed for extra torque","Petrol particulate filter fitted: keep it","Brakes are the first limit on track","Tuned AMGs usually need a specialist insurer"],status:"On sale"}
 ];
 
 /* ---------- DATA: mods ---------- */
@@ -965,6 +1176,11 @@ const MODS = [
  {id:"drlcolour",cat:"Lighting & glass",part:null,name:"Coloured or RGB DRL kit",what:"Colour-changing or coloured LED strips used as daytime running lights.",why:"Listed so you can recognise it: DRLs must be white on the road.",diff:2,who:"DIY",cost:[30,150],gain:"Show only",legal:"illegal",declare:true,mot:"Red, blue and green at the front are reserved or prohibited; approved DRLs are white and marked RL.",order:4,goals:[]},
  {id:"auxlamps",cat:"Lighting & glass",part:null,name:"Auxiliary driving lamps / light bar",what:"Extra main-beam driving lamps or an LED light bar.",why:"More reach on unlit Highland roads.",diff:3,who:"DIY+",cost:[100,600],gain:"Main-beam reach",legal:"check",declare:true,mot:"Must be E-marked, in a matched pair, and only work with main beam. Many light bars aren't road-approved.",scot:"Useful on the A9, A82 and NC500 at night, used only where main beam is allowed.",order:4,goals:["road"]},
  {id:"halo",cat:"Lighting & glass",part:null,name:"Halo / angel-eye rings",what:"Ring-style position lamps inside or around the headlamps.",why:"Signature look.",diff:3,who:"DIY+",cost:[60,300],gain:"Looks",legal:"check",declare:true,mot:"Only white approved position lamps are legal at the front; coloured rings aren't.",order:4,goals:["show"]},
+
+ {id:"smokedtail",cat:"Lighting & glass",part:null,name:"Smoked tail light units (E-marked)",what:"Complete smoked or 'black edition' rear lamp units: factory facelift or approved aftermarket LED units.",why:"Darker rear look without cutting light output below the approved level.",diff:2,who:"DIY+",cost:[200,900],gain:"Looks",legal:"check",declare:true,mot:"Legal as complete E-marked units: tail and brake lights red, indicators amber, reversing white, all clearly visible.",order:4,goals:["show"]},
+ {id:"tailfilm",cat:"Lighting & glass",part:null,name:"Tail light tint film / spray",what:"Smoked film or tint spray over the factory rear lamps.",why:"Cheap smoked look, but it reduces light output.",diff:2,who:"DIY",cost:[15,80],gain:"Looks",legal:"check",declare:true,mot:"Risky: the lamp must still show the right colour and be clearly visible. Dark film or spray is a common fail and can draw police attention.",order:4,goals:[]},
+ {id:"clearlens",cat:"Lighting & glass",part:null,name:"Clear-lens tail lights",what:"Clear or crystal rear lamp units, popular on older cars.",why:"Clean look; legal only if every function shows the correct colour.",diff:2,who:"DIY+",cost:[80,400],gain:"Looks",legal:"check",declare:true,mot:"Indicators must flash amber (amber bulbs or LEDs) and tail and brake lights must show red. A clear lens with a white indicator is a fail.",order:4,goals:["show"]},
+ {id:"chameleon",cat:"Lighting & glass",part:null,name:"Chameleon windscreen film",what:"Colour-shifting clear film on the windscreen.",why:"Colour-shift look and some heat rejection.",diff:3,who:"Pro",cost:[200,450],gain:"Looks and heat",legal:"check",declare:true,mot:"Legal only if the windscreen and film together still let 75% of light through. Measure after fitting.",scot:"Low winter sun and dark evenings in Scotland make a darker windscreen a real visibility trade-off.",order:4,goals:["show"]},
  {id:"seats",cat:"Interior & safety",part:null,name:"Bucket seats",what:"Fixed-back or reclining buckets from Recaro, Corbeau (UK), Cobra (UK) or Sparco on proper subframes.",why:"Holds you in place so you can feel the car.",diff:3,who:"DIY+",cost:[600,3000],gain:"Driver support",legal:"check",declare:true,mot:"Seat must be securely mounted; airbag warning light is a fail.",scot:"Side-airbag seats need a resistor or coding done properly.",order:4,goals:["track"]},
  {id:"harness",cat:"Interior & safety",part:null,name:"Harness + harness bar",what:"Four- or six-point harness mounted to a harness bar or cage.",why:"Motorsport restraint. Not a road-safety upgrade.",diff:4,who:"Pro",cost:[300,900],gain:"Track restraint",legal:"track",declare:true,mot:"Standard seatbelts must stay fitted and working for road use.",order:5,req:["seats"],goals:["track"]},
  {id:"cage",cat:"Interior & safety",part:null,name:"Half or full roll cage",what:"Bolt-in or welded cage built to Motorsport UK specs.",why:"Required for many race series.",diff:5,who:"Pro",cost:[700,4000],gain:"Motorsport safety",legal:"track",declare:true,mot:"Road use without helmets is dangerous; padding required.",order:5,goals:["track"]},
@@ -1059,6 +1275,11 @@ const KIT = {
  drlcolour:["Don't use on the road; white RL-marked DRLs only"],
  auxlamps:["E-marked driving lamp pair","Relay and fused wiring switched with main beam","Mounting brackets"],
  halo:["E-marked white position lamp rings or approved units","Wiring and coding"],
+
+ smokedtail:["E-marked smoked lamp units for your model","Coding or load resistors for LED units if needed","Check every lamp function after fitting"],
+ tailfilm:["Light smoke film only, if any","Heat gun and squeegee","Daylight visibility check of brake lights"],
+ clearlens:["E-marked clear units","Amber indicator bulbs or LEDs","Check indicator colour and flash rate"],
+ chameleon:["Chameleon film from a professional installer","VLT meter reading after fitting (75% minimum)","Receipt showing the reading for police or MOT"],
  canards:["Canard set","3M double-sided tape and/or screws","Adhesion promoter and surface cleaner"],
  sideskirt:["Side skirt set","Screws, rivnuts or 3M tape","Adhesion promoter"],
  rearsplit:["Rear side splitter pair","Screws and 3M tape","Surface cleaner"],
@@ -1121,14 +1342,14 @@ const INS_MAP = {
  suspension:["springs","coilovers","arb","bushes","strutbar"],
  styling:["splitter","canards","sideskirt","rearsplit","diffuser","bonnetext","grille","rearwin","eyebrows"],
  spoiler:["spoilercap","wingraise"],
- tint:["reartint"],
+ tint:["reartint","chameleon"],
  brakes:["pads","lines","bbk","discs"],
  intake:["intake","turboinlet","ic","chargepipes"],
  paint:["wrap","sunstrip"],
  drivetrain:["lsd","clutch","mounts","oilcool"],
  interior:["seats"],
  wheels:["forged","winter","spacers"],
- lights:["oemled","aftled","seqind","auxlamps","halo","drlcode","headtint"],
+ lights:["smokedtail","tailfilm","clearlens","oemled","aftled","seqind","auxlamps","halo","drlcode","headtint"],
  minor:["undertray","gearknob"],
  security:["tracker","immob"],
  none:["health","tyres","align","fluid","obdlock","dashcam","laptimer","tuition","bonnetstruts","halogenup","restore"],
@@ -1172,7 +1393,7 @@ const DRL_COLOURS = [
 ];
 
 /* ---------- DATA: model-year variants (UK spec) and body style ---------- */
-const BODY = {golfgti:"hatch",golfr:"hatch",civicr:"hatch",gryaris:"hatch3",i30n:"hatch",focusst:"hatch",fiestast:"hatch3",rs3:"hatch",a45s:"hatch",m2:"coupe",supra:"coupe",cayman:"mid",a110:"mid",mx5:"roadster",gr86:"coupe"};
+const BODY = {golfgti:"hatch",golfr:"hatch",civicr:"hatch",gryaris:"hatch3",i30n:"hatch",focusst:"hatch",fiestast:"hatch3",rs3:"hatch",a45s:"hatch",m2:"coupe",supra:"coupe",cayman:"mid",a110:"mid",mx5:"roadster",gr86:"coupe",pologti:"hatch",i20n:"hatch",focusrs:"hatch",m135i:"hatch",m140i:"hatch",a35:"hatch"};
 const VARIANTS = {
  golfgti:[
   {label:"2020–2023 · Mk8 GTI",ps:245,nm:370,z62:6.3,box:"6MT or 7-speed DSG",s1:[290,305],s2:[320,345],note:"Launch car. Last GTI offered with a manual gearbox."},
@@ -1218,7 +1439,24 @@ const VARIANTS = {
   {label:"2019–2023 · ND 2.0 revised",ps:184,nm:205,z62:6.5,note:"Revised engine revs to 7,500rpm; telescopic steering column added."},
   {label:"2024– · ND3",ps:184,nm:205,z62:6.5,note:"New LED lights, larger screen and an asymmetric LSD on manual 2.0 cars."}],
  gr86:[
-  {label:"2022–2024 · GR86 (UK)",ps:234,nm:250,z62:6.3,note:"Sold in the UK for two years only in limited numbers."}]
+  {label:"2022–2024 · GR86 (UK)",ps:234,nm:250,z62:6.3,note:"Sold in the UK for two years only in limited numbers."}],
+ pologti:[
+  {label:"2018–2021 · AW GTI",ps:200,nm:320,z62:6.7,s1:[240,255],s2:[260,280],note:"Pre-facelift 2.0 TSI."},
+  {label:"2022– · facelift",ps:207,nm:320,z62:6.5,note:"Facelift with more power and updated tech. Edition 25 (2024) limited to 350 UK cars."}],
+ i20n:[
+  {label:"2021–2024 · i20 N",ps:204,nm:275,z62:6.2,note:"UK sales ended 2024. Mechanical LSD fitted as standard in the UK."}],
+ focusrs:[
+  {label:"2009–2011 · Mk2 RS",ps:305,nm:440,z62:5.9,engine:"2.5 turbo five-cylinder",layout:"FWD, Quaife ATB LSD",kg:1467,s1:[340,360],s2:[370,400],note:"RS500 (2010, 500 cars) made 350PS."},
+  {label:"2016–2018 · Mk3 RS",ps:350,nm:470,z62:4.7,note:"470Nm on overboost. 2018 Heritage Edition had a Mountune upgrade to 375PS."}],
+ m135i:[
+  {label:"2012–2016 · F20 M135i",ps:320,nm:450,z62:5.1,box:"6MT or 8-speed auto",engine:"3.0 turbo straight-six (N55)",layout:"RWD (xDrive on some cars)",kg:1430,s1:[370,390],s2:[390,420],note:"Straight-six, rear drive. 326PS from the 2015 facelift."},
+  {label:"2019–2024 · F40 M135i xDrive",ps:306,nm:450,z62:4.8,box:"8-speed auto",kg:1525,s1:[350,370],s2:[370,400],note:"Switched to a four-cylinder and front-biased AWD with a Torsen front diff."},
+  {label:"2024– · F70 M135 xDrive",ps:300,nm:400,z62:4.9,note:"Renamed M135 xDrive. Dual-clutch replaces the torque converter; stiffer chassis and adaptive dampers."}],
+ m140i:[
+  {label:"2016–2019 · M140i",ps:340,nm:500,z62:4.6,note:"0–62 is 4.6s with the auto, 4.8s manual. Shadow Edition from 2018; OPF on mid-2018-on cars."}],
+ a35:[
+  {label:"2019–2022 · pre-facelift",ps:306,nm:400,z62:4.7,note:"Launch car."},
+  {label:"2023– · facelift",ps:306,nm:400,z62:4.7,note:"48V mild-hybrid starter-generator added; headline outputs unchanged."}]
 };
 
 const DIFF = [
@@ -1263,7 +1501,7 @@ const base = () => CARS.find(c => c.id === state.car);
 function varIndex(id){ const n = VARIANTS[id].length; const v = state.vi[id]; return (Number.isInteger(v) && v >= 0 && v < n) ? v : n-1; }
 function effective(c, vi){
   const v = VARIANTS[c.id][vi];
-  return Object.assign({}, c, {ps:v.ps, nm:v.nm, z62:v.z62, box:v.box || c.box, s1:v.s1 || c.s1, s2:v.s2 || c.s2, psNote:v.note, yearLabel:v.label});
+  return Object.assign({}, c, {ps:v.ps, nm:v.nm, z62:v.z62, box:v.box || c.box, engine:v.engine || c.engine, layout:v.layout || c.layout, kg:v.kg || c.kg, s1:v.s1 || c.s1, s2:v.s2 || c.s2, psNote:v.note, yearLabel:v.label});
 }
 const car = () => effective(base(), varIndex(state.car));
 
@@ -1503,14 +1741,14 @@ function renderDiffScale(){
 }
 function updateTint(){
   const g = +$("#glass").value, f = +$("#film").value, pane = $("#pane").value;
-  const combined = Math.round(g*f/100);
+  const raw = g*f/100, combined = Math.floor(raw*10)/10;
   $("#glassv").textContent = g+"%"; $("#filmv").textContent = f+"%";
   $("#tintnum").textContent = combined+"%";
   $("#tintpane").setAttribute("opacity", (0.08 + (1-combined/100)*0.85).toFixed(2));
   const min = pane==="side" ? 70 : pane==="screen" ? 75 : 0;
   const v = $("#tintverdict"), n = $("#tintnote");
   if(pane==="rear"){ v.textContent = "Legal"; v.className = "verdict ok"; n.textContent = "No legal minimum for rear side windows or the rear screen."; }
-  else if(combined >= min){ v.textContent = "Passes"; v.className = "verdict ok"; n.textContent = `${combined}% combined is at or above the ${min}% minimum. Meters vary by a point or two, so leave a margin.`; }
+  else if(raw >= min){ v.textContent = "Passes"; v.className = "verdict ok"; n.textContent = `${combined}% combined is at or above the ${min}% minimum. Meters vary by a point or two, so leave a margin.`; }
   else { v.textContent = "Fails"; v.className = "verdict bad"; n.textContent = `${combined}% combined is below the ${min}% minimum. Police or DVSA can issue a prohibition notice.`; }
 }
 
@@ -1608,12 +1846,22 @@ const PLATFORM = {
  cayman:{t:["Custom maps from Porsche specialists","Porsche Tequipment / factory options where available"],n:["Naturally aspirated: remap gains are small","Consider warranty and Porsche Approved cover before any software change"]},
  a110:{t:["Specialist Alpine/Renault tuners","DCT software from the same specialists"],n:["DCT torque rating caps the gains","Chassis, tyres and alignment give more than power"]},
  mx5:{t:["Specialist MX-5 tuners, including UK forced-induction kit makers"],n:["Remap alone gives little on the NA 2.0","Turbo or supercharger kits need a full calibration"]},
- gr86:{t:["EcuTek through UK dealers"],n:["Main benefit is filling the mid-range torque dip","Oil cooling matters more than power for track use"]}
+ gr86:{t:["EcuTek through UK dealers"],n:["Main benefit is filling the mid-range torque dip","Oil cooling matters more than power for track use"]},
+ pologti:{t:["Stage maps from VAG tuning brands and UK VAG specialists","DSG (TCU) software"],n:["Later ECUs may need bench unlocking","Intake and intercooler are the usual stage 2 hardware","Keep the GPF"]},
+ i20n:{t:["Custom ECU maps from UK Hyundai N specialists","Piggyback options"],n:["Pair stage 2 with an uprated clutch","Intercooler upgrades help with heat soak"]},
+ focusrs:{t:["COBB Accessport (Mk3)","Mountune upgrade kits (Mk2 and Mk3)","Custom maps from UK Ford specialists"],n:["Check the head gasket fix on 2016–17 Mk3 cars before tuning","Stage 2 needs intake, intercooler and turbo-back with sports cat","Rear drive unit fluid and cooling for track use"]},
+ m135i:{t:["bootmod3 and MHD (F20 and F40)","JB4-style piggyback","Custom maps from BMW specialists"],n:["The F20 straight-six has the most tuning headroom","F70 support is still developing: check before buying","Keep the OPF on 2018-on cars"]},
+ m140i:{t:["bootmod3","MHD","JB4-style piggyback","EcuTek"],n:["One of the most tunable cars here","Stage 2+ adds an uprated B58 fuel pump","Keep the OPF"]},
+ a35:{t:["Specialist Mercedes-AMG tuners (usually bench flash)","DCT software from the same tuners"],n:["The M260 is less stressed than the A 45's M139, leaving more headroom","Newer ECUs often need bench unlocking"]}
 };
 
 /* ---------- DATA: garages (Trustpilot checked 30 Sept 2026) ---------- */
 const GARAGES = [
  {n:"Laird Performance",g:"tune",area:"Cambuslang, Glasgow G72",tp:null,tpNote:"No Trustpilot profile found · IMI Professional Register listed",screen:"pass",svc:["Rolling road","In-house Ford EcoBoost tuning","Remote tune devices","Styling parts","Performance parts","HP Tuners"],p:"Specialists in Ford EcoBoost tuning and parts, also Mercedes, Hyundai and BMW, with their own LP-Outlaw hardware and in-house software. Sells Maxton and Airtec styling for Fiesta and Focus ST. No emissions deletes advertised. Mon–Fri 8:30–17:30; 07542 752997.",url:"https://www.laird-performance.co.uk/"},
+
+ {n:"Maxton Design",g:"brand",area:"Made in Poland · UK dealer in Leeds",tp:4.5,count:735,tpNote:"Score is for Maxton Design UK (165 reviews in the last 12 months)",screen:"pass",svc:["Splitters","Side skirts","Diffusers","Spoiler caps","Canards"],p:"Aerodynamic styling parts since 2006, mainly in ABS plastic, over 15,000 products for hundreds of models. Sold in Glasgow through Laird Performance. Reviews praise finish and helpful staff; a few mention fitment issues.",url:"https://maxtondesign.com/"},
+ {n:"Milltek Sport",g:"brand",area:"Derby · since 1983",tp:3.3,count:12,tpNote:"12 reviews; profile doesn't invite reviews",screen:"caution",svc:["Cat-back","GPF-back","Downpipes","Sports cats"],p:"T304L stainless systems with a wide EC-approved range tested by TÜV. Reviewers praise warranty help and sound; complaints are about fitment and missing parts. The range also includes de-cat pipes sold for motorsport: choose sports-cat or GPF-back parts for a road car.",url:"https://www.millteksport.com/"},
+ {n:"Scorpion Exhausts (Scorpion Redpower)",g:"brand",area:"Ripley, Derbyshire · since 1992",tp:2.1,count:29,tpNote:"Trustpilot profile unclaimed. Reviews.co.uk shows 4.7 from 722 reviews",screen:"caution",svc:["Cat-back","GPF-back","Resonated / non-resonated","Lifetime guarantee"],p:"UK-made performance exhausts. Ratings split sharply: verified buyers on Reviews.co.uk are positive about quality and sound, while the small Trustpilot sample reports fitment, drone and warranty problems. Ask about drone and dB levels for your car.",url:"https://www.scorpion-exhausts.com/"},
  {n:"Dyna Tune",g:"tune",area:"East Kilbride (≈30 min from Glasgow)",tp:null,tpNote:"No Trustpilot profile found",screen:"pass",svc:["Hub dyno","Remaps","Diagnostics","Standalone ECUs"],p:"Dynapack hub dyno. Lists Link, UpRev, Nistune and other engine-management tuning. No emissions-delete services advertised on its site. Check Google reviews and forum feedback.",url:"https://dynatune.co.uk/"},
  {n:"Autotec Scotland",g:"tune",area:"Inverclyde",tp:null,tpNote:"No Trustpilot profile found",screen:"pass",svc:["4WD rolling road","Quantum remaps","Laser alignment","Diagnostics"],p:"4WD Dyno Developments rolling road in a dedicated cell with a customer viewing area, plus four-wheel alignment. No emissions deletes advertised on its tuning page.",url:"https://autotecscotland.co.uk/services/performance-tuning/"},
  {n:"Quantum Tuning (Glasgow dealer)",g:"tune",area:"Glasgow G3 · national network",tp:4.1,count:905,tpNote:"Score is for the whole Quantum network; only 12 reviews in the last year",screen:"caution",svc:["Remaps","TCU","Dyno","Mobile"],p:"Network reviews praise response and professionalism; complaints cover value and aftercare. The Glasgow dealer page advertises 'DPF solutions', so ask exactly what that means before booking.",url:"https://glasgow.quantumtuning.co.uk/"},
@@ -1766,9 +2014,95 @@ function renderInsRef(){
   $("#insref").innerHTML = keys.map(k => `<div><span>${esc(INS_CATS[k].n)}${INS_CATS[k].src==="est"?" <span class=\"note\">est</span>":""}</span><b>+${INS_CATS[k].p.toFixed(1)}%</b></div>`).join("");
 }
 
+
+/* ---------- quick guides ---------- */
+const TAIL_OPTS = [
+ {id:"oem",n:"Factory smoked / black-edition units",lens:"smoke",dark:.35,k:"ok",h:"Road legal",t:"Complete units approved for your model. Correct colours and output. Costs about £200–£900 a pair.",r:"Best option for a smoked look."},
+ {id:"emark",n:"E-marked aftermarket smoked LED units",lens:"smoke",dark:.4,k:"ok",h:"Road legal if E-marked",t:"Check the E-mark on every lamp function and that indicators flash amber at the right rate. May need coding.",r:"Good value if the brand has a track record for your model."},
+ {id:"lightfilm",n:"Light smoke film over factory lamps",lens:"smoke",dark:.3,k:"warn",h:"Grey area",t:"Legal only if every lamp still shows its correct colour and is clearly visible. Testers and police judge it by eye.",r:"Only very light film, and check brake lights in daylight."},
+ {id:"darkfilm",n:"Dark film or tint spray",lens:"smoke",dark:.75,k:"bad",h:"Likely to fail",t:"Cuts light output and can change the colour seen. A common MOT fail and reason for a police stop.",r:"Avoid on a road car."},
+ {id:"clear",n:"Clear lenses with amber indicator bulbs",lens:"clear",dark:0,k:"ok",h:"Road legal if E-marked",t:"Clear units are fine when the indicator shows amber and tail and brake lights show red.",r:"Use amber bulbs or LEDs, never white."},
+ {id:"clearwhite",n:"Clear lenses with white indicator bulbs",lens:"clearwhite",dark:0,k:"bad",h:"Not road legal",t:"Indicators must flash amber. A white indicator is an MOT fail.",r:"Swap to amber bulbs before driving."},
+ {id:"stock",n:"Standard factory lamps",lens:"stock",dark:0,k:"ok",h:"Road legal",t:"No change.",r:"—"}
+];
+let tailState = {o:"oem", m:"tail"};
+function renderTail(){
+  const o = TAIL_OPTS.find(x => x.id === tailState.o);
+  const st = $(".tailstage");
+  st.dataset.state = tailState.m; st.dataset.lens = o.lens;
+  ["tintL","tintR"].forEach(id => $("#"+id).setAttribute("opacity", o.dark));
+  const out = $("#gtailOut"); out.className = "lezout " + o.k;
+  out.innerHTML = `<b>${esc(o.h)}</b>${esc(o.t)}<br><span class="note">Recommendation: ${esc(o.r)}</span>`;
+}
+function renderGuideDrl(){
+  const c = DRL_COLOURS.find(x => x.id === $("#gdrlSel").value) || DRL_COLOURS[0];
+  ["#gdrlL","#gdrlR"].forEach(s => $(s).setAttribute("stroke", c.hex === "rgb" ? "url(#rgbg)" : c.hex));
+  const map = {ok:["ok","Road legal"],check:["warn","Check before fitting"],bad:["bad","Not road legal"]};
+  const rec = c.k === "ok" ? "Go ahead with RL-marked parts and declare it." : c.k === "check" ? "Only as part of an approved lamp; otherwise stick to white." : "Show use only, switched off on public roads. For the road, choose white.";
+  const o = $("#gdrlOut"); o.className = "lezout " + map[c.k][0];
+  o.innerHTML = `<b>${map[c.k][1]}</b>${esc(c.t)}<br><span class="note">Recommendation: ${esc(rec)}</span>`;
+}
+function insFor(id){
+  const k = INS_OF[id];
+  if(k === "styling") return {p:4.52, txt:"+4.5% alone; about +15.9% as part of a 3+ piece body kit"};
+  const c = INS_CATS[k];
+  if(!c) return {p:0, txt:"—"};
+  if(c.p === null) return {p:null, txt: k==="illegal" ? "Likely to void cover" : "Specialist cover needed"};
+  if(c.p === 0) return {p:0, txt: k==="security" ? "May reduce premium" : "Not usually a modification"};
+  return {p:c.p, txt:`+${c.p.toFixed(1)}%${c.src==="est"?" (estimated)":""}`};
+}
+function basePremium(){ const v = +($("#basePrem") && $("#basePrem").value); return isFinite(v) && v > 0 ? v : 900; }
+function renderGuideIns(){
+  const id = $("#ginsSel").value, m = byId[id], f = insFor(id), base = basePremium();
+  $("#ginsBase").textContent = gbp(base);
+  const extra = typeof f.p === "number" ? base * f.p / 100 : null;
+  $("#ginsOut").innerHTML = `<span class="cat">${esc(m.cat)}</span><b>${f.p===null ? "—" : f.p===0 ? "£0" : "+"+gbp(extra)}</b><span>${esc(m.name)}: ${esc(f.txt)}${extra?` · about ${gbp(extra/12)} a month on a ${gbp(base)} premium`:""}</span><span class="note">${esc(m.declare ? "Declare before driving." : "Usually not a modification; tell your insurer if unsure.")}</span>`;
+}
+function renderGuideInsList(){
+  const rows = MODS.map(m => ({m, f:insFor(m.id)})).sort((a,b) => (b.f.p ?? -1) - (a.f.p ?? -1) || a.m.name.localeCompare(b.m.name));
+  $("#ginsList").innerHTML = rows.map(r => `<div><span>${esc(r.m.name)}</span><b class="${r.f.p===null?"x":r.f.p===0?"z":""}">${esc(r.f.p===null ? (INS_OF[r.m.id]==="illegal"?"void risk":"specialist") : r.f.p===0 ? "£0 / —" : "+"+r.f.p.toFixed(1)+"%")}</b></div>`).join("");
+}
+function renderScreen(){
+  const g = +$("#wsGlass").value, f = +$("#wsFilm").value, strip = +$("#wsStrip").value, zone = $("#wsZone").value;
+  const raw = f ? g*f/100 : g, combined = Math.floor(raw*10)/10;
+  $("#wsGlassV").textContent = g+"%"; $("#wsFilmV").textContent = f ? f+"%" : "no film"; $("#wsStripV").textContent = strip+"mm";
+  $("#chamfill").setAttribute("opacity", f ? (0.12 + (1 - f/100)*1.2).toFixed(2) : 0);
+  // strip rect: top of sweep at y=56 in the drawing; 1px ≈ 1mm scale for illustration
+  $("#stripRect").setAttribute("height", 30 + Math.max(0, strip - 0) * 0.9 + (strip ? 26 : 0));
+  const out = [];
+  out.push(raw >= 75 ? {k:"good", t:`Windscreen ${combined}% combined: at or above the 75% minimum. Meters vary, so leave a margin.`} : {k:"bad", t:`Windscreen ${combined}% combined: below the 75% minimum. Police or DVSA can issue a prohibition notice and it's an MOT fail.`});
+  const lim = zone === "a" ? 10 : 40;
+  if(strip === 0) out.push({k:"good", t:"Sun strip sits above the wiper sweep: fine."});
+  else if(strip <= 10) out.push({k:"good", t:`${strip}mm into the sweep: within DVSA limits and the common 10mm police rule.`});
+  else if(strip <= lim) out.push({k:"warn", t:`${strip}mm into Zone B: within the DVSA 40mm limit but over the 10mm many police officers apply. Trim it to be safe.`});
+  else out.push({k:"bad", t:`${strip}mm into ${zone==="a"?"Zone A":"the swept area"}: over the ${lim}mm limit. MOT fail.`});
+  $("#wsOut").innerHTML = out.map(x => `<div class="flag ${x.k}"><span>${esc(x.t)}</span></div>`).join("");
+}
+function initGuides(){
+  $("#gdrlSel").innerHTML = DRL_COLOURS.map(c => `<option value="${c.id}">${esc(c.n)}</option>`).join("");
+  $("#gtailSel").innerHTML = TAIL_OPTS.map(o => `<option value="${o.id}">${esc(o.n)}</option>`).join("");
+  const cats = [...new Set(MODS.map(m => m.cat))];
+  $("#ginsSel").innerHTML = cats.map(c => `<optgroup label="${esc(c)}">${MODS.filter(m => m.cat===c).map(m => `<option value="${m.id}">${esc(m.name)}</option>`).join("")}</optgroup>`).join("");
+  $("#ginsSel").value = "stage1";
+  renderGuideDrl(); renderTail(); renderGuideIns(); renderGuideInsList(); renderScreen();
+  $("#gdrlSel").addEventListener("change", renderGuideDrl);
+  $("#gtailSel").addEventListener("change", e => { tailState.o = e.target.value; renderTail(); });
+  $$("#tailmode button").forEach(b => b.addEventListener("click", () => { tailState.m = b.dataset.t; $$("#tailmode button").forEach(x => x.setAttribute("aria-pressed", x===b)); renderTail(); }));
+  $("#ginsSel").addEventListener("change", renderGuideIns);
+  ["wsGlass","wsFilm","wsStrip","wsZone"].forEach(id => $("#"+id).addEventListener("input", renderScreen));
+  $("#wsZone").addEventListener("change", renderScreen);
+  $("#navGuide").addEventListener("change", e => {
+    const id = e.target.value; if(!id) return;
+    const d = $("#"+id); d.open = true; d.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start"});
+    e.target.value = "";
+  });
+  if(/^g-(drl|tail|ins|screen)$/.test(location.hash.slice(1))){ const d = $(location.hash); if(d) d.open = true; }
+}
+
 /* ---------- init & events ---------- */
 function init(){
   $("#modcountpill").textContent = `${MODS.length} modifications`;
+  $("#carcountpill").textContent = `${CARS.length} cars · ${Object.values(VARIANTS).reduce((a,v)=>a+v.length,0)} model-year variants`;
   const cats = [...new Set(MODS.map(m => m.cat))];
   $("#catsel").insertAdjacentHTML("beforeend", cats.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join(""));
   const ys = []; for(let y=2026; y>=1980; y--) ys.push(`<option value="${y}"${y===2012?" selected":""}>${y}</option>`);
@@ -1777,8 +2111,8 @@ function init(){
   renderRemaps(); renderGarages(); renderDrl(); renderInsRef(); drawGaugeTicks(); renderCarList(); renderCar(); updateGauge(); renderMods(); renderBuild(); renderDiffScale(); updateTint(); updateLez();
   try{ trails(); }catch(e){}
 
-  $$(".seg button").forEach(b => b.addEventListener("click", () => {
-    state.cls = b.dataset.cls; $$(".seg button").forEach(x => x.setAttribute("aria-pressed", x===b)); renderCarList();
+  $$("#carfilter button").forEach(b => b.addEventListener("click", () => {
+    state.cls = b.dataset.cls; $$("#carfilter button").forEach(x => x.setAttribute("aria-pressed", x===b)); renderCarList();
   }));
   $("#carlist").addEventListener("click", e => {
     const b = e.target.closest("[data-car]"); if(!b) return;
@@ -1847,8 +2181,9 @@ function init(){
   });
   $$("#drlmode button").forEach(b => b.addEventListener("click", () => { drl.m = b.dataset.m; $$("#drlmode button").forEach(x => x.setAttribute("aria-pressed", x===b)); renderDrl(); }));
   $("#basePrem").value = store.get("cr_prem", 900);
-  $("#basePrem").addEventListener("input", () => { store.set("cr_prem", +$("#basePrem").value || 0); renderInsurance(); });
+  $("#basePrem").addEventListener("input", () => { store.set("cr_prem", +$("#basePrem").value || 0); renderInsurance(); renderGuideIns(); });
   renderInsurance();
+  initGuides();
   $("#clearbuild").addEventListener("click", () => { state.build = []; renderMods(); renderBuild(); toast("Build cleared"); });
   ["glass","film","pane"].forEach(id => $("#"+id).addEventListener("input", updateTint));
   ["lezfuel","lezyear","lezmonth"].forEach(id => $("#"+id).addEventListener("change", updateLez));

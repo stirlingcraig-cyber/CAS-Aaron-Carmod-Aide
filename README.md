@@ -2,10 +2,12 @@
 
 Hot hatch and sports car tuning guide for Glasgow and the west of Scotland.
 
-- 15 cars with 30 UK model-year variants (specs, stage 1/2 estimates, watch items)
+- 21 cars with 41 UK model-year variants (specs, stage 1/2 estimates, watch items)
 - Remap options, per-car tuning platforms and stage 1/2/3 requirements
 - Laird Performance (Cambuslang) tuning packages and Maxton/Airtec styling prices for Fiesta ST and Focus ST
-- 78 modifications (performance, styling and lighting) rated for difficulty, cost, gain, MOT and legal status, each with a "what you'll need" list
+- 82 modifications (performance, styling and lighting) rated for difficulty, cost, gain, MOT and legal status, each with a "what you'll need" list
+- Quick-guide drop-down menus: DRL colour change, smoked/clear tail lights, insurance increase per mod, chameleon windscreen tint and sun strip
+- Brands & websites: Maxton Design, Milltek Sport, Scorpion Exhausts, with review data
 - Lighting lab: DRL colour visualiser with road-legal check, headlight options and costs, beam-pattern guide
 - Insurance estimator: predicted premium increase per mod type from your build (cinch 2025 data)
 - Build planner with cost, power, insurance and legality checks and a merged parts checklist (saved in the browser)
