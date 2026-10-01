@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Hot hatch and sports car tuning guide for Glasgow and Scotland: 21 cars, 3D build visualiser with photo mode, quick guides, remap stages, rated mods, lighting lab, insurance estimator, screened garages and parts brands.">
+<meta name="description" content="Hot hatch and sports car tuning guide for Glasgow and Scotland: 21 cars, 3D build visualiser with multi-photo mode, quick guides, remap stages, rated mods, lighting lab, insurance estimator, screened garages and parts brands.">
 <meta name="theme-color" content="#0e1116">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <title>Clydeside Redline</title>
@@ -396,6 +396,34 @@ input[type=color]{width:100%;height:42px;padding:3px;background:var(--panel-2);b
 .vizmodebar{padding:10px 16px 0}
 .photostage{position:relative;background:#07080b;border-bottom:1px solid var(--line);margin-top:10px}
 #photoCanvas{display:block;width:100%;height:auto;max-height:70vh;object-fit:contain;cursor:crosshair}
+
+
+.photoadd{display:flex;flex-wrap:wrap;gap:10px;align-items:end;padding:10px 16px 0}
+.photoadd .f{min-width:180px}
+.addbtn2{padding:11px 14px;border-color:var(--sodium);color:var(--sodium);cursor:pointer}
+.addbtn2.disabled{opacity:.4;pointer-events:none}
+.strip{display:flex;gap:8px;overflow-x:auto;padding:10px 16px 2px}
+.thumb{all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:112px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.thumb img{display:block;width:100%;height:64px;object-fit:cover}
+.thumb span{display:flex;align-items:center;gap:6px;padding:6px 8px;font:600 .66rem/1.1 var(--body);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.thumb[aria-pressed="true"]{border-color:var(--sodium);box-shadow:0 0 0 1px var(--sodium)}
+.thumb[aria-pressed="true"] span{color:var(--fg)}
+.thumb:focus-visible{outline:2px solid var(--sodium)}
+.photorow2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.photorow2 .note{margin:4px 0 0}
+.detlist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.detlist li{display:grid;gap:3px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.88rem}
+.detlist li span{font-size:.82rem}
+.partchip[aria-pressed="true"]{color:var(--asphalt);background:var(--sodium);border-color:var(--sodium)}
+#photoCanvas{touch-action:pan-y}
+.angles{display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px 0}
+.angbtn{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font:600 .74rem/1 var(--body);letter-spacing:.05em;text-transform:uppercase;padding:8px 11px;border-radius:99px;border:1px solid var(--line);color:var(--muted);background:var(--panel)}
+.angbtn[aria-pressed="true"]{color:var(--fg);border-color:var(--sodium);background:var(--sodium-dim)}
+.angbtn:focus-visible{outline:2px solid var(--sodium)}
+.angdot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--muted)}
+.angdot.half{background:var(--warn);border-color:var(--warn)}
+.angdot.ok{background:var(--ok);border-color:var(--ok)}
+.adjrows{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:10px}
 [hidden]{display:none!important}
 .photoempty{display:grid;place-items:center;gap:10px;padding:34px 18px;text-align:center;color:var(--muted);font-size:.92rem}
 .photoempty b{color:var(--fg)}
@@ -899,26 +927,57 @@ input[type=color]{width:100%;height:42px;padding:3px;background:var(--panel-2);b
           <button type="button" data-mode="photo" aria-pressed="false">On my photo</button>
         </div></div>
         <div id="vizPhoto" hidden>
+          <div class="photoadd">
+            <label class="f" for="photoAddAngle">Angle for the next photo<select id="photoAddAngle"></select></label>
+            <label class="tog addbtn2" id="photoAddLabel" for="photoIn2">＋ Add photo</label>
+            <input type="file" id="photoIn2" accept="image/*" class="sr">
+          </div>
+          <div class="strip" id="photoStrip" role="group" aria-label="Your photos of this car"></div>
           <div class="photostage">
             <canvas id="photoCanvas" hidden aria-label="Your photo with the mods from your build drawn on"></canvas>
             <div id="photoEmpty" class="photoempty">
               <svg viewBox="0 0 220 80" aria-hidden="true" style="width:min(260px,70%)"><path d="M10 62 L22 40 Q30 28 52 26 L84 14 Q96 10 120 10 L150 10 Q168 12 182 24 L204 34 Q212 38 212 50 L212 62 Z" fill="none" stroke="var(--sodium)" stroke-width="2" stroke-dasharray="5 5"/><circle cx="56" cy="62" r="13" fill="none" stroke="var(--led)" stroke-width="2"/><circle cx="170" cy="62" r="13" fill="none" stroke="var(--led)" stroke-width="2"/><line x1="0" y1="76" x2="220" y2="76" stroke="var(--line)"/></svg>
-              <p><b>Side-on photo works best.</b> Stand level with the wheels, about two car lengths away, whole car in frame.</p>
+              <p id="photoEmptyText"></p>
             </div>
           </div>
           <p class="photomsg" id="photoMsg" aria-live="polite"></p>
           <div class="vizctl">
             <div class="viztogs">
-              <label class="tog" for="photoIn2" style="cursor:pointer">Upload photo</label>
-              <input type="file" id="photoIn2" accept="image/*" class="sr">
-              <button type="button" class="tog" id="photoCal">Set wheels</button>
+              <button type="button" class="tog" id="photoCal">Set scale from wheels</button>
               <button type="button" class="tog" id="photoPick">Pick paint colour</button>
               <span class="photoswatch" id="photoSwatch" hidden></span>
               <button type="button" class="tog" id="photoUseColour">Use in 3D</button>
+              <button type="button" class="tog" id="photoPaintTog" aria-pressed="false">Preview new paint</button>
               <button type="button" class="tog" id="photoReset">Reset marks</button>
+              <button type="button" class="tog" id="photoRemove">Remove photo</button>
+            </div>
+            <div class="photorow2">
+              <div id="photoDistRow" hidden><label class="f" for="photoDist"><span id="photoDistLab">Wheelbase (cm)</span><input type="number" id="photoDist" min="20" max="340" step="0.1" inputmode="decimal"></label><p class="note" id="photoDistHint"></p></div>
+              <div id="photoAngleRow" hidden><label class="f" for="photoThisAngle">This photo's angle<select id="photoThisAngle"></select></label></div>
             </div>
             <div class="vizrow" id="photoSplitRow" hidden><label for="photoSplit" class="vizlab">Before / after</label><input type="range" id="photoSplit" min="0" max="100" value="100"></div>
             <div class="vizrow" id="photoTolRow" hidden><label for="photoTol" class="vizlab">Paint match</label><input type="range" id="photoTol" min="10" max="70" value="34"></div>
+            <div id="photoAdjRows" hidden class="adjrows">
+              <p class="vizlab">Line up the kit with your car</p>
+              <div class="vizrow"><label for="photoAdjKit" class="vizlab">Splitter / skirts <span id="photoAdjKitV" class="num">0cm</span></label><input type="range" id="photoAdjKit" min="-15" max="15" value="0"></div>
+              <div class="vizrow"><label for="photoAdjWing" class="vizlab">Wing height <span id="photoAdjWingV" class="num">0cm</span></label><input type="range" id="photoAdjWing" min="-25" max="40" value="0"></div>
+              <div class="vizrow" id="photoAdjWingXRow"><label for="photoAdjWingX" class="vizlab">Wing fore / aft <span id="photoAdjWingXV" class="num">0cm</span></label><input type="range" id="photoAdjWingX" min="-40" max="40" value="0"></div>
+            </div>
+            <div id="photoParts" hidden class="adjrows">
+              <p class="vizlab">Your part images</p>
+              <p class="note" style="margin:0">Save a product photo from a parts maker's website (a cut-out PNG works best), add it here, then drag it onto your car.</p>
+              <div class="viztogs"><label class="tog" for="partIn" style="cursor:pointer">＋ Add part image</label><input type="file" id="partIn" accept="image/*" class="sr"><span id="photoPartsList" class="viztogs"></span></div>
+              <div id="partCtl" hidden class="adjrows" style="border:0;padding-top:0">
+                <div class="vizrow"><label for="partSize" class="vizlab">Size</label><input type="range" id="partSize" min="20" max="3000" value="500"></div>
+                <div class="vizrow"><label for="partRot" class="vizlab">Rotate</label><input type="range" id="partRot" min="-180" max="180" value="0"></div>
+                <div class="vizrow"><label for="partOp" class="vizlab">Opacity</label><input type="range" id="partOp" min="20" max="100" value="100"></div>
+                <div class="viztogs"><button type="button" class="tog" id="partFlip" aria-pressed="false">Flip</button><button type="button" class="tog" id="partKnock" aria-pressed="false">Remove white background</button><button type="button" class="tog" id="partDel">Delete part</button><button type="button" class="tog" id="partDone">Done</button></div>
+              </div>
+            </div>
+            <div class="adjrows">
+              <p class="vizlab">Parts in this photo</p>
+              <div id="photoDetail"></div>
+            </div>
           </div>
         </div>
         <div id="viz3d">
@@ -933,6 +992,9 @@ input[type=color]{width:100%;height:42px;padding:3px;background:var(--panel-2);b
             <button type="button" data-view="rear">Rear</button>
             <button type="button" data-view="top">Top</button>
             <button type="button" data-view="low">Low</button>
+            <button type="button" data-view="wheel">Wheel close-up</button>
+            <button type="button" data-view="splitter">Splitter close-up</button>
+            <button type="button" data-view="wing">Wing close-up</button>
           </div>
           <div class="vizrow">
             <label for="vizAngle" class="vizlab">360° <span id="vizAngleV" class="num">0°</span></label>
@@ -956,6 +1018,13 @@ input[type=color]{width:100%;height:42px;padding:3px;background:var(--panel-2);b
           <label class="f" for="vizFinish">Finish<select id="vizFinish"></select></label>
           <label class="f" for="vizRim">Aftermarket wheel colour<select id="vizRim"></select></label>
         </div>
+        <p class="eyebrow" style="margin-top:18px">Alloy wheels</p>
+        <div class="vizpick">
+          <label class="f" for="vizWheelStyle">Style<select id="vizWheelStyle"></select></label>
+          <label class="f" for="vizWheelSize">Size<select id="vizWheelSize"><option value="17">17 inch</option><option value="18">18 inch</option><option value="19">19 inch</option><option value="20">20 inch</option></select></label>
+          <label class="f" for="vizWing">Rear wing (with splitter kit)<select id="vizWing"><option value="low">Low boot wing</option><option value="gt">GT wing (swan neck)</option><option value="none">No wing</option></select></label>
+        </div>
+        <p class="note" id="vizWheelNote" style="margin-top:8px"></p>
         <p class="note" style="margin-top:8px">A full colour change by paint or wrap must be reported to DVLA on the V5C, and declared to your insurer.</p>
         <p class="eyebrow" style="margin-top:18px">On the model</p>
         <div id="vizLegend" style="margin-top:8px"></div>
@@ -1312,7 +1381,7 @@ const MODS = [
  {id:"laptimer",cat:"Interior & safety",part:"ecu",name:"Lap timer / data logger",what:"GPS lap timer with OBD logging such as an AIM Solo or RaceBox.",why:"Shows real improvement from driving and mods.",diff:1,who:"DIY",cost:[150,700],gain:"Data",legal:"ok",declare:false,mot:"No effect.",order:2,goals:["track"]},
 
  {id:"canards",cat:"Styling",part:null,name:"Front bumper canards",what:"Small winglets on the front bumper corners.",why:"Aggressive look; tiny aero effect at road speed.",diff:2,who:"DIY",cost:[44,120],gain:"Looks",legal:"check",declare:true,mot:"Edges must not be sharp or project dangerously; must not cover lights or the number plate.",src:"Laird Performance: Maxton V1–V3 for Fiesta ST Mk8, £44–£89",order:4,goals:["show"]},
- {id:"sideskirt",cat:"Styling",part:null,name:"Side skirt diffusers",what:"Extensions under the sills, often with small vertical flaps.",why:"Visually lowers the car and links the front and rear aero.",diff:2,who:"DIY+",cost:[174,300],gain:"Looks",legal:"ok",declare:true,mot:"Must be secure with no sharp edges.",scot:"Check clearance over Glasgow speed humps and kerbs.",src:"Laird Performance: Maxton V1–V4 for Fiesta ST Mk8, £174–£219",order:4,goals:["show"]},
+ {id:"sideskirt",cat:"Styling",part:null,name:"Side skirts",what:"Extensions under the sills, often with small vertical flaps.",why:"Visually lowers the car and links the front and rear aero.",diff:2,who:"DIY+",cost:[174,300],gain:"Looks",legal:"ok",declare:true,mot:"Must be secure with no sharp edges.",scot:"Check clearance over Glasgow speed humps and kerbs.",src:"Laird Performance: Maxton V1–V4 for Fiesta ST Mk8, £174–£219",order:4,goals:["show"]},
  {id:"rearsplit",cat:"Styling",part:null,name:"Rear side splitters",what:"Lower corner extensions on the rear bumper.",why:"Frames the rear and pairs with a diffuser.",diff:2,who:"DIY",cost:[79,120],gain:"Looks",legal:"ok",declare:true,mot:"Must be secure with no sharp edges.",src:"Laird Performance: Maxton for Fiesta ST Mk8 and Focus ST Mk3, £79–£109",order:4,goals:["show"]},
  {id:"diffuser",cat:"Styling",part:"catback",name:"Rear valance / diffuser",what:"Replacement lower rear panel, sometimes sold with a matching exhaust.",why:"The biggest visual change at the rear.",diff:3,who:"DIY+",cost:[149,1600],gain:"Looks",legal:"ok",declare:true,mot:"Rear fog and reflectors must stay fitted and visible; exhaust must keep the GPF.",src:"Laird Performance: Maxton valances £149–£174; diffuser + Milltek GPF-back kit for Fiesta ST Mk8 from £1,559",order:4,goals:["show"]},
  {id:"spoilercap",cat:"Styling",part:null,name:"Spoiler cap / extension",what:"Add-on lip that extends the factory roof spoiler.",why:"Longer, more aggressive roofline.",diff:1,who:"DIY",cost:[129,180],gain:"Looks",legal:"check",declare:true,mot:"The high-level brake light must stay fully visible.",src:"Laird Performance: Maxton caps for Fiesta ST Mk8 and Focus ST Mk3, £129",order:4,goals:["show"]},
@@ -1427,7 +1496,7 @@ const STAGE_REQS = [
 /* ---------- DATA: Laird Performance catalogue (from laird-performance.co.uk, 30 Sept 2026) ---------- */
 const LAIRD = {
  fiestast:{tune:["Stage 1: 240–255bhp, 260–275lb ft · workshop tune from £379.99 (optional dyno runs)","Stage 1 with remote tune device: up to 255bhp · £599.99","Stage 2: 260–270bhp, 290–300lb ft · workshop from £439.99","Stage 2 with remote tune device: up to 270bhp · £609.99","Stage 3: up to 315bhp · workshop £599.99 (hardware needed)"],
-  style:[["Maxton front splitter V1–V3","£174"],["Maxton front racing splitter V1/V2","£119–£159"],["Maxton front splitter V4 with flaps","£219"],["Maxton front bumper canards V1–V3","£44–£89"],["Maxton side skirt diffusers V1–V4","£174"],["Maxton side skirts V2 with flaps","£219"],["Maxton rear side splitters","£79–£109"],["Maxton rear valance V1–V3","£174"],["Maxton spoiler cap V1–V3 / spoiler lip","£129"],["Maxton bonnet extension","from £159"],["Maxton / Style 1 headlight eyebrows","£49–£49.95"],["Maxton front grille (ST 2018-)","£132"],["Maxton rear window extension","£154"],["Rear diffuser + Milltek GPF-back exhaust","from £1,559"],["Airtec aluminium under tray","£396"],["Airtec rear diffuser extension","£53.54"],["Airtec / carbon weighted gear knob","£50–£63.75"],["Hub-centric wheel spacers","£72.95–£79.95"],["Sun strip / body vinyls","from £15"]]},
+  style:[["Maxton front splitter V1–V3","£174"],["Maxton front racing splitter V1/V2","£119–£159"],["Maxton front splitter V4 with flaps","£219"],["Maxton front bumper canards V1–V3","£44–£89"],["Maxton side skirts V1–V4","£174"],["Maxton side skirts V2 with flaps","£219"],["Maxton rear side splitters","£79–£109"],["Maxton rear valance V1–V3","£174"],["Maxton spoiler cap V1–V3 / spoiler lip","£129"],["Maxton bonnet extension","from £159"],["Maxton / Style 1 headlight eyebrows","£49–£49.95"],["Maxton front grille (ST 2018-)","£132"],["Maxton rear window extension","£154"],["Rear diffuser + Milltek GPF-back exhaust","from £1,559"],["Airtec aluminium under tray","£396"],["Airtec rear diffuser extension","£53.54"],["Airtec / carbon weighted gear knob","£50–£63.75"],["Hub-centric wheel spacers","£72.95–£79.95"],["Sun strip / body vinyls","from £15"]]},
  focusst:{tune:["Stage 1: up to 355bhp and 549Nm · workshop upload £399.99 (rolling road optional)","Switchable power: normal mode about 20% down, full power in Sport","Recommended with an SD Performance or Airtec intake"],
   style:[["Maxton Focus Mk4 ST/ST-Line front splitter","£149"],["Airtec aluminium under tray","£479.50"],["SD wheel spacers","from £76.95"],["Carbon fibre weighted gear knob","£50"],["Sun strip / body vinyls","from £15"]]}
 };
@@ -2248,7 +2317,7 @@ const VIZ_GROUPS = {
 };
 const VIZ_OF = {}; Object.entries(VIZ_GROUPS).forEach(([g,ids]) => ids.forEach(id => VIZ_OF[id] = g));
 const VIZ_VIEW = {"Body & aero":"front34","Suspension & stance":"side","Wheels & brakes":"side","Paint & glass":"front34","Lights":"front","Exhaust":"rear34","Engine (x-ray)":"front34"};
-const VIEWS = {front34:{yaw:.72,pitch:.16,dist:7.4},front:{yaw:0,pitch:.08,dist:6.8},side:{yaw:Math.PI/2,pitch:.06,dist:7.6},rear34:{yaw:Math.PI-.7,pitch:.16,dist:7.4},rear:{yaw:Math.PI,pitch:.08,dist:6.8},top:{yaw:.6,pitch:1.2,dist:8.2},low:{yaw:.9,pitch:-.04,dist:6.6}};
+const VIEWS = {wheel:{yaw:Math.PI/2-.08,pitch:.04,dist:2.6,ty:.36,tx:"front"},splitter:{yaw:.42,pitch:.04,dist:4.6,ty:.32},wing:{yaw:Math.PI-.55,pitch:.22,dist:5.8,ty:.92},front34:{yaw:.72,pitch:.16,dist:7.4},front:{yaw:0,pitch:.08,dist:6.8},side:{yaw:Math.PI/2,pitch:.06,dist:7.6},rear34:{yaw:Math.PI-.7,pitch:.16,dist:7.4},rear:{yaw:Math.PI,pitch:.08,dist:6.8},top:{yaw:.6,pitch:1.2,dist:8.2},low:{yaw:.9,pitch:-.04,dist:6.6}};
 /* Generic body styles (no manufacturer designs). Heights in metres; x = +front. */
 const VIZ_PROFILES = {
  hatch:{len:4.26,wb:2.63,track:1.56,w:1.80,nose:.66,bonF:.82,scut:[1.0,.98],roofF:[.26,1.43],roofR:[-1.42,1.45],tailG:[-1.98,1.02],tailTop:1.0,belt:.98,roof:true,spoiler:true,doors:5,eng:"front"},
@@ -2257,7 +2326,7 @@ const VIZ_PROFILES = {
  mid:{len:4.2,wb:2.42,track:1.58,w:1.82,nose:.56,bonF:.72,scut:[.95,.88],roofF:[.3,1.24],roofR:[-.55,1.25],tailG:[-1.45,.98],tailTop:.98,belt:.9,roof:true,spoiler:false,duck:true,doors:2,eng:"mid"},
  roadster:{len:3.95,wb:2.31,track:1.5,w:1.74,nose:.6,bonF:.74,scut:[.42,.9],roofF:[.04,1.2],roofR:null,tailG:null,tailTop:.93,belt:.9,roof:false,spoiler:false,duck:true,doors:2,eng:"front"}
 };
-let vizState = {paint:{}, finish:"gloss", rim:"gunmetal", xray:false, stock:false, spin:true, mode:"3d"};
+let vizState = {paint:{}, finish:"gloss", rim:"gunmetal", xray:false, stock:false, spin:true, mode:"3d", wheel:{style:"stock", size:18}, wing:"low", photoPaint:false};
 const V = {ok:false};
 function vizHas(id){ return !vizState.stock && state.build.includes(id); }
 
@@ -2327,7 +2396,7 @@ function initViz(){
   sh.rotation.x = -Math.PI/2; sh.receiveShadow = true; scene.add(sh);
   const contact = new THREE.Mesh(new THREE.PlaneGeometry(5.2,2.6), new THREE.MeshBasicMaterial({map:vizShadowTex(), transparent:true, depthWrite:false, opacity:.85}));
   contact.rotation.x = -Math.PI/2; contact.position.y = .003; scene.add(contact);
-  Object.assign(V, {ok:true, renderer, scene, camera, box, car:null, yaw:VIEWS.front34.yaw, pitch:VIEWS.front34.pitch, dist:VIEWS.front34.dist, tYaw:null, tPitch:null, tDist:null, dirty:true, visible:true, anim:[], paintMat:null, last:performance.now(), tread:vizTreadTex()});
+  Object.assign(V, {ok:true, renderer, scene, camera, box, car:null, ty:.58, tTy:.58, tx:0, tTx:0, yaw:VIEWS.front34.yaw, pitch:VIEWS.front34.pitch, dist:VIEWS.front34.dist, tYaw:null, tPitch:null, tDist:null, dirty:true, visible:true, anim:[], paintMat:null, last:performance.now(), tread:vizTreadTex()});
   vizBindControls();
   vizResize();
   window.addEventListener("resize", () => { vizResize(); if(typeof photoRender === "function") photoRender(); });
@@ -2344,7 +2413,7 @@ function vizResize(){
   V.renderer.domElement.style.width = "100%"; V.renderer.domElement.style.height = h + "px";
   V.camera.aspect = w / h; V.camera.updateProjectionMatrix(); V.dirty = true;
 }
-function vizSave(){ store.set("cr_viz", {paint:vizState.paint, finish:vizState.finish, rim:vizState.rim, xray:vizState.xray, spin:vizState.spin, mode:vizState.mode}); }
+function vizSave(){ store.set("cr_viz", {paint:vizState.paint, finish:vizState.finish, rim:vizState.rim, xray:vizState.xray, spin:vizState.spin, mode:vizState.mode, wheel:vizState.wheel, wing:vizState.wing, photoPaint:!!vizState.photoPaint}); }
 function vizPaintHex(){ const c = car(); return vizState.paint[c.id] || DEFAULT_PAINT[c.id] || "#c8102e"; }
 
 /* --- materials --- */
@@ -2358,7 +2427,7 @@ function vizMats(){
     black: ghost(new THREE.MeshStandardMaterial({color:0x0b0c0f, roughness:.35, metalness:.2})),
     trim: ghost(new THREE.MeshStandardMaterial({color:0x15171b, roughness:.65, metalness:.1})),
     shut: ghost(new THREE.MeshBasicMaterial({color:0x050506})),
-    kit: new THREE.MeshPhysicalMaterial({side:THREE.DoubleSide, color:0x0b0b0d, roughness:.16, metalness:.1, clearcoat:1}),
+    kit: new THREE.MeshPhysicalMaterial({side:THREE.DoubleSide, color:0x0b0b0d, roughness:.2, metalness:.1, clearcoat:1, envMapIntensity:.35}),
     glass: new THREE.MeshPhysicalMaterial({side:THREE.DoubleSide, color:0x0a0e14, roughness:.03, metalness:.2, transparent:true, opacity:glassOp, envMapIntensity:1.8, depthWrite:!x}),
     rearGlass: new THREE.MeshPhysicalMaterial({side:THREE.DoubleSide, color:0x040507, roughness:.03, metalness:.2, transparent:true, opacity:x ? .08 : (vizHas("reartint") ? .97 : .8), envMapIntensity:1.6, depthWrite:!x}),
     frontSide: new THREE.MeshPhysicalMaterial({side:THREE.DoubleSide, color:0x070a0f, roughness:.03, metalness:.2, transparent:true, opacity:x ? .08 : (vizHas("fronttint") ? .96 : .74), envMapIntensity:1.8, depthWrite:!x}),
@@ -2452,25 +2521,27 @@ function stationsBetween(a, b, n){ const s = []; for(let i=0;i<=n;i++) s.push(a 
 /* --- wheel --- */
 function vizWheel(M, side, opts){
   const g = new THREE.Group();
-  const R = .335, W = .235, rimR = opts.forged ? .25 : .23;
+  const R = .335, W = .235, rimR = WHEEL_SIZES[opts.size] || .229, style = opts.style || "stock";
   // tyre: lathe profile (radius, width) rotated to the z axis
   const tyrePts = [new THREE.Vector2(rimR+.005,-W/2), new THREE.Vector2(R-.035,-W/2), new THREE.Vector2(R-.008,-W/2+.025), new THREE.Vector2(R,-W/2+.06), new THREE.Vector2(R,W/2-.06), new THREE.Vector2(R-.008,W/2-.025), new THREE.Vector2(R-.035,W/2), new THREE.Vector2(rimR+.005,W/2)];
   const tyre = new THREE.Mesh(new THREE.LatheGeometry(tyrePts, 48), M.tyre); tyre.rotation.x = Math.PI/2; g.add(tyre);
   const tread = new THREE.Mesh(new THREE.CylinderGeometry(R+.001, R+.001, W-.12, 48, 1, true), M.tread); tread.rotation.x = Math.PI/2; g.add(tread);
-  const rimMat = opts.forged || opts.winter ? M.rim : M.stockRim;
+  const rimMat = opts.custom ? M.rim : M.stockRim;
   const barrel = new THREE.Mesh(new THREE.CylinderGeometry(rimR, rimR, W*.85, 40, 1, true), M.hub); barrel.rotation.x = Math.PI/2; g.add(barrel);
   const lip = new THREE.Mesh(new THREE.TorusGeometry(rimR, .012, 8, 48), rimMat); lip.position.z = W*.42; g.add(lip);
   const face = new THREE.Mesh(new THREE.RingGeometry(rimR-.035, rimR-.004, 48), rimMat); face.position.z = W*.4; g.add(face);
-  const spokes = opts.forged ? 10 : opts.winter ? 6 : 5;
-  for(let i=0;i<spokes;i++){
-    const a = i/spokes*Math.PI*2;
-    const sh = new THREE.Shape(); const wIn = opts.forged ? .012 : .028, wOut = opts.forged ? .018 : .045;
-    sh.moveTo(.055, -wIn); sh.lineTo(rimR-.03, -wOut); sh.lineTo(rimR-.03, wOut); sh.lineTo(.055, wIn);
-    const sg = new THREE.ExtrudeGeometry(sh, {depth:.03, bevelEnabled:true, bevelThickness:.006, bevelSize:.005, bevelSegments:2});
-    const s = new THREE.Mesh(sg, rimMat); s.rotation.z = a; s.position.z = W*.36 - (opts.forged ? .02 : 0); g.add(s);
-  }
-  const cap = mCyl(.05,.055,.035, rimMat, 24); cap.rotation.x = Math.PI/2; cap.position.z = W*.4; g.add(cap);
-  for(let i=0;i<5;i++){ const a = i/5*Math.PI*2; const n = mCyl(.009,.009,.02,M.chrome,8); n.rotation.x = Math.PI/2; n.position.set(Math.cos(a)*.072, Math.sin(a)*.072, W*.43); g.add(n); }
+  const faceZ = style === "dish" ? W*.2 : W*.36;
+  if(style === "aero"){ const dm = rimMat.clone(); dm.roughness = .55; dm.metalness = .35; dm.clearcoat = .3; const disc = new THREE.Mesh(new THREE.CircleGeometry(rimR-.02, 40), dm); disc.position.z = faceZ - .01; g.add(disc); }
+  if(style === "dish"){ const dl = new THREE.Mesh(new THREE.RingGeometry(rimR-.05, rimR-.004, 48), M.chrome); dl.position.z = W*.41; g.add(dl);
+    const wall = new THREE.Mesh(new THREE.CylinderGeometry(rimR-.05, rimR-.05, W*.21, 40, 1, true), M.chrome); wall.rotation.x = Math.PI/2; wall.position.z = W*.305; g.add(wall); }
+  const spMat = style === "aero" ? M.hub : rimMat;
+  wheelSegments(style, rimR).forEach(sg => {
+    const x0 = Math.cos(sg.a0)*sg.r0, y0 = Math.sin(sg.a0)*sg.r0, x1 = Math.cos(sg.a1)*sg.r1, y1 = Math.sin(sg.a1)*sg.r1;
+    const len = Math.hypot(x1-x0, y1-y0), sp = mBox(len, sg.w, .03, spMat, (x0+x1)/2, (y0+y1)/2, faceZ);
+    sp.rotation.z = Math.atan2(y1-y0, x1-x0); g.add(sp);
+  });
+  const cap = mCyl(.05,.055,.035, rimMat, 24); cap.rotation.x = Math.PI/2; cap.position.z = faceZ + .03; g.add(cap);
+  for(let i=0;i<5;i++){ const a = i/5*Math.PI*2; const n = mCyl(.009,.009,.02,M.chrome,8); n.rotation.x = Math.PI/2; n.position.set(Math.cos(a)*.072, Math.sin(a)*.072, faceZ + .035); g.add(n); }
   const discR = opts.bbk ? .205 : .165;
   const disc = mCyl(discR, discR, .028, M.disc, 40); disc.rotation.x = Math.PI/2; disc.position.z = W*.08; g.add(disc);
   const hat = mCyl(.085,.085,.05, opts.discs ? M.chrome : M.hub, 24); hat.rotation.x = Math.PI/2; hat.position.z = W*.12; g.add(hat);
@@ -2646,11 +2717,18 @@ function vizBuildCar(){
     const sw = (fz)*2 - .05;
     const spl = new THREE.Shape(); spl.moveTo(-sw/2,0); spl.lineTo(sw/2,0); spl.lineTo(sw/2-.08,.22); spl.lineTo(-sw/2+.08,.22); spl.closePath();
     const sg = new THREE.ExtrudeGeometry(spl, {depth:.018, bevelEnabled:false}); const sm = new THREE.Mesh(sg, M.kit); sm.rotation.x = Math.PI/2; sm.rotation.z = -Math.PI/2; sm.position.set(h+.04, .25, 0); body.add(sm);
-    if(P.roof){ [-.48,.48].forEach(z => { const post = mBox(.06,.15,.025,M.kit,-h+.26,P.tailTop+.07,z); body.add(post); });
-      const wing = new THREE.Shape(); wing.moveTo(0,0); wing.quadraticCurveTo(-.12,.05,-.3,.02); wing.lineTo(-.3,.0); wing.quadraticCurveTo(-.12,.025,0,-.012); wing.closePath();
-      const wg = new THREE.ExtrudeGeometry(wing, {depth:P.w-.16, bevelEnabled:false}); wg.translate(0,0,-(P.w-.16)/2);
-      const wm = new THREE.Mesh(wg, M.kit); wm.position.set(-h+.38, P.tailTop+.15, 0); wm.castShadow = true; body.add(wm);
-      [1,-1].forEach(sd => body.add(mBox(.32,.1,.012,M.kit,-h+.23,P.tailTop+.16,sd*(P.w-.16)/2))); }
+    const wingStyle = vizState.wing || "low";
+    if(P.roof && wingStyle !== "none"){
+      const gt = wingStyle === "gt", wy = gt ? Math.max(P.roofR[1]+.02, P.tailTop+.36) : P.tailTop+.15, wx = -h + (gt ? .4 : .38), span = P.w - (gt ? .1 : .16), chord = gt ? .36 : .3;
+      const wing = new THREE.Shape(); wing.moveTo(0,0); wing.quadraticCurveTo(-chord*.4,.05,-chord,.02); wing.lineTo(-chord,0); wing.quadraticCurveTo(-chord*.4,.025,0,-.012); wing.closePath();
+      const wg = new THREE.ExtrudeGeometry(wing, {depth:span, bevelEnabled:false}); wg.translate(0,0,-span/2);
+      const wm = new THREE.Mesh(wg, M.kit); wm.position.set(wx, wy, 0); wm.rotation.z = gt ? .06 : 0; wm.castShadow = true; body.add(wm);
+      [1,-1].forEach(sd => body.add(mBox(chord+.04, gt ? .2 : .1, .012, M.kit, wx-chord/2, wy+(gt ? .03 : .01), sd*span/2)));
+      [-.42,.42].forEach(z => {
+        if(gt) body.add(mTube([[wx-.12,P.tailTop-.01,z],[wx-.2,(P.tailTop+wy)/2+.05,z],[wx-.1,wy+.06,z],[wx-.02,wy+.03,z]], .016, M.kit));
+        else body.add(mBox(.06, wy-P.tailTop+.02, .025, M.kit, wx-.12, (P.tailTop+wy)/2, z));
+      });
+    }
   }
   if(vizHas("canards")) [1,-1].forEach(sd => [0,1].forEach(k => { const cn = mBox(.15,.01,.15,M.kit,h-.04,.38+k*.08,sd*(sideZ(h-.04,.4)+.02)); cn.rotation.z = -.25; body.add(cn); }));
   if(vizHas("sideskirt")) [1,-1].forEach(sd => { const sk = mBox(P.wb-.9,.045,.06,M.kit,0,.255,sd*(sideZ(0,.3)+.015)); body.add(sk); for(let i=-1;i<=1;i++) body.add(mBox(.012,.06,.07,M.kit,i*.5,.29,sd*(sideZ(0,.3)+.04))); });
@@ -2666,7 +2744,8 @@ function vizBuildCar(){
   tips.forEach(([z,r]) => { const tp = mCyl(r,r*.95,.16,M.chrome,24); tp.rotation.z = Math.PI/2; tp.position.set(-h+.02,.29,z); body.add(tp);
     const inner = mCyl(r*.8,r*.8,.01,new THREE.MeshBasicMaterial({color:0x050505}),20); inner.rotation.z = Math.PI/2; inner.position.set(-h-.06,.29,z); body.add(inner); });
   // ---- wheels ----
-  const wopts = {forged:vizHas("forged"), winter:vizHas("winter") && !vizHas("forged"), bbk:vizHas("bbk"), discs:vizHas("discs")};
+  const wpk = vizState.stock ? {style:"stock", size:18, custom:false} : wheelPick();
+  const wopts = {style:wpk.style, size:wpk.size, custom:wpk.custom, bbk:vizHas("bbk"), discs:vizHas("discs")};
   V.wheels = [];
   [[wb,1],[wb,-1],[-wb,1],[-wb,-1]].forEach(([x,sd]) => { const w = vizWheel(M, sd, wopts); w.position.set(x, .335, sd*(track - .03)); root.add(w); V.wheels.push(w); });
   if(vizState.xray) vizEngine(root, P, M, h, wb, track, drop);
@@ -2715,10 +2794,23 @@ function vizRebuild(){
   $$("#vizPaints .sw").forEach(b => b.setAttribute("aria-checked", b.dataset.c === vizPaintHex()));
   $("#vizPaintCustom").value = vizPaintHex();
   $("#vizFinish").value = vizState.finish; $("#vizRim").value = vizState.rim;
+  vizWheelUI();
   $("#vizXray").setAttribute("aria-pressed", vizState.xray); $("#vizStock").setAttribute("aria-pressed", vizState.stock); $("#vizSpin").setAttribute("aria-pressed", vizState.spin);
   let drop = 0; if(vizHas("springs")) drop = 32; if(vizHas("coilovers")) drop = 45;
   $("#vizStance").textContent = `Ride height ${drop ? "−"+drop+"mm" : "standard"} · track ${vizHas("spacers") ? "+30mm each side" : "standard"}`;
   if(typeof photoRender === "function" && vizState.mode === "photo") photoLoad(photoRender);
+}
+function vizWheelUI(){
+  const w = Object.assign({style:"stock", size:18}, vizState.wheel), st = WHEEL_STYLES[w.style] || WHEEL_STYLES.stock, c = car();
+  $("#vizWheelStyle").value = w.style; $("#vizWheelSize").value = String(w.size); $("#vizWing").value = vizState.wing || "low";
+  const q = encodeURIComponent(`${st.ex || st.n.replace(/\s*\(.*\)/,"")} alloy wheels ${c.name}`);
+  const parts = [];
+  if(st.ex) parts.push(`Example to look at: ${esc(st.ex)}.`);
+  parts.push(`<a href="https://www.google.com/search?tbm=isch&q=${q}" target="_blank" rel="noopener">See real photos of this style on a ${esc(c.name)} ↗</a>`);
+  if(w.style !== "stock" && !state.build.includes("forged")) parts.push("Add lightweight forged wheels to your build to include the cost and insurance.");
+  parts.push("Check offset, PCD and load rating for your car before buying.");
+  $("#vizWheelNote").innerHTML = parts.join(" ");
+  if(!state.build.includes("splitter")) $("#vizWing").title = "Shows when the front splitter / rear wing mod is in your build";
 }
 function vizLegend(){
   const shown = {}, hidden = [];
@@ -2728,7 +2820,7 @@ function vizLegend(){
     + (hidden.length ? `<p class="note">Not shown in 3D: ${hidden.map(id => esc(byId[id].name)).join(", ")}</p>` : "")
     : `<div class="empty">Add mods in the build planner or load a preset. Body kits, suspension, wheels, brakes, lights, tint, exhaust and engine parts appear on the model.</div>`;
 }
-function vizSetView(name){ const v = VIEWS[name]; if(!v || !V.ok) return; V.tYaw = v.yaw; V.tPitch = v.pitch; V.tDist = v.dist; vizState.spin = false; $("#vizSpin").setAttribute("aria-pressed", false); }
+function vizSetView(name){ const v = VIEWS[name]; if(!v || !V.ok) return; V.tYaw = v.yaw; V.tPitch = v.pitch; V.tDist = v.dist; V.tTy = v.ty || .58; V.tTx = v.tx === "front" ? (VIZ_PROFILES[BODY[state.car]] || VIZ_PROFILES.hatch).wb/2 : 0; vizState.spin = false; $("#vizSpin").setAttribute("aria-pressed", false); }
 function vizLoop(){
   if(!V.ok || V.looping) return;
   V.looping = true;
@@ -2741,6 +2833,8 @@ function vizLoop(){
     if(V.tYaw !== null){
       let dy = ((V.tYaw - V.yaw + Math.PI*3) % (Math.PI*2)) - Math.PI;
       V.yaw += dy*Math.min(1, dt*6); V.pitch += (V.tPitch - V.pitch)*Math.min(1, dt*6); V.dist += (V.tDist - V.dist)*Math.min(1, dt*6);
+      if(V.tTy !== undefined) V.ty += (V.tTy - V.ty)*Math.min(1, dt*6);
+      if(V.tTx !== undefined) V.tx += (V.tTx - V.tx)*Math.min(1, dt*6);
       if(Math.abs(dy) < .002 && Math.abs(V.tPitch - V.pitch) < .002) V.tYaw = null;
       moving = true;
     }
@@ -2750,8 +2844,10 @@ function vizLoop(){
     if(V.anim.length){ V.anim.forEach(f => f(t)); moving = true; }
     if(moving || V.dirty){
       const y = V.yaw;
-      V.camera.position.set(Math.cos(y)*Math.cos(V.pitch)*V.dist, .55 + Math.sin(V.pitch)*V.dist, Math.sin(y)*Math.cos(V.pitch)*V.dist);
-      V.camera.lookAt(0, .58, 0);
+      const ty = V.ty || .58;
+      const tx = V.tx || 0;
+      V.camera.position.set(tx + Math.cos(y)*Math.cos(V.pitch)*V.dist, ty - .03 + Math.sin(V.pitch)*V.dist, Math.sin(y)*Math.cos(V.pitch)*V.dist);
+      V.camera.lookAt(tx, ty, 0);
       V.renderer.render(V.scene, V.camera); V.dirty = false;
       const deg = Math.round(((V.yaw % (Math.PI*2)) + Math.PI*2) % (Math.PI*2) * 180/Math.PI);
       const sl = $("#vizAngle"); if(sl && document.activeElement !== sl) sl.value = deg;
@@ -2794,174 +2890,397 @@ function vizBindPanel(){
   $("#vizPaintCustom").addEventListener("input", e => { vizState.paint[state.car] = e.target.value; vizSave(); vizRebuild(); });
   $("#vizFinish").addEventListener("change", e => { vizState.finish = e.target.value; vizSave(); vizRebuild(); });
   $("#vizRim").addEventListener("change", e => { vizState.rim = e.target.value; vizSave(); vizRebuild(); });
+  $("#vizWheelStyle").addEventListener("change", e => { vizState.wheel = Object.assign({size:18}, vizState.wheel, {style:e.target.value}); vizSave(); vizRebuild(); if(vizState.mode === "3d") vizSetView("wheel"); });
+  $("#vizWheelSize").addEventListener("change", e => { vizState.wheel = Object.assign({style:"stock"}, vizState.wheel, {size:+e.target.value}); vizSave(); vizRebuild(); });
+  $("#vizWing").addEventListener("change", e => { vizState.wing = e.target.value; vizSave(); vizRebuild(); if(vizState.mode === "3d") vizSetView("wing"); });
   $("#vizLegend").addEventListener("click", e => { const b = e.target.closest("[data-vg]"); if(!b) return; const g = b.dataset.vg; if(vizState.mode === "photo") vizSetMode("3d"); if(g === "Engine (x-ray)" && !vizState.xray){ vizState.xray = true; vizRebuild(); } vizSetView(VIZ_VIEW[g] || "front34"); });
 }
 function vizControlsHTML(){
   $("#vizPaints").innerHTML = PAINTS.map(p => `<button type="button" class="sw" role="radio" data-c="${p.c}" aria-checked="false" style="--c:${p.c}"><i></i>${esc(p.n)}</button>`).join("");
   $("#vizFinish").innerHTML = Object.entries(FINISHES).map(([k,f]) => `<option value="${k}">${esc(f.n)}</option>`).join("");
   $("#vizRim").innerHTML = Object.entries(RIMS).map(([k,r]) => `<option value="${k}">${esc(r.n)}</option>`).join("");
+  $("#vizWheelStyle").innerHTML = Object.entries(WHEEL_STYLES).map(([k,w]) => `<option value="${k}">${esc(w.n)}</option>`).join("");
 }
 
-/* ---------- "On my photo": mods drawn onto the user's own side-on photo ---------- */
-const PH = {img:null, imgId:null, step:null, recol:null, recolKey:"", split:1, tol:34};
-function photoCal(){ const all = store.get("cr_photocal", {}); return all[state.car] || null; }
-function photoSetCal(c){ const all = Object.assign({}, store.get("cr_photocal", {})); if(c) all[state.car] = c; else delete all[state.car]; store.set("cr_photocal", all); }
+/* ---------- wheel styles (shared by the 3D model and photo mode) ---------- */
+const WHEEL_STYLES = {
+ stock:{n:"Standard 5-spoke (factory)"},
+ six:{n:"6-spoke motorsport", ex:"Volk Racing TE37"},
+ twin6:{n:"Twin 6-spoke", ex:"Enkei RPF1"},
+ ten:{n:"10-spoke"},
+ twelve:{n:"12-spoke", ex:"Team Dynamics Pro Race 1.3"},
+ y5:{n:"5 Y-spoke"},
+ mesh:{n:"Mesh / cross-spoke", ex:"BBS RS"},
+ aero:{n:"Turbofan / aero disc"},
+ dish:{n:"Deep-dish 8-spoke"}
+};
+const WHEEL_SIZES = {17:.216, 18:.229, 19:.241, 20:.254};
+function wheelPick(){ // the style actually shown: your chosen style, or a sensible default for the wheel mods in the build
+  const w = vizState.wheel || {};
+  let style = w.style || "stock";
+  if(style === "stock" && vizHas("forged")) style = "ten";
+  if(style === "stock" && vizHas("winter")) style = "six";
+  return {style, size:+w.size || 18, custom:style !== "stock"};
+}
+function wheelSegments(style, rimR){
+  const S = [], seg = (r0,a0,r1,a1,w) => S.push({r0,a0,r1,a1,w}), N = (n, f) => { for(let i=0;i<n;i++) f(i/n*Math.PI*2); };
+  const e = rimR - .02;
+  switch(style){
+    case "six": N(6, a => seg(.055,a,e,a,.06)); break;
+    case "twin6": N(6, a => { seg(.06,a-.05,e,a-.12,.018); seg(.06,a+.05,e,a+.12,.018); }); break;
+    case "ten": N(10, a => seg(.055,a,e,a,.024)); break;
+    case "twelve": N(12, a => seg(.055,a,e,a,.02)); break;
+    case "y5": N(5, a => { seg(.055,a,.13,a,.04); seg(.13,a,e,a+.22,.024); seg(.13,a,e,a-.22,.024); }); break;
+    case "mesh": N(10, a => { seg(.06,a,rimR-.015,a+.55,.012); seg(.06,a,rimR-.015,a-.55,.012); }); break;
+    case "aero": N(14, a => seg(.09,a,e,a+.35,.03)); break;
+    case "dish": N(8, a => seg(.05,a,rimR-.05,a,.035)); break;
+    default: N(5, a => seg(.055,a,e,a,.05));
+  }
+  return S;
+}
+
+/* ---------- "On my photo": mods drawn onto the user's own photos ---------- */
+const PHOTO_ANGLES = [
+ {id:"side", n:"Left side", kind:"side"},
+ {id:"sideR", n:"Right side", kind:"side"},
+ {id:"front", n:"Front", kind:"front"},
+ {id:"rear", n:"Rear", kind:"rear"},
+ {id:"f34", n:"Front ¾", kind:"view"},
+ {id:"r34", n:"Rear ¾", kind:"view"}
+];
+const PLATE_W = .52; // UK standard number plate width, metres
+const MAX_PER_ANGLE = 4;
+const PH = {img:null, imgId:null, step:null, recol:null, recolKey:"", split:1, tol:34, key:null, sel:-1, partCache:{}, partImgs:[], drag:null};
+/* photo keys: "<car>" = first left-side photo (also the garage photo), "<car>.<angle>" = first of that angle, "<car>.<angle>.<n>" = extra photos */
+function photoKeysFor(car){
+  const order = PHOTO_ANGLES.map(a => a.id);
+  return Object.keys(state.photos).filter(k => k === car || k.indexOf(car + ".") === 0)
+    .map(k => { const p = k === car ? ["side", 1] : [k.split(".")[1], +(k.split(".")[2] || 1)]; return {k, angle:p[0], n:p[1]}; })
+    .filter(x => order.includes(x.angle))
+    .sort((a,b) => order.indexOf(a.angle) - order.indexOf(b.angle) || a.n - b.n);
+}
+function photoNewKey(car, angle){
+  for(let n=1;n<=MAX_PER_ANGLE;n++){ const k = angle === "side" && n === 1 ? car : (n === 1 ? `${car}.${angle}` : `${car}.${angle}.${n}`); if(!state.photos[k]) return k; }
+  return null;
+}
+function photoKey(){
+  const list = photoKeysFor(state.car);
+  if(PH.key && (PH.key === state.car || PH.key.indexOf(state.car + ".") === 0) && (state.photos[PH.key] || !list.length)) return PH.key;
+  PH.key = list.length ? list[0].k : state.car; return PH.key;
+}
+function photoAngleOf(k){ const id = k === state.car ? "side" : (k.split(".")[1] || "side"); return PHOTO_ANGLES.find(a => a.id === id) || PHOTO_ANGLES[0]; }
+function photoAngle(){ return state.photos[photoKey()] ? photoAngleOf(photoKey()) : (PHOTO_ANGLES.find(a => a.id === $("#photoAddAngle").value) || PHOTO_ANGLES[0]); }
+function photoCal(key){ const all = store.get("cr_photocal", {}); return all[key || photoKey()] || null; }
+function photoSetCal(c, key){ const k = key || photoKey(); const all = Object.assign({}, store.get("cr_photocal", {})); if(c) all[k] = c; else delete all[k]; store.set("cr_photocal", all); }
+function photoParts(key){ return (store.get("cr_photoparts", {})[key || photoKey()] || []).slice(); }
+function photoSetParts(list, key){ const k = key || photoKey(); const all = Object.assign({}, store.get("cr_photoparts", {})); if(list && list.length) all[k] = list; else delete all[k]; store.set("cr_photoparts", all); }
 function hex2rgb(h){ const n = parseInt(h.slice(1),16); return [n>>16 & 255, n>>8 & 255, n & 255]; }
 function rgb2hex(r,g,b){ return "#" + [r,g,b].map(v => clamp(Math.round(v),0,255).toString(16).padStart(2,"0")).join(""); }
 function ycc(r,g,b){ return [.299*r+.587*g+.114*b, -.1687*r-.3313*g+.5*b, .5*r-.4187*g-.0813*b]; }
-/* car frame (metres, x = +front, y = height above ground) → photo pixels */
-function photoXf(cal){
+function photoAdj(cal){ return Object.assign({kit:0, wing:0, wingX:0}, (cal && cal.adj) || {}); }
+function photoDefaultDist(kind){ const P = VIZ_PROFILES[BODY[state.car]] || VIZ_PROFILES.hatch; return kind === "side" ? P.wb : PLATE_W; }
+/* Side photos: x metres along the car (+front), y metres above ground; scaled from the wheelbase.
+   Front/rear photos: x metres across (+ = photo right), y metres above ground; scaled from the number plate, ground from the tyre tap. */
+function photoXf(cal, kind){
   const P = VIZ_PROFILES[BODY[state.car]] || VIZ_PROFILES.hatch;
-  const fx = cal.f[0], fy = cal.f[1], rx = cal.r[0], ry = cal.r[1];
-  const dpx = Math.hypot(fx-rx, fy-ry), ppm = dpx / P.wb;
-  const ux = (fx-rx)/dpx, uy = (fy-ry)/dpx;
-  const vx = ux >= 0 ? uy : -uy, vy = ux >= 0 ? -ux : ux; // "up" on screen
-  const mx = (fx+rx)/2, my = (fy+ry)/2;
-  const R = .335;
-  const toPx = (xm, ym) => [mx + ux*xm*ppm + vx*(ym-R)*ppm, my + uy*xm*ppm + vy*(ym-R)*ppm];
-  return {P, ppm, ux, uy, vx, vy, mx, my, R, toPx, wb:P.wb/2};
-}
-function photoAutoColour(cal){
-  const X = photoXf(cal), cv = document.createElement("canvas"); cv.width = PH.img.width; cv.height = PH.img.height;
-  const g = cv.getContext("2d"); g.drawImage(PH.img, 0, 0);
-  const d = g.getImageData(0,0,cv.width,cv.height).data, rs = [], gs = [], bs = [];
-  for(let xm = -X.wb + .45; xm <= X.wb - .45; xm += .05) for(let ym = .5; ym <= .82; ym += .03){
-    const [px,py] = X.toPx(xm, ym).map(Math.round); if(px < 0 || py < 0 || px >= cv.width || py >= cv.height) continue;
-    const i = (py*cv.width + px)*4; rs.push(d[i]); gs.push(d[i+1]); bs.push(d[i+2]);
+  const k = kind || photoAngle().kind;
+  const a = cal.f, b = cal.r;
+  if(k === "side"){
+    const dist = cal.dist || P.wb, dpx = Math.hypot(a[0]-b[0], a[1]-b[1]), ppm = dpx / dist;
+    const ux = (a[0]-b[0])/dpx, uy = (a[1]-b[1])/dpx;
+    const vx = ux >= 0 ? uy : -uy, vy = ux >= 0 ? -ux : ux;
+    const mx = (a[0]+b[0])/2, my = (a[1]+b[1])/2, R = .335;
+    const ox = mx - vx*R*ppm, oy = my - vy*R*ppm;
+    const toPx = (xm, ym) => [ox + ux*xm*ppm + vx*ym*ppm, oy + uy*xm*ppm + vy*ym*ppm];
+    return {P, ppm, ux, uy, vx, vy, ox, oy, R, toPx, wb:dist/2, kind:"side"};
   }
+  const dist = cal.dist || ((cal.method === "bumper" || (!cal.method && !cal.g)) ? P.w*.92 : PLATE_W), dpx = Math.hypot(a[0]-b[0], a[1]-b[1]), ppm = dpx / dist;
+  const ux = (b[0]-a[0])/dpx, uy = (b[1]-a[1])/dpx, vx = uy, vy = -ux;
+  const mx = (a[0]+b[0])/2, my = (a[1]+b[1])/2;
+  let ox, oy;
+  if(cal.g){ const d = (cal.g[0]-mx)*vx + (cal.g[1]-my)*vy; ox = mx + vx*d; oy = my + vy*d; }
+  else { ox = mx - vx*.25*ppm; oy = my - vy*.25*ppm; } // older bumper-corner marks: bumper bottom ≈ 25cm up
+  const toPx = (xm, ym) => [ox + ux*xm*ppm + vx*ym*ppm, oy + uy*xm*ppm + vy*ym*ppm];
+  return {P, ppm, ux, uy, vx, vy, ox, oy, R:.335, toPx, half:P.w/2, kind:k};
+}
+function photoImgData(){ const cv = document.createElement("canvas"); cv.width = PH.img.width; cv.height = PH.img.height; const g = cv.getContext("2d"); g.drawImage(PH.img, 0, 0); return g.getImageData(0,0,cv.width,cv.height); }
+function photoAutoColour(cal){
+  const X = photoXf(cal), id = photoImgData(), d = id.data, W = id.width, H = id.height, rs = [], gs = [], bs = [], pts = [];
+  if(X.kind === "side"){ for(let xm = -X.wb + .45; xm <= X.wb - .45; xm += .05) for(let ym = .5; ym <= .82; ym += .03) pts.push([xm,ym]); }
+  else { for(let xm = -X.half + .12; xm <= X.half - .12; xm += .04){ if(Math.abs(xm) < .45) continue; for(let ym = .62; ym <= .78; ym += .03) pts.push([xm,ym]); } }
+  pts.forEach(([xm,ym]) => { const [px,py] = X.toPx(xm, ym).map(Math.round); if(px < 0 || py < 0 || px >= W || py >= H) return; const i = (py*W + px)*4; rs.push(d[i]); gs.push(d[i+1]); bs.push(d[i+2]); });
   if(!rs.length) return null;
   const med = a => a.sort((p,q) => p-q)[a.length >> 1];
   return [med(rs), med(gs), med(bs)];
 }
 function photoLoad(cb){
-  const src = state.photos[state.car];
+  const key = photoKey(), src = state.photos[key];
   if(!src){ PH.img = null; PH.imgId = null; cb && cb(); return; }
-  if(PH.img && PH.imgId === state.car + src.length){ cb && cb(); return; }
-  const im = new Image(); im.onload = () => { PH.img = im; PH.imgId = state.car + src.length; PH.recolKey = ""; cb && cb(); }; im.src = src;
+  const id = key + ":" + src.length;
+  if(PH.img && PH.imgId === id){ cb && cb(); return; }
+  const im = new Image(); im.onload = () => { PH.img = im; PH.imgId = id; PH.recolKey = ""; PH.sel = -1; cb && cb(); }; im.src = src;
+}
+function photoOutline(X){
+  const out = [];
+  if(X.kind === "side"){
+    const S = vizShape(X.P), hh = X.P.len/2 + .06;
+    for(let xm = hh; xm >= -hh; xm -= .04){ const xc = clamp(xm, -X.P.len/2, X.P.len/2);
+      const inCab = X.P.roof && xc <= X.P.scut[0] && xc >= X.P.tailG[0];
+      out.push(X.toPx(xm, (inCab ? Math.max(S.gTop(xc), S.yTop(xc)) : S.yTop(xc)) + .05)); }
+    for(let xm = -hh; xm <= hh; xm += .04) out.push(X.toPx(xm, .17));
+  } else {
+    const top = X.P.roof ? Math.max(X.P.roofF[1], X.P.roofR[1]) + .04 : X.P.belt + .1, w = X.half + .05;
+    [[-w,.17],[w,.17],[w,X.P.belt+.02],[w*.78,top],[-w*.78,top],[-w,X.P.belt+.02]].forEach(p => out.push(X.toPx(...p)));
+  }
+  return out;
 }
 function photoRecoloured(cal, X, target){
-  const key = [state.car, PH.imgId, cal.src.join(","), target, PH.tol, cal.f.join(","), cal.r.join(",")].join("|");
+  const key = [photoKey(), PH.imgId, cal.src.join(","), target, PH.tol, cal.f.join(","), cal.r.join(","), cal.dist, (cal.g || []).join(",")].join("|");
   if(PH.recolKey === key && PH.recol) return PH.recol;
   const W = PH.img.width, H = PH.img.height, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
   const g = cv.getContext("2d"); g.drawImage(PH.img, 0, 0);
   const id = g.getImageData(0,0,W,H), d = id.data;
-  const [sr,sg,sb] = cal.src, [tr,tg,tb] = hex2rgb(target);
-  const sY = ycc(sr,sg,sb), sLum = Math.max(8, sY[0]);
-  // only recolour inside the car's expected outline (from the body-style profile), and skip the wheels
-  const S = vizShape(X.P), mk = document.createElement("canvas"); mk.width = W; mk.height = H;
-  const mg = mk.getContext("2d"), out = [], hh = X.P.len/2 + .06;
-  for(let xm = hh; xm >= -hh; xm -= .04){ const xc = clamp(xm, -X.P.len/2, X.P.len/2);
-    const inCab = X.P.roof && xc <= X.P.scut[0] && xc >= X.P.tailG[0];
-    out.push(X.toPx(xm, (inCab ? Math.max(S.gTop(xc), S.yTop(xc)) : S.yTop(xc)) + .05)); }
-  for(let xm = -hh; xm <= hh; xm += .04) out.push(X.toPx(xm, .17));
+  const [tr,tg,tb] = hex2rgb(target), sY = ycc(...cal.src), sLum = Math.max(8, sY[0]);
+  const mk = document.createElement("canvas"); mk.width = W; mk.height = H; const mg = mk.getContext("2d");
+  const out = photoOutline(X);
   mg.beginPath(); out.forEach(([a,b],i) => i ? mg.lineTo(a,b) : mg.moveTo(a,b)); mg.closePath(); mg.fillStyle = "#fff"; mg.fill();
-  const mask = mg.getImageData(0,0,W,H).data;
-  const corners = [[X.P.len/2+.15,.05],[X.P.len/2+.15,1.6],[-X.P.len/2-.15,.05],[-X.P.len/2-.15,1.6]].map(([a,b]) => X.toPx(a,b));
-  const x0 = Math.max(0, Math.floor(Math.min(...corners.map(p => p[0])))), x1 = Math.min(W, Math.ceil(Math.max(...corners.map(p => p[0]))));
-  const y0 = Math.max(0, Math.floor(Math.min(...corners.map(p => p[1])))), y1 = Math.min(H, Math.ceil(Math.max(...corners.map(p => p[1]))));
-  const wR = X.R*X.ppm*1.04, wf = X.toPx(X.wb, X.R), wr = X.toPx(-X.wb, X.R);
-  const tol = PH.tol;
-  for(let y=y0;y<y1;y++) for(let x=x0;x<x1;x++){
-    if(Math.hypot(x-wf[0], y-wf[1]) < wR || Math.hypot(x-wr[0], y-wr[1]) < wR) continue;
-    const i = (y*W + x)*4; if(!mask[i+3]) continue;
-    const r = d[i], gg = d[i+1], b = d[i+2];
-    const p = ycc(r,gg,b);
+  if(X.kind === "side"){ mg.globalCompositeOperation = "destination-out"; [X.toPx(X.wb, X.R), X.toPx(-X.wb, X.R)].forEach(([cx,cy]) => { mg.beginPath(); mg.arc(cx, cy, X.R*X.ppm*1.04, 0, Math.PI*2); mg.fill(); }); }
+  const mask = mg.getImageData(0,0,W,H).data, tol = PH.tol;
+  for(let i=0;i<d.length;i+=4){
+    if(!mask[i+3]) continue;
+    const r = d[i], gg = d[i+1], b = d[i+2], p = ycc(r,gg,b);
     const dist = Math.sqrt(2.2*((p[1]-sY[1])**2 + (p[2]-sY[2])**2) + .25*(p[0]-sY[0])**2);
     if(dist > tol) continue;
-    const w = dist < tol*.6 ? 1 : 1 - (dist - tol*.6)/(tol*.4);
-    const f = p[0] / sLum; // keep the photo's light and shade
-    d[i]   = r  + (clamp(tr*f,0,255) - r )*w;
-    d[i+1] = gg + (clamp(tg*f,0,255) - gg)*w;
-    d[i+2] = b  + (clamp(tb*f,0,255) - b )*w;
+    const w = dist < tol*.6 ? 1 : 1 - (dist - tol*.6)/(tol*.4), f = p[0] / sLum;
+    d[i] = r + (clamp(tr*f,0,255) - r)*w; d[i+1] = gg + (clamp(tg*f,0,255) - gg)*w; d[i+2] = b + (clamp(tb*f,0,255) - b)*w;
   }
   g.putImageData(id,0,0);
   PH.recol = cv; PH.recolKey = key; return cv;
 }
-function photoDrawWheel(g, X, cx, cy, rimHex, forged, bbk){
-  const R = X.ppm, rim = .25*R;
-  g.save(); g.translate(cx, cy);
-  g.fillStyle = "#1a1b1f"; g.beginPath(); g.arc(0,0,rim,0,Math.PI*2); g.fill();
-  if(bbk){ g.fillStyle = "#d4161c"; g.beginPath(); g.ellipse(-.03*R, -.13*R, .055*R, .095*R, -.3, 0, Math.PI*2); g.fill(); }
-  const grad = g.createRadialGradient(-rim*.3,-rim*.3,rim*.1,0,0,rim);
-  grad.addColorStop(0, "rgba(255,255,255,.35)"); grad.addColorStop(1, "rgba(255,255,255,0)");
-  g.strokeStyle = rimHex; g.lineCap = "round";
-  const n = forged ? 10 : 6;
-  for(let i=0;i<n;i++){ const a = i/n*Math.PI*2; g.lineWidth = (forged ? .022 : .045)*R; g.beginPath(); g.moveTo(Math.cos(a)*.05*R, Math.sin(a)*.05*R); g.lineTo(Math.cos(a)*(rim-.012*R), Math.sin(a)*(rim-.012*R)); g.stroke(); }
-  g.lineWidth = .02*R; g.beginPath(); g.arc(0,0,rim-.008*R,0,Math.PI*2); g.stroke();
-  g.fillStyle = rimHex; g.beginPath(); g.arc(0,0,.05*R,0,Math.PI*2); g.fill();
+function photoDrawWheel(g, X, cx, cy, wp, rimHex, bbk, mirror){
+  const s = X.ppm, rimR = WHEEL_SIZES[wp.size] || .229, rim = rimR*s;
+  g.save(); g.translate(cx, cy); if(mirror) g.scale(-1, 1);
+  g.fillStyle = "#16171a"; g.beginPath(); g.arc(0,0,rim,0,Math.PI*2); g.fill();
+  if(bbk){ g.fillStyle = "#d4161c"; g.beginPath(); g.ellipse(-.03*s, -.13*s, .055*s, .095*s, -.3, 0, Math.PI*2); g.fill(); }
+  if(wp.style === "aero"){ g.fillStyle = rimHex; g.globalAlpha = .9; g.beginPath(); g.arc(0,0,rim*.96,0,Math.PI*2); g.fill(); g.globalAlpha = 1; }
+  g.strokeStyle = wp.style === "aero" ? "#0d0e10" : rimHex; g.lineCap = "round";
+  wheelSegments(wp.style, rimR).forEach(sg => { g.lineWidth = Math.max(1, sg.w*s); g.beginPath(); g.moveTo(Math.cos(sg.a0)*sg.r0*s, -Math.sin(sg.a0)*sg.r0*s); g.lineTo(Math.cos(sg.a1)*sg.r1*s, -Math.sin(sg.a1)*sg.r1*s); g.stroke(); });
+  g.strokeStyle = wp.style === "dish" ? "#dfe2e6" : rimHex; g.lineWidth = (wp.style === "dish" ? .04 : .016)*s;
+  g.beginPath(); g.arc(0,0,rim - g.lineWidth/2,0,Math.PI*2); g.stroke();
+  g.fillStyle = rimHex; g.beginPath(); g.arc(0,0,.05*s,0,Math.PI*2); g.fill();
+  const grad = g.createRadialGradient(-rim*.35,-rim*.35,rim*.05,0,0,rim); grad.addColorStop(0,"rgba(255,255,255,.3)"); grad.addColorStop(1,"rgba(255,255,255,0)");
   g.fillStyle = grad; g.beginPath(); g.arc(0,0,rim,0,Math.PI*2); g.fill();
   g.restore();
 }
-function photoKit(g, X){
-  const P = X.P, h = P.len/2, kit = "#0c0c0e", hi = "rgba(255,255,255,.22)";
+function photoKit(g, X, adj){
+  const P = X.P, h = P.len/2, kit = "#0c0c0e", hi = "rgba(255,255,255,.22)", s = X.ppm, k = adj.kit, wing = vizState.wing || "low";
   g.save();
-  // car-frame transform: x metres along wheel line, y metres up
-  const s = X.ppm;
-  g.setTransform(X.ux*s, X.uy*s, X.vx*s, X.vy*s, X.mx - X.vx*X.R*s, X.my - X.vy*X.R*s);
+  g.setTransform(X.ux*s, X.uy*s, X.vx*s, X.vy*s, X.ox, X.oy);
   const poly = (pts, fill) => { g.beginPath(); pts.forEach(([x,y],i) => i ? g.lineTo(x,y) : g.moveTo(x,y)); g.closePath(); g.fillStyle = fill; g.fill(); };
-  if(vizHas("splitter")){ poly([[h-.25,.27],[h+.06,.24],[h+.08,.215],[h-.25,.225]], kit); poly([[h-.25,.27],[h+.06,.24],[h+.06,.235],[h-.25,.262]], hi);
-    if(P.roof){ poly([[-h+.22,P.tailTop-.02],[-h+.26,P.tailTop+.14],[-h+.3,P.tailTop+.14],[-h+.27,P.tailTop-.02]], kit);
-      poly([[-h+.08,P.tailTop+.13],[-h+.48,P.tailTop+.2],[-h+.48,P.tailTop+.17],[-h+.08,P.tailTop+.15]], kit); } }
-  if(vizHas("sideskirt")) poly([[-X.wb+.44,.31],[X.wb-.44,.31],[X.wb-.44,.255],[-X.wb+.44,.255]], kit);
-  if(vizHas("canards")) [0,1].forEach(k => poly([[h-.12,.4+k*.08],[h+.02,.42+k*.08],[h+.02,.41+k*.08],[h-.12,.39+k*.08]], kit));
-  if(vizHas("rearsplit")) poly([[-h-.02,.27],[-h+.28,.27],[-h+.28,.24],[-h+.02,.235]], kit);
-  if(vizHas("diffuser")) poly([[-h+.35,.25],[-h-.03,.28],[-h-.03,.22],[-h+.35,.22]], kit);
-  if(vizHas("bonnetext")) poly([[h-.35,P.nose+.08],[h-.05,P.nose+.06],[h-.05,P.nose+.045],[h-.35,P.nose+.07]], kit);
-  if(P.spoiler && (vizHas("spoilercap") || vizHas("wingraise"))){
-    const rx = P.roofR[0], ry = P.roofR[1], lift = vizHas("wingraise") ? .05 : 0;
-    poly([[rx+.05,ry+.01+lift],[rx-.38,ry-.02+lift],[rx-.38,ry-.045+lift],[rx+.05,ry-.01+lift]], vizHas("spoilercap") ? kit : "rgba(0,0,0,.35)");
+  const rect = (x0,y0,x1,y1,fill) => poly([[x0,y0],[x1,y0],[x1,y1],[x0,y1]], fill);
+  if(X.kind === "side"){
+    if(vizHas("splitter")){ poly([[h-.25,.27+k],[h+.06,.24+k],[h+.08,.215+k],[h-.25,.225+k]], kit); poly([[h-.25,.27+k],[h+.06,.24+k],[h+.06,.235+k],[h-.25,.262+k]], hi);
+      if(P.roof && wing !== "none"){
+        const wy = (wing === "gt" ? Math.max(P.roofR[1]+.02, P.tailTop+.36) : P.tailTop+.15) + adj.wing, wx = -h+.3 + adj.wingX;
+        if(wing === "gt"){ g.lineWidth = .028; g.strokeStyle = kit; g.beginPath(); g.moveTo(wx-.1, P.tailTop-.02); g.quadraticCurveTo(wx-.12, wy+.12, wx+.02, wy+.02); g.stroke(); }
+        else poly([[wx-.08,P.tailTop-.02],[wx-.04,wy-.01],[wx,wy-.01],[wx-.03,P.tailTop-.02]], kit);
+        poly([[wx-.24,wy-.02],[wx+.14,wy+.05],[wx+.14,wy+.02],[wx-.24,wy-.005]], kit);
+        if(wing === "gt") poly([[wx-.26,wy-.06],[wx+.16,wy-.02],[wx+.16,wy+.1],[wx-.26,wy+.06]], "rgba(12,12,14,.85)");
+      } }
+    if(vizHas("sideskirt")) rect(-X.wb+.44,.255+k,X.wb-.44,.31+k, kit);
+    if(vizHas("canards")) [0,1].forEach(i => poly([[h-.12,.4+i*.08+k],[h+.02,.42+i*.08+k],[h+.02,.41+i*.08+k],[h-.12,.39+i*.08+k]], kit));
+    if(vizHas("rearsplit")) poly([[-h-.02,.27+k],[-h+.28,.27+k],[-h+.28,.24+k],[-h+.02,.235+k]], kit);
+    if(vizHas("diffuser")) rect(-h-.03,.22+k,-h+.35,.28+k, kit);
+    if(vizHas("bonnetext")) poly([[h-.35,P.nose+.08],[h-.05,P.nose+.06],[h-.05,P.nose+.045],[h-.35,P.nose+.07]], kit);
+    if(P.spoiler && (vizHas("spoilercap") || vizHas("wingraise"))){ const rx = P.roofR[0], ry = P.roofR[1], lift = vizHas("wingraise") ? .05 : 0;
+      poly([[rx+.05,ry+.01+lift],[rx-.38,ry-.02+lift],[rx-.38,ry-.045+lift],[rx+.05,ry-.01+lift]], vizHas("spoilercap") ? kit : "rgba(0,0,0,.35)"); }
+    if(vizHas("catback") || vizHas("valved") || vizHas("gpfback")){ g.fillStyle = "#c9ccd1"; g.beginPath(); g.ellipse(-h-.02,.29,.03,.055,0,0,Math.PI*2); g.fill(); g.fillStyle = "#111"; g.beginPath(); g.ellipse(-h-.02,.29,.018,.04,0,0,Math.PI*2); g.fill(); }
+  } else if(X.kind === "front"){
+    const w = X.half;
+    if(vizHas("splitter")){ poly([[-w+.04,.25+k],[w-.04,.25+k],[w-.1,.205+k],[-w+.1,.205+k]], kit); rect(-w+.06,.243+k,w-.06,.25+k, hi); [-1,1].forEach(sd => rect(sd*(w-.06)-.008,.205+k,sd*(w-.06)+.008,.27+k, kit)); }
+    if(vizHas("canards")) [-1,1].forEach(sd => [0,1].forEach(i => poly([[sd*(w-.02),.38+i*.08+k],[sd*(w+.06),.36+i*.08+k],[sd*(w+.06),.35+i*.08+k],[sd*(w-.02),.37+i*.08+k]], kit)));
+    if(vizHas("bonnetext")) rect(-w*.6,P.nose+.06,w*.6,P.nose+.08, kit);
+    if(vizHas("sideskirt")) [-1,1].forEach(sd => rect(sd*(w-.02),.26+k,sd*(w+.03),.31+k, kit));
+  } else if(X.kind === "rear"){
+    const w = X.half;
+    if(vizHas("splitter") && P.roof && wing !== "none"){
+      const wy = (wing === "gt" ? Math.max(P.roofR[1]+.02, P.tailTop+.36) : P.tailTop+.15) + adj.wing, ww = w*.92;
+      [-.42,.42].forEach(x => rect(x-.025, P.tailTop-.02, x+.025, wy, kit));
+      rect(-ww, wy, ww, wy + (wing === "gt" ? .07 : .045), kit); rect(-ww, wy + (wing === "gt" ? .06 : .038), ww, wy + (wing === "gt" ? .07 : .045), hi);
+      [-1,1].forEach(sd => rect(sd*ww - .012, wy - .07, sd*ww + .012, wy + .12, kit));
+    }
+    if(vizHas("diffuser")){ rect(-w*.62,.2+k,w*.62,.3+k, kit); for(let i=-3;i<=3;i++) rect(i*.17-.008,.2+k,i*.17+.008,.32+k, "#1d1e22"); }
+    if(vizHas("rearsplit")) [-1,1].forEach(sd => rect(sd*(w-.32),.22+k,sd*(w-.02),.25+k, kit));
+    if(P.spoiler && (vizHas("spoilercap") || vizHas("wingraise"))) rect(-w*.68, P.roofR[1]-.01+(vizHas("wingraise") ? .05 : 0), w*.68, P.roofR[1]+.02+(vizHas("wingraise") ? .05 : 0), vizHas("spoilercap") ? kit : "rgba(0,0,0,.35)");
+    let tips = [[.5,.042]];
+    if(vizHas("catback") || vizHas("gpfback")) tips = [[.52,.052],[.38,.052]];
+    if(vizHas("valved")) tips = [[-.56,.05],[-.43,.05],[.43,.05],[.56,.05]];
+    if(vizHas("diffuser") && !vizHas("valved")) tips = tips.map(t => [t[0]*.35, t[1]]);
+    if(vizHas("catback") || vizHas("gpfback") || vizHas("valved") || vizHas("diffuser")) tips.forEach(([x,r]) => { g.fillStyle = "#c9ccd1"; g.beginPath(); g.arc(x,.29+k,r,0,Math.PI*2); g.fill(); g.fillStyle = "#0a0a0a"; g.beginPath(); g.arc(x,.29+k,r*.78,0,Math.PI*2); g.fill(); });
   }
-  if(vizHas("catback") || vizHas("valved") || vizHas("gpfback")){ g.fillStyle = "#c9ccd1"; g.beginPath(); g.ellipse(-h-.02,.29,.03,.055,0,0,Math.PI*2); g.fill(); g.fillStyle = "#111"; g.beginPath(); g.ellipse(-h-.02,.29,.018,.04,0,0,Math.PI*2); g.fill(); }
   g.restore();
+}
+/* --- your own part images (e.g. a product photo saved from a maker's website) --- */
+function partImage(p, cb){
+  const ck = p.src.length + ":" + p.src.slice(-40) + ":" + (p.knock ? 1 : 0);
+  if(PH.partCache[ck]){ cb(PH.partCache[ck]); return; }
+  const im = new Image(); im.onload = () => {
+    let out = im;
+    if(p.knock){ const cv = document.createElement("canvas"); cv.width = im.width; cv.height = im.height; const g = cv.getContext("2d"); g.drawImage(im,0,0);
+      const id = g.getImageData(0,0,cv.width,cv.height), d = id.data;
+      for(let i=0;i<d.length;i+=4){ const mn = Math.min(d[i],d[i+1],d[i+2]); if(mn > 232) d[i+3] = 0; else if(mn > 205) d[i+3] = Math.round(d[i+3]*(232-mn)/27); }
+      g.putImageData(id,0,0); out = cv; }
+    PH.partCache[ck] = out; cb(out); };
+  im.src = p.src;
+}
+function partBox(p, im){ const w = im.width*p.s, h = im.height*p.s; return {w, h}; }
+function photoDrawParts(g, done){
+  const parts = photoParts(); if(!parts.length){ done(); return; }
+  let left = parts.length;
+  const imgs = new Array(parts.length);
+  parts.forEach((p,i) => partImage(p, im => { imgs[i] = im; if(--left === 0) paint(); }));
+  function paint(){
+    PH.partImgs = imgs;
+    parts.forEach((p,i) => { const im = imgs[i], b = partBox(p, im);
+      g.save(); g.translate(p.x, p.y); g.rotate(p.r*Math.PI/180); g.scale(p.flip ? -1 : 1, 1); g.globalAlpha = p.op == null ? 1 : p.op;
+      g.drawImage(im, -b.w/2, -b.h/2, b.w, b.h); g.restore();
+      if(i === PH.sel){ g.save(); g.translate(p.x, p.y); g.rotate(p.r*Math.PI/180); g.strokeStyle = "#ffae2b"; g.lineWidth = Math.max(2, PH.img.width/400); g.setLineDash([10,8]); g.strokeRect(-b.w/2, -b.h/2, b.w, b.h); g.restore(); }
+    });
+    done();
+  }
 }
 function photoRender(){
   const cv = $("#photoCanvas"); if(!cv) return;
-  const msg = $("#photoMsg"), cal = photoCal();
+  photoStripUI();
+  const msg = $("#photoMsg"), A = photoAngle(), cal = photoCal();
   const g = cv.getContext("2d");
-  if(!PH.img){ cv.hidden = true; $("#photoEmpty").hidden = false; msg.textContent = "Add a side-on photo of your car to start."; photoButtons(); return; }
+  if(!PH.img){ cv.hidden = true; $("#photoEmpty").hidden = false; $("#photoEmptyText").innerHTML = photoTip(A); msg.textContent = `Choose an angle, then tap “Add photo” to take or choose one.`; photoButtons(); photoPartsUI(); photoDetailUI(); return; }
   cv.hidden = false; $("#photoEmpty").hidden = true;
   const W = PH.img.width, H = PH.img.height; cv.width = W; cv.height = H;
   g.setTransform(1,0,0,1,0,0); g.clearRect(0,0,W,H);
+  const finish = text => { photoDrawParts(g, () => {}); if(text) msg.textContent = text; photoButtons(); photoPartsUI(); photoDetailUI(); };
+  if(A.kind === "view"){ g.drawImage(PH.img, 0, 0); finish("¾ photos are shown as taken. You can still place your own part images on them."); return; }
   if(!cal || PH.step){
     g.drawImage(PH.img, 0, 0);
-    const pts = PH.step ? PH.tmp || [] : cal ? [cal.f, cal.r] : [];
-    pts.forEach((p,i) => { g.strokeStyle = "#ffae2b"; g.lineWidth = Math.max(3, W/300); g.beginPath(); g.arc(p[0],p[1],Math.max(14,W/60),0,Math.PI*2); g.stroke();
-      g.fillStyle = "#ffae2b"; g.font = `700 ${Math.max(16,W/45)}px sans-serif`; g.fillText(i ? "Rear" : "Front", p[0]+Math.max(18,W/50), p[1]-Math.max(18,W/50)); });
-    msg.textContent = PH.step === "front" ? "Tap the centre of the FRONT wheel." : PH.step === "rear" ? "Now tap the centre of the REAR wheel." : PH.step === "paint" ? "Tap a clean patch of paint (a door panel is ideal)." : "Tap “Set wheels” and mark both wheel centres so mods can be drawn to scale.";
-    photoButtons(); return;
+    const pts = PH.step ? PH.tmp || [] : cal ? [cal.f, cal.r].concat(cal.g ? [cal.g] : []) : [];
+    const labels = A.kind === "side" ? ["Front","Rear"] : ["Plate L","Plate R","Ground"];
+    pts.forEach((p,i) => { g.strokeStyle = "#ffae2b"; g.lineWidth = Math.max(3, W/300); g.beginPath(); g.arc(p[0],p[1],Math.max(12,W/70),0,Math.PI*2); g.stroke();
+      g.beginPath(); g.moveTo(p[0]-Math.max(18,W/50),p[1]); g.lineTo(p[0]+Math.max(18,W/50),p[1]); g.moveTo(p[0],p[1]-Math.max(18,W/50)); g.lineTo(p[0],p[1]+Math.max(18,W/50)); g.stroke();
+      g.fillStyle = "#ffae2b"; g.font = `700 ${Math.max(16,W/45)}px sans-serif`; g.fillText(labels[i], p[0]+Math.max(18,W/50), p[1]-Math.max(18,W/50)); });
+    const side = A.kind === "side";
+    const stepText = PH.step === "a" ? (side ? "Tap the centre of the FRONT wheel." : "Tap the LEFT end of the number plate (as you see it).")
+      : PH.step === "b" ? (side ? "Now tap the centre of the REAR wheel." : "Now tap the RIGHT end of the number plate.")
+      : PH.step === "g" ? "Last one: tap where a tyre meets the road."
+      : PH.step === "paint" ? "Tap a clean patch of paint."
+      : `Tap “${side ? "Set scale from wheels" : "Set scale from plate"}” so mods can be drawn to scale.`;
+    finish(stepText); return;
   }
-  const X = photoXf(cal);
+  const X = photoXf(cal, A.kind), adj = photoAdj(cal);
   const target = vizPaintHex(), srcHex = rgb2hex(...cal.src);
-  const recolour = !vizState.stock && target.toLowerCase() !== srcHex.toLowerCase() && !cal.keepPaint;
+  const recolour = vizState.photoPaint && !vizState.stock && target.toLowerCase() !== srcHex.toLowerCase();
   const base = recolour ? photoRecoloured(cal, X, target) : PH.img;
   let drop = 0; if(vizHas("springs")) drop = .032; if(vizHas("coilovers")) drop = .045;
-  const dpx = drop * X.ppm;
   g.drawImage(base, 0, 0);
-  if(dpx > 0){
-    // move the body down, keep the road and the wheels where they are
-    g.drawImage(base, -X.vx*dpx, -X.vy*dpx);
-    const groundY = Math.max(X.toPx(X.wb, 0)[1], X.toPx(-X.wb, 0)[1]) - X.R*X.ppm*.18;
-    g.drawImage(base, 0, groundY, W, H-groundY, 0, groundY, W, H-groundY);
-    [X.toPx(X.wb, X.R), X.toPx(-X.wb, X.R)].forEach(([cx,cy]) => { g.save(); g.beginPath(); g.arc(cx, cy, X.R*X.ppm*.99, 0, Math.PI*2); g.clip(); g.drawImage(base, 0, 0); g.restore(); });
+  if(A.kind === "side"){
+    const dpx = drop * X.ppm;
+    if(dpx > 0){
+      g.drawImage(base, -X.vx*dpx, -X.vy*dpx);
+      const groundY = Math.max(X.toPx(X.wb, 0)[1], X.toPx(-X.wb, 0)[1]) - X.R*X.ppm*.18;
+      g.drawImage(base, 0, groundY, W, H-groundY, 0, groundY, W, H-groundY);
+      [X.toPx(X.wb, X.R), X.toPx(-X.wb, X.R)].forEach(([cx,cy]) => { g.save(); g.beginPath(); g.arc(cx, cy, X.R*X.ppm*.99, 0, Math.PI*2); g.clip(); g.drawImage(base, 0, 0); g.restore(); });
+    }
+    const wp = wheelPick();
+    if(!vizState.stock && (wp.custom || vizHas("bbk"))){
+      const rimHex = wp.custom ? (RIMS[vizState.rim] || RIMS.gunmetal).c : "#c9ccd1";
+      [X.toPx(X.wb, X.R), X.toPx(-X.wb, X.R)].forEach(([cx,cy]) => photoDrawWheel(g, X, cx, cy, wp.custom ? wp : {style:"stock", size:wp.size}, rimHex, vizHas("bbk"), X.ux < 0));
+    }
   }
-  if(vizHas("forged") || vizHas("winter") || vizHas("bbk")){
-    const rimHex = vizHas("forged") || vizHas("winter") ? (RIMS[vizState.rim] || RIMS.gunmetal).c : "#c9ccd1";
-    [X.toPx(X.wb, X.R), X.toPx(-X.wb, X.R)].forEach(([cx,cy]) => photoDrawWheel(g, X, cx, cy, rimHex, vizHas("forged"), vizHas("bbk")));
-  }
-  if(!vizState.stock) photoKit(g, X);
-  if(PH.split < 1){
-    const sx = W*PH.split; g.save(); g.beginPath(); g.rect(0,0,sx,H); g.clip(); g.drawImage(PH.img,0,0); g.restore();
-    g.fillStyle = "#ffae2b"; g.fillRect(sx-2,0,4,H);
-    g.font = `700 ${Math.max(14,W/50)}px sans-serif`; g.fillStyle = "#ffae2b"; g.fillText("STOCK", 12, Math.max(24,W/35)); g.fillText("YOUR BUILD", sx+12, Math.max(24,W/35));
-  }
-  msg.textContent = `Scaled from your wheelbase (${(X.P.wb).toFixed(2)}m for this body style). ${recolour ? "Paint recoloured to your choice." : "Paint shown as photographed."} ${drop ? `Lowered ${Math.round(drop*1000)}mm.` : ""}`;
-  photoButtons();
+  if(!vizState.stock) photoKit(g, X, adj);
+  const parts = [A.kind === "side" ? `Scaled from a ${X.wb*2 >= 1 ? (X.wb*2).toFixed(2) : ""}m wheelbase.` : `Scaled from a ${Math.round((cal.dist || PLATE_W)*1000)}mm number plate.`];
+  parts.push(recolour ? "Showing your chosen paint." : "Your real paint is kept.");
+  if(A.kind === "side" && drop) parts.push(`Lowered ${Math.round(drop*1000)}mm.`);
+  if(A.kind !== "side" && drop) parts.push("Lowering shows on side photos.");
+  photoDrawParts(g, () => {
+    if(PH.split < 1){
+      const sx = W*PH.split; g.save(); g.beginPath(); g.rect(0,0,sx,H); g.clip(); g.drawImage(PH.img,0,0); g.restore();
+      g.fillStyle = "#ffae2b"; g.fillRect(sx-2,0,4,H);
+      g.font = `700 ${Math.max(14,W/50)}px sans-serif`; g.fillStyle = "#ffae2b"; g.fillText("STOCK", 12, Math.max(24,W/35)); g.fillText("YOUR BUILD", sx+12, Math.max(24,W/35));
+    }
+  });
+  msg.textContent = parts.join(" ");
+  photoButtons(); photoPartsUI(); photoDetailUI();
+}
+function photoTip(A){
+  return {side:"<b>Side-on works best.</b> Stand level with the wheel centres, about two car lengths away, whole car in frame.",
+    front:"<b>Straight-on front photo.</b> Crouch to headlight height so the number plate is square-on, whole bumper and both front tyres in frame.",
+    rear:"<b>Straight-on rear photo.</b> Crouch to tail-light height so the number plate is square-on, whole bumper, boot lid and both rear tyres in frame.",
+    view:"<b>¾ angle.</b> Stand at a front or rear corner to show two sides of the car. Shown as taken."}[A.kind];
+}
+function photoStripUI(){
+  const box = $("#photoStrip"); if(!box) return;
+  const list = photoKeysFor(state.car), cur = photoKey(), cals = store.get("cr_photocal", {});
+  box.innerHTML = list.length ? list.map(x => { const A = PHOTO_ANGLES.find(a => a.id === x.angle), ok = A.kind === "view" || !!cals[x.k];
+    return `<button type="button" class="thumb" data-key="${esc(x.k)}" aria-pressed="${x.k === cur}" title="${esc(A.n)}${x.n > 1 ? " " + x.n : ""}"><img src="${state.photos[x.k]}" alt=""><span><i class="angdot ${ok ? "ok" : "half"}"></i>${esc(A.n)}${x.n > 1 ? " " + x.n : ""}</span></button>`; }).join("")
+    : `<p class="note" style="margin:0">No photos yet for this car.</p>`;
 }
 function photoButtons(){
-  const cal = photoCal();
-  $("#photoCal").disabled = !PH.img; $("#photoPick").disabled = !cal; $("#photoUseColour").disabled = !cal; $("#photoReset").disabled = !cal;
-  $("#photoSplitRow").hidden = !cal; $("#photoTolRow").hidden = !cal;
-  const sw = $("#photoSwatch"); if(cal){ sw.hidden = false; sw.style.background = rgb2hex(...cal.src); sw.title = "Colour detected in your photo: " + rgb2hex(...cal.src); } else sw.hidden = true;
+  const cal = photoCal(), A = photoAngle(), scaled = A.kind !== "view", has = !!PH.img;
+  $("#photoCal").textContent = A.kind === "side" ? "Set scale from wheels" : "Set scale from plate";
+  $("#photoCal").hidden = !scaled || !has; $("#photoCal").disabled = !has;
+  $("#photoDistRow").hidden = !scaled || !has;
+  $("#photoDistLab").textContent = A.kind === "side" ? "Wheelbase (cm)" : "Number plate width (cm)";
+  if(document.activeElement !== $("#photoDist")) $("#photoDist").value = Math.round(((cal && cal.dist) || photoDefaultDist(A.kind))*1000)/10;
+  $("#photoDistHint").textContent = A.kind === "side" ? "Uses this body style's typical wheelbase. Enter your car's exact figure if you know it." : "Standard UK plates are 52cm. Change it if yours is a short or shaped plate.";
+  $("#photoPick").hidden = !scaled || !has; $("#photoPick").disabled = !cal;
+  $("#photoUseColour").hidden = !scaled || !has; $("#photoUseColour").disabled = !cal;
+  $("#photoReset").hidden = !scaled || !has; $("#photoReset").disabled = !cal;
+  $("#photoRemove").disabled = !has;
+  $("#photoPaintTog").hidden = !scaled || !has; $("#photoPaintTog").disabled = !cal; $("#photoPaintTog").setAttribute("aria-pressed", !!vizState.photoPaint);
+  $("#photoSplitRow").hidden = !cal || !scaled; $("#photoTolRow").hidden = !cal || !scaled || !vizState.photoPaint;
+  $("#photoAdjRows").hidden = !cal || !scaled;
+  $("#photoAdjWingXRow").hidden = A.kind !== "side";
+  $("#photoAngleRow").hidden = !has;
+  $("#photoThisAngle").value = A.id;
+  const adj = photoAdj(cal);
+  $("#photoAdjKit").value = Math.round(adj.kit*100); $("#photoAdjKitV").textContent = `${adj.kit >= 0 ? "+" : ""}${Math.round(adj.kit*100)}cm`;
+  $("#photoAdjWing").value = Math.round(adj.wing*100); $("#photoAdjWingV").textContent = `${adj.wing >= 0 ? "+" : ""}${Math.round(adj.wing*100)}cm`;
+  $("#photoAdjWingX").value = Math.round(adj.wingX*100); $("#photoAdjWingXV").textContent = `${adj.wingX >= 0 ? "+" : ""}${Math.round(adj.wingX*100)}cm`;
+  const sw = $("#photoSwatch"); if(cal && scaled){ sw.hidden = false; sw.style.background = rgb2hex(...cal.src); sw.title = "Colour detected in your photo: " + rgb2hex(...cal.src); } else sw.hidden = true;
+  $("#photoAddLabel").classList.toggle("disabled", !photoNewKey(state.car, $("#photoAddAngle").value));
+}
+function photoPartsUI(){
+  const box = $("#photoPartsList"); if(!box) return;
+  const parts = photoParts(), has = !!PH.img;
+  $("#photoParts").hidden = !has;
+  box.innerHTML = parts.map((p,i) => `<button type="button" class="tog partchip" data-part="${i}" aria-pressed="${i === PH.sel}">${esc(p.name || "Part " + (i+1))}</button>`).join("");
+  const p = parts[PH.sel];
+  $("#partCtl").hidden = !p;
+  if(p){ $("#partSize").value = Math.round(p.s*1000); $("#partRot").value = Math.round(p.r); $("#partOp").value = Math.round((p.op == null ? 1 : p.op)*100);
+    $("#partKnock").setAttribute("aria-pressed", !!p.knock); $("#partFlip").setAttribute("aria-pressed", !!p.flip); }
+}
+function photoDetailUI(){
+  const box = $("#photoDetail"); if(!box) return;
+  const A = photoAngle(), c = car(), wp = wheelPick();
+  const seen = {side:["splitter","sideskirt","canards","rearsplit","diffuser","bonnetext","spoilercap","wingraise","catback","valved","gpfback","coilovers","springs","forged","winter","bbk"],
+    front:["splitter","canards","bonnetext","sideskirt","eyebrows","grille","oemled","aftled","halo","headtint","drlcolour","chameleon","sunstrip"],
+    rear:["splitter","diffuser","rearsplit","spoilercap","wingraise","catback","valved","gpfback","smokedtail","tailfilm","clearlens","reartint"],
+    view:Object.keys(VIZ_OF)}[A.kind];
+  const ids = state.build.filter(id => seen.includes(id));
+  const q = s => encodeURIComponent(s);
+  const g = (s) => `https://www.google.com/search?tbm=isch&q=${q(s)}`;
+  const makers = id => {
+    const out = [];
+    if(VIZ_OF[id] === "Body & aero") out.push(["Maxton Design", `https://www.google.com/search?q=${q("site:maxtondesign.com " + c.name)}`]);
+    if(VIZ_OF[id] === "Exhaust"){ out.push(["Milltek", `https://www.google.com/search?q=${q("site:millteksport.com " + c.name)}`]); out.push(["Scorpion", `https://www.google.com/search?q=${q("site:scorpion-exhausts.com " + c.name)}`]); }
+    if(/^Ford /.test(c.name) && ["Body & aero","Exhaust","Engine (x-ray)"].includes(VIZ_OF[id])) out.push(["Laird Performance", "https://www.laird-performance.co.uk/"]);
+    return out;
+  };
+  let rows = ids.map(id => { const m = byId[id];
+    const name = id === "splitter" ? `${m.name}${vizState.wing && vizState.wing !== "low" ? " (" + ($("#vizWing").selectedOptions[0] || {}).text + ")" : ""}` : m.name;
+    const links = [[`Real photos on a ${c.name}`, g(`${m.name} ${c.name}`)]].concat(makers(id));
+    return `<li><b>${esc(name)}</b><span>${links.map(([t,u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join(" · ")}</span></li>`; });
+  if(A.kind === "side" && wp.custom){ const st = WHEEL_STYLES[wp.style]; rows.unshift(`<li><b>${esc(st.n)} wheels, ${wp.size}"</b><span><a href="${g(`${st.ex || st.n} alloy wheels ${c.name}`)}" target="_blank" rel="noopener">Real photos on a ${esc(c.name)} ↗</a></span></li>`); }
+  box.innerHTML = rows.length ? `<ul class="detlist">${rows.join("")}</ul>` : `<p class="note">Mods from your build that show from this angle will be listed here with links to real photos and parts makers.</p>`;
 }
 function photoCanvasPoint(e){ const cv = $("#photoCanvas"), r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height]; }
 function photoSample(p){
@@ -2970,14 +3289,16 @@ function photoSample(p){
   const d = g.getImageData(x, y, 7, 7).data; let r=0,gg=0,b=0; for(let i=0;i<d.length;i+=4){ r+=d[i]; gg+=d[i+1]; b+=d[i+2]; } const n = d.length/4;
   return [Math.round(r/n), Math.round(gg/n), Math.round(b/n)];
 }
-function readPhotoFile(file, id, done){
+function readPhotoFile(file, id, done, maxW, type){
   if(!file || !/^image\//.test(file.type)){ toast("That file isn't an image"); return; }
   const rd = new FileReader();
   rd.onload = () => { const im = new Image(); im.onload = () => {
-      const scale = Math.min(1, 1600/im.width), cv = document.createElement("canvas");
+      const scale = Math.min(1, (maxW || 1400)/im.width), cv = document.createElement("canvas");
       cv.width = Math.round(im.width*scale); cv.height = Math.round(im.height*scale);
       cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
-      state.photos[id] = cv.toDataURL("image/jpeg", 0.85); persistPhoto(id); done && done(); };
+      const url = type === "png" ? cv.toDataURL("image/png") : cv.toDataURL("image/jpeg", 0.82);
+      if(id){ state.photos[id] = url; persistPhoto(id); }
+      done && done(url, cv.width, cv.height); };
     im.onerror = () => toast("Couldn't read that image. Try a JPG or PNG."); im.src = rd.result; };
   rd.onerror = () => toast("Couldn't read that file. Try another image.");
   rd.readAsDataURL(file);
@@ -2988,27 +3309,103 @@ function vizSetMode(m){
   $("#viz3d").hidden = m !== "3d"; $("#vizPhoto").hidden = m !== "photo";
   if(m === "3d"){ V.dirty = true; vizResize(); vizLoop(); } else photoLoad(photoRender);
 }
+function photoSetAdj(field, v){ const cal = photoCal(); if(!cal) return; cal.adj = Object.assign(photoAdj(cal), {[field]:v}); photoSetCal(cal); photoRender(); }
+function photoMoveKey(from, to){
+  state.photos[to] = state.photos[from]; delete state.photos[from]; persistPhoto(to); persistPhoto(from);
+  const cal = photoCal(from); photoSetCal(null, from); if(cal) photoSetCal(cal, to);
+  const parts = photoParts(from); photoSetParts(null, from); if(parts.length) photoSetParts(parts, to);
+}
+function photoPartEdit(fn){ const parts = photoParts(); const p = parts[PH.sel]; if(!p) return; fn(p); photoSetParts(parts); photoRender(); }
 function initPhoto(){
+  $("#photoAddAngle").innerHTML = PHOTO_ANGLES.map(a => `<option value="${a.id}">${esc(a.n)}</option>`).join("");
+  $("#photoThisAngle").innerHTML = PHOTO_ANGLES.map(a => `<option value="${a.id}">${esc(a.n)}</option>`).join("");
   $$("#vizMode button").forEach(b => b.addEventListener("click", () => vizSetMode(b.dataset.mode)));
-  $("#photoIn2").addEventListener("change", e => { const f = e.target.files && e.target.files[0]; const id = state.car; e.target.value = "";
-    readPhotoFile(f, id, () => { photoSetCal(null); PH.recolKey = ""; photoLoad(() => { PH.step = "front"; PH.tmp = []; photoRender(); }); if(typeof renderCar === "function") renderCar(); toast("Photo added. Mark the wheels next."); }); });
-  $("#photoCal").addEventListener("click", () => { PH.step = "front"; PH.tmp = []; photoRender(); });
+  $("#photoStrip").addEventListener("click", e => { const b = e.target.closest("[data-key]"); if(!b) return; PH.key = b.dataset.key; PH.step = null; PH.split = 1; PH.sel = -1; $("#photoSplit").value = 100; photoLoad(photoRender); });
+  $("#photoAddAngle").addEventListener("change", () => { photoButtons(); if(!PH.img) photoRender(); });
+  $("#photoIn2").addEventListener("change", e => {
+    const f = e.target.files && e.target.files[0]; e.target.value = "";
+    const angle = $("#photoAddAngle").value, id = photoNewKey(state.car, angle), A = PHOTO_ANGLES.find(a => a.id === angle);
+    if(!id){ toast(`You already have ${MAX_PER_ANGLE} ${A.n.toLowerCase()} photos. Remove one first.`); return; }
+    readPhotoFile(f, id, () => { photoSetCal(null, id); PH.key = id; PH.recolKey = ""; PH.sel = -1;
+      photoLoad(() => { PH.step = A.kind === "view" ? null : "a"; PH.tmp = []; photoRender(); });
+      if(id === state.car && typeof renderCar === "function") renderCar();
+      toast(A.kind === "view" ? "Photo added" : A.kind === "side" ? "Photo added. Tap the wheel centres next." : "Photo added. Tap the number plate ends next."); });
+  });
+  $("#photoThisAngle").addEventListener("change", e => {
+    const from = photoKey(), to = photoNewKey(state.car, e.target.value);
+    if(!to){ toast("That angle already has the maximum number of photos."); photoButtons(); return; }
+    photoMoveKey(from, to); photoSetCal(null, to); PH.key = to; PH.imgId = null; PH.step = null;
+    if((from === state.car || to === state.car) && typeof renderCar === "function") renderCar();
+    photoLoad(() => { const A = photoAngle(); if(A.kind !== "view"){ PH.step = "a"; PH.tmp = []; } photoRender(); });
+  });
+  $("#photoCal").addEventListener("click", () => { PH.step = "a"; PH.tmp = []; photoRender(); });
+  $("#photoDist").addEventListener("change", e => {
+    const v = +e.target.value; const A = photoAngle();
+    if(!(v > 0)){ photoButtons(); return; }
+    const m = v/100; if(A.kind === "side" ? (m < 1.8 || m > 3.4) : (m < .2 || m > .8)){ toast(A.kind === "side" ? "Wheelbase should be between 180 and 340cm." : "Plate width should be between 20 and 80cm."); photoButtons(); return; }
+    const cal = photoCal(); if(cal){ cal.dist = m; photoSetCal(cal); PH.recolKey = ""; photoRender(); } else { PH.pendingDist = m; }
+  });
   $("#photoPick").addEventListener("click", () => { PH.step = "paint"; photoRender(); });
   $("#photoReset").addEventListener("click", () => { photoSetCal(null); PH.recolKey = ""; PH.step = null; photoRender(); });
+  $("#photoRemove").addEventListener("click", () => {
+    const id = photoKey(); delete state.photos[id]; persistPhoto(id); photoSetCal(null, id); photoSetParts(null, id);
+    PH.img = null; PH.imgId = null; PH.step = null; PH.key = null; PH.sel = -1;
+    if(id === state.car && typeof renderCar === "function") renderCar();
+    photoLoad(photoRender); toast("Photo removed"); });
   $("#photoUseColour").addEventListener("click", () => { const cal = photoCal(); if(!cal) return; vizState.paint[state.car] = rgb2hex(...cal.src); vizSave(); vizRebuild(); toast("3D paint set to your car's colour"); });
+  $("#photoPaintTog").addEventListener("click", () => { vizState.photoPaint = !vizState.photoPaint; vizSave(); photoRender(); });
   $("#photoSplit").addEventListener("input", e => { PH.split = +e.target.value/100; photoRender(); });
   $("#photoTol").addEventListener("input", e => { PH.tol = +e.target.value; photoRender(); });
-  $("#photoCanvas").addEventListener("click", e => {
-    if(!PH.img) return; const p = photoCanvasPoint(e);
-    if(PH.step === "front"){ PH.tmp = [p]; PH.step = "rear"; photoRender(); return; }
-    if(PH.step === "rear"){
-      PH.tmp.push(p);
-      const cal = {f:PH.tmp[0], r:PH.tmp[1], src:[128,128,128]};
-      if(Math.hypot(cal.f[0]-cal.r[0], cal.f[1]-cal.r[1]) < PH.img.width*.12){ toast("Those points are too close together. Tap the centre of each wheel."); PH.step = "front"; PH.tmp = []; photoRender(); return; }
-      PH.step = null; cal.src = photoAutoColour(cal) || [128,128,128]; photoSetCal(cal); PH.recolKey = ""; photoRender();
-      toast("Wheels set. Paint colour detected from your photo."); return;
+  $("#photoAdjKit").addEventListener("input", e => photoSetAdj("kit", +e.target.value/100));
+  $("#photoAdjWing").addEventListener("input", e => photoSetAdj("wing", +e.target.value/100));
+  $("#photoAdjWingX").addEventListener("input", e => photoSetAdj("wingX", +e.target.value/100));
+  // part images
+  $("#partIn").addEventListener("change", e => { const f = e.target.files && e.target.files[0]; e.target.value = ""; if(!PH.img) return;
+    readPhotoFile(f, null, (url, w) => { const parts = photoParts(); parts.push({src:url, name:(f.name || "Part").replace(/\.[a-z0-9]+$/i,"").slice(0,24), x:PH.img.width/2, y:PH.img.height/2, s:Math.min(1, PH.img.width*.35/w), r:0, flip:false, knock:/png$/i.test(f.type) ? false : true, op:1});
+      photoSetParts(parts); PH.sel = parts.length-1; photoRender(); toast("Part added. Drag it into place."); }, 700, /png|webp|gif/i.test(f.type) ? "png" : "jpg"); });
+  $("#photoPartsList").addEventListener("click", e => { const b = e.target.closest("[data-part]"); if(!b) return; PH.sel = +b.dataset.part === PH.sel ? -1 : +b.dataset.part; photoRender(); });
+  $("#partSize").addEventListener("input", e => photoPartEdit(p => p.s = +e.target.value/1000));
+  $("#partRot").addEventListener("input", e => photoPartEdit(p => p.r = +e.target.value));
+  $("#partOp").addEventListener("input", e => photoPartEdit(p => p.op = +e.target.value/100));
+  $("#partFlip").addEventListener("click", () => photoPartEdit(p => p.flip = !p.flip));
+  $("#partKnock").addEventListener("click", () => photoPartEdit(p => p.knock = !p.knock));
+  $("#partDel").addEventListener("click", () => { const parts = photoParts(); parts.splice(PH.sel, 1); photoSetParts(parts); PH.sel = -1; photoRender(); });
+  $("#partDone").addEventListener("click", () => { PH.sel = -1; photoRender(); });
+  const cv = $("#photoCanvas");
+  cv.addEventListener("pointerdown", e => {
+    if(PH.step || PH.sel < 0) return; const p = photoCanvasPoint(e), parts = photoParts(), s = parts[PH.sel]; if(!s) return;
+    PH.drag = {dx:p[0]-s.x, dy:p[1]-s.y, moved:false}; try{ cv.setPointerCapture(e.pointerId); }catch(_){} e.preventDefault();
+  });
+  cv.addEventListener("pointermove", e => { if(!PH.drag) return; const p = photoCanvasPoint(e); const parts = photoParts(), s = parts[PH.sel]; if(!s) return; s.x = p[0]-PH.drag.dx; s.y = p[1]-PH.drag.dy; PH.drag.moved = true; photoSetParts(parts); photoRender(); });
+  const endDrag = () => { if(PH.drag){ PH.dragJustEnded = PH.drag.moved; PH.drag = null; } };
+  cv.addEventListener("pointerup", endDrag); cv.addEventListener("pointercancel", endDrag);
+  cv.addEventListener("click", e => {
+    if(PH.dragJustEnded){ PH.dragJustEnded = false; return; }
+    if(!PH.img) return; const A = photoAngle(); const p = photoCanvasPoint(e);
+    if(PH.step === "a"){ PH.tmp = [p]; PH.step = "b"; photoRender(); return; }
+    if(PH.step === "b"){
+      let a = PH.tmp[0], b = p;
+      const minGap = A.kind === "side" ? PH.img.width*.12 : PH.img.width*.03;
+      if(Math.hypot(a[0]-b[0], a[1]-b[1]) < minGap){ toast(A.kind === "side" ? "Those points are too close. Tap the centre of each wheel." : "Those points are too close. Tap each end of the number plate."); PH.step = "a"; PH.tmp = []; photoRender(); return; }
+      if(A.kind !== "side" && b[0] < a[0]){ const t = a; a = b; b = t; }
+      if(A.kind === "side"){ const cal = {f:a, r:b, src:[128,128,128], adj:{kit:0, wing:0, wingX:0}, method:"wheels", dist:PH.pendingDist || photoDefaultDist("side")};
+        PH.step = null; PH.pendingDist = null; photoSetCal(cal); cal.src = photoAutoColour(cal) || [128,128,128]; photoSetCal(cal); PH.recolKey = ""; photoRender(); toast("Scale set from your wheels. Paint colour detected."); return; }
+      PH.tmp = [a, b]; PH.step = "g"; photoRender(); return;
     }
-    if(PH.step === "paint"){ const cal = photoCal(); if(!cal) return; cal.src = photoSample(p); photoSetCal(cal); PH.step = null; PH.recolKey = ""; photoRender(); toast("Paint colour picked"); }
+    if(PH.step === "g"){
+      const [a, b] = PH.tmp;
+      const cal = {f:a, r:b, g:p, src:[128,128,128], adj:{kit:0, wing:0, wingX:0}, method:"plate", dist:PH.pendingDist || PLATE_W};
+      const X = photoXf(cal, A.kind);
+      if(((a[0]+b[0])/2 - p[0])*X.vx + ((a[1]+b[1])/2 - p[1])*X.vy < .1*X.ppm){ toast("The road should be below the number plate. Tap where a tyre meets the road."); return; }
+      PH.step = null; PH.pendingDist = null; photoSetCal(cal); cal.src = photoAutoColour(cal) || [128,128,128]; photoSetCal(cal); PH.recolKey = ""; photoRender(); toast("Scale set from your number plate. Paint colour detected."); return;
+    }
+    if(PH.step === "paint"){ const cal = photoCal(); if(!cal) return; cal.src = photoSample(p); photoSetCal(cal); PH.step = null; PH.recolKey = ""; photoRender(); toast("Paint colour picked"); return; }
+    // tap a part to select it
+    const parts = photoParts();
+    for(let i=parts.length-1;i>=0;i--){ const s = parts[i], im = PH.partImgs && PH.partImgs[i]; if(!im) continue;
+      const b = partBox(s, im), dx = p[0]-s.x, dy = p[1]-s.y, a = -s.r*Math.PI/180, rx = dx*Math.cos(a) - dy*Math.sin(a), ry = dx*Math.sin(a) + dy*Math.cos(a);
+      if(Math.abs(rx) <= b.w/2 && Math.abs(ry) <= b.h/2){ PH.sel = i; photoRender(); return; } }
+    if(PH.sel >= 0){ PH.sel = -1; photoRender(); }
   });
 }
 
@@ -3051,7 +3448,7 @@ function init(){
         const scale = Math.min(1, 1200/im.width), cv = document.createElement("canvas");
         cv.width = Math.round(im.width*scale); cv.height = Math.round(im.height*scale);
         cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
-        state.photos[id] = cv.toDataURL("image/jpeg", 0.82); savePhotos(); if(id === state.car && typeof photoSetCal === "function"){ photoSetCal(null); PH.recolKey = ""; }
+        state.photos[id] = cv.toDataURL("image/jpeg", 0.82); savePhotos(); if(typeof photoSetCal === "function"){ photoSetCal(null, id); PH.recolKey = ""; PH.imgId = null; }
         if(state.car === id) renderCar(); toast("Photo added");
       };
       im.onerror = () => toast("Couldn't read that image. Try a JPG or PNG.");
@@ -3099,7 +3496,7 @@ function init(){
   initGuides();
   vizControlsHTML();
   vizState = Object.assign(vizState, store.get("cr_viz", {})); vizState.stock = false;
-  vizBindPanel(); initPhoto();
+  vizBindPanel(); initPhoto(); try{ vizWheelUI(); }catch(e){}
   try{ initViz(); }catch(err){ const fb = $("#vizFallback"); if(fb) fb.hidden = false; }
   vizSetMode(vizState.mode === "photo" ? "photo" : "3d");
   $("#clearbuild").addEventListener("click", () => { state.build = []; renderMods(); renderBuild(); toast("Build cleared"); });
